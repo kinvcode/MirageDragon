@@ -14,6 +14,7 @@ class CMirageDragonDlg : public CDialogEx
 {
 // 构造
 public:
+	CBrush m_brush;
 	CMirageDragonDlg(CWnd* pParent = nullptr);	// 标准构造函数
 
 // 对话框数据
@@ -33,6 +34,8 @@ protected:
 	CDialog* m_tab_box[3];
 	// tab控件当前索引
 	int m_cur_tab_index;
+	// 日志输出时间
+	CTime m_log_time;
 
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
@@ -53,6 +56,7 @@ public:
 
 	afx_msg void OnBnClickedButton1();
 	CTabCtrl m_ctl_tab;
+	//CMFCTabCtrl m_ctl_tab;
 	CEdit m_ctl_edit_console;
 	CButton m_ctl_btn_init;
 	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult);

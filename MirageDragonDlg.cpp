@@ -1,5 +1,5 @@
-
-// MirageDragonDlg.cpp: ÊµÏÖÎÄ¼ş
+ï»¿
+// MirageDragonDlg.cpp: å®ç°æ–‡ä»¶
 //
 
 #include "pch.h"
@@ -16,22 +16,22 @@
 
 HANDLE MSDK_HANDLE;
 
-// ÓÃÓÚÓ¦ÓÃ³ÌĞò¡°¹ØÓÚ¡±²Ëµ¥ÏîµÄ CAboutDlg ¶Ô»°¿ò
+// ç”¨äºåº”ç”¨ç¨‹åºâ€œå…³äºâ€èœå•é¡¹çš„ CAboutDlg å¯¹è¯æ¡†
 
 class CAboutDlg : public CDialogEx
 {
 public:
 	CAboutDlg();
 
-	// ¶Ô»°¿òÊı¾İ
+	// å¯¹è¯æ¡†æ•°æ®
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
 
-// ÊµÏÖ
+// å®ç°
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -49,7 +49,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CMirageDragonDlg ¶Ô»°¿ò
+// CMirageDragonDlg å¯¹è¯æ¡†
 
 
 
@@ -77,15 +77,15 @@ BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 
-// CMirageDragonDlg ÏûÏ¢´¦Àí³ÌĞò
+// CMirageDragonDlg æ¶ˆæ¯å¤„ç†ç¨‹åº
 
 BOOL CMirageDragonDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	// ½«¡°¹ØÓÚ...¡±²Ëµ¥ÏîÌí¼Óµ½ÏµÍ³²Ëµ¥ÖĞ¡£
+	// å°†â€œå…³äº...â€èœå•é¡¹æ·»åŠ åˆ°ç³»ç»Ÿèœå•ä¸­ã€‚
 
-	// IDM_ABOUTBOX ±ØĞëÔÚÏµÍ³ÃüÁî·¶Î§ÄÚ¡£
+	// IDM_ABOUTBOX å¿…é¡»åœ¨ç³»ç»Ÿå‘½ä»¤èŒƒå›´å†…ã€‚
 	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
 	ASSERT(IDM_ABOUTBOX < 0xF000);
 
@@ -103,23 +103,23 @@ BOOL CMirageDragonDlg::OnInitDialog()
 		}
 	}
 
-	// ÉèÖÃ´Ë¶Ô»°¿òµÄÍ¼±ê¡£  µ±Ó¦ÓÃ³ÌĞòÖ÷´°¿Ú²»ÊÇ¶Ô»°¿òÊ±£¬¿ò¼Ü½«×Ô¶¯
-	//  Ö´ĞĞ´Ë²Ù×÷
-	SetIcon(m_hIcon, TRUE);			// ÉèÖÃ´óÍ¼±ê
-	SetIcon(m_hIcon, FALSE);		// ÉèÖÃĞ¡Í¼±ê
+	// è®¾ç½®æ­¤å¯¹è¯æ¡†çš„å›¾æ ‡ã€‚  å½“åº”ç”¨ç¨‹åºä¸»çª—å£ä¸æ˜¯å¯¹è¯æ¡†æ—¶ï¼Œæ¡†æ¶å°†è‡ªåŠ¨
+	//  æ‰§è¡Œæ­¤æ“ä½œ
+	SetIcon(m_hIcon, TRUE);			// è®¾ç½®å¤§å›¾æ ‡
+	SetIcon(m_hIcon, FALSE);		// è®¾ç½®å°å›¾æ ‡
 
-	// ÉèÖÃ´°¿Ú±êÌâ
-	SetWindowText(L"»Ã¾µÁú");
+	// è®¾ç½®çª—å£æ ‡é¢˜
+	SetWindowText(L"å¹»é•œé¾™");
 
-	// ÉèÖÃÈÕÖ¾¿ò×Ö·ûÊı
+	// è®¾ç½®æ—¥å¿—æ¡†å­—ç¬¦æ•°
 	m_ctl_edit_console.SetLimitText(UINT_MAX);
 
-	// ¿ªÆôÇı¶¯°´¼ü¹¦ÄÜ
+	// å¼€å¯é©±åŠ¨æŒ‰é”®åŠŸèƒ½
 	MSDK_HANDLE = M_Open(1);
 
-	// TODO: ÔÚ´ËÌí¼Ó¶îÍâµÄ³õÊ¼»¯´úÂë
+	// TODO: åœ¨æ­¤æ·»åŠ é¢å¤–çš„åˆå§‹åŒ–ä»£ç 
 
-	return TRUE;  // ³ı·Ç½«½¹µãÉèÖÃµ½¿Ø¼ş£¬·ñÔò·µ»Ø TRUE
+	return TRUE;  // é™¤éå°†ç„¦ç‚¹è®¾ç½®åˆ°æ§ä»¶ï¼Œå¦åˆ™è¿”å› TRUE
 }
 
 void CMirageDragonDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -135,19 +135,19 @@ void CMirageDragonDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 }
 
-// Èç¹ûÏò¶Ô»°¿òÌí¼Ó×îĞ¡»¯°´Å¥£¬ÔòĞèÒªÏÂÃæµÄ´úÂë
-//  À´»æÖÆ¸ÃÍ¼±ê¡£  ¶ÔÓÚÊ¹ÓÃÎÄµµ/ÊÓÍ¼Ä£ĞÍµÄ MFC Ó¦ÓÃ³ÌĞò£¬
-//  Õâ½«ÓÉ¿ò¼Ü×Ô¶¯Íê³É¡£
+// å¦‚æœå‘å¯¹è¯æ¡†æ·»åŠ æœ€å°åŒ–æŒ‰é’®ï¼Œåˆ™éœ€è¦ä¸‹é¢çš„ä»£ç 
+//  æ¥ç»˜åˆ¶è¯¥å›¾æ ‡ã€‚  å¯¹äºä½¿ç”¨æ–‡æ¡£/è§†å›¾æ¨¡å‹çš„ MFC åº”ç”¨ç¨‹åºï¼Œ
+//  è¿™å°†ç”±æ¡†æ¶è‡ªåŠ¨å®Œæˆã€‚
 
 void CMirageDragonDlg::OnPaint()
 {
 	if (IsIconic())
 	{
-		CPaintDC dc(this); // ÓÃÓÚ»æÖÆµÄÉè±¸ÉÏÏÂÎÄ
+		CPaintDC dc(this); // ç”¨äºç»˜åˆ¶çš„è®¾å¤‡ä¸Šä¸‹æ–‡
 
 		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
 
-		// Ê¹Í¼±êÔÚ¹¤×÷Çø¾ØĞÎÖĞ¾ÓÖĞ
+		// ä½¿å›¾æ ‡åœ¨å·¥ä½œåŒºçŸ©å½¢ä¸­å±…ä¸­
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
 		CRect rect;
@@ -155,17 +155,22 @@ void CMirageDragonDlg::OnPaint()
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
 
-		// »æÖÆÍ¼±ê
+		// ç»˜åˆ¶å›¾æ ‡
 		dc.DrawIcon(x, y, m_hIcon);
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		// çª—å£é¢œè‰²
+		CPaintDC dc(this);
+		CRect rect;
+		GetClientRect(&rect);
+		//dc.FillSolidRect(rect, RGB(0, 255, 255));
+		dc.FillSolidRect(rect, RGB(255, 255, 255));
 	}
 }
 
-//µ±ÓÃ»§ÍÏ¶¯×îĞ¡»¯´°¿ÚÊ±ÏµÍ³µ÷ÓÃ´Ëº¯ÊıÈ¡µÃ¹â±ê
-//ÏÔÊ¾¡£
+//å½“ç”¨æˆ·æ‹–åŠ¨æœ€å°åŒ–çª—å£æ—¶ç³»ç»Ÿè°ƒç”¨æ­¤å‡½æ•°å–å¾—å…‰æ ‡
+//æ˜¾ç¤ºã€‚
 HCURSOR CMirageDragonDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
@@ -173,38 +178,38 @@ HCURSOR CMirageDragonDlg::OnQueryDragIcon()
 
 void CMirageDragonDlg::OnBnClickedButton1()
 {
-	// »ñÈ¡DNF½ø³ÌID
+	// è·å–DNFè¿›ç¨‹ID
 	PID = getProcessPID(L"DNF.exe");
 	if (PID == 0) {
-		AfxMessageBox(L"ÇëÏÈÔËĞĞÓÎÏ·");
+		AfxMessageBox(L"è¯·å…ˆè¿è¡Œæ¸¸æˆ");
 		return;
 	}
 
 	if (readInt(0x140000000) != 0x905A4D) {
-		AfxMessageBox(L"ÎŞ¶ÁĞ´È¨ÏŞ£¬Çë»ñÈ¡Í¼±ê!");
+		AfxMessageBox(L"æ— è¯»å†™æƒé™ï¼Œè¯·è·å–å›¾æ ‡!");
 		return;
 	}
 
-	// ÏÔÊ¾¿Ø¼ş
+	// æ˜¾ç¤ºæ§ä»¶
 	m_ctl_btn_init.ShowWindow(SW_HIDE);
 	m_ctl_edit_console.ShowWindow(SW_SHOW);
 	m_ctl_tab.ShowWindow(SW_SHOW);
 
-	// ³õÊ¼»¯tab¿Ø¼ş
+	//// åˆå§‹åŒ–tabæ§ä»¶
 	initTabCtl();
-	
-	Log(L"³õÊ¼»¯Íê±Ï");
 
-	// Æô¶¯Ïß³Ì
+	Log(L"åˆå§‹åŒ–å®Œæ¯•");
+
+	//// å¯åŠ¨çº¿ç¨‹
 	AfxBeginThread(userPointerThread, this);
 }
 
-void CMirageDragonDlg::initTabCtl() 
+void CMirageDragonDlg::initTabCtl()
 {
-	// ³õÊ¼»¯tab¿Ø¼ş
-	m_ctl_tab.InsertItem(0, L"Ö÷½çÃæ");
-	m_ctl_tab.InsertItem(1, L"µØÍ¼±éÀú");
-	m_ctl_tab.InsertItem(2, L"ÅäÖÃ½çÃæ");
+	// åˆå§‹åŒ–tabæ§ä»¶
+	m_ctl_tab.InsertItem(0, L"ä¸»ç•Œé¢");
+	m_ctl_tab.InsertItem(1, L"åœ°å›¾éå†");
+	m_ctl_tab.InsertItem(2, L"é…ç½®ç•Œé¢");
 	page1.Create(IDD_DIALOG_PAGE1, &m_ctl_tab);
 	page2.Create(IDD_DIALOG_PAGE2, &m_ctl_tab);
 	page3.Create(IDD_DIALOG_PAGE3, &m_ctl_tab);
@@ -244,6 +249,11 @@ void CMirageDragonDlg::OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CMirageDragonDlg::Log(CString msg)
 {
+	m_log_time = CTime::GetCurrentTime();
+	CString time = m_log_time.Format("%H:%M:%S");
+
+	msg = time + L" " + msg;
+
 	m_ctl_edit_console.SetSel(-1);
 	m_ctl_edit_console.ReplaceSel(msg);
 	m_ctl_edit_console.SetSel(-1);
@@ -254,14 +264,14 @@ HBRUSH CMirageDragonDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 {
 	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
 
-	// TODO:  ÔÚ´Ë¸ü¸Ä DC µÄÈÎºÎÌØĞÔ
+	// TODO:  åœ¨æ­¤æ›´æ”¹ DC çš„ä»»ä½•ç‰¹æ€§
 	if (pWnd->GetDlgCtrlID() == IDC_EDIT1)
 	{
-		
-		pDC->SetTextColor(RGB(171, 192, 35));//ÉèÖÃ±à¼­¿ò×ÖÌåµÄÑÕÉ«
-		pDC->SetBkColor(RGB(43, 43, 43));//ÉèÖÃ×ÖÌå±³¾°ÑÕÉ«
+		pDC->SetTextColor(RGB(171, 192, 35));//è®¾ç½®ç¼–è¾‘æ¡†å­—ä½“çš„é¢œè‰²
+		pDC->SetBkColor(RGB(43, 43, 43));//è®¾ç½®å­—ä½“èƒŒæ™¯é¢œè‰²
+		return CreateSolidBrush(RGB(43, 43, 43));
 	}
 
-	// TODO:  Èç¹ûÄ¬ÈÏµÄ²»ÊÇËùĞè»­±Ê£¬Ôò·µ»ØÁíÒ»¸ö»­±Ê
+	// TODO:  å¦‚æœé»˜è®¤çš„ä¸æ˜¯æ‰€éœ€ç”»ç¬”ï¼Œåˆ™è¿”å›å¦ä¸€ä¸ªç”»ç¬”
 	return hbr;
 }

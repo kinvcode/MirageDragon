@@ -19,8 +19,10 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
+	//afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 public:
 	CListCtrl _ctl_list;
 	afx_msg void OnBnClickedButton1();
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

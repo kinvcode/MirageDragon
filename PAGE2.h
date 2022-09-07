@@ -19,6 +19,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
+	//afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 public:
 	CEdit _attack_speed;
@@ -26,4 +27,5 @@ public:
 	CEdit _move_speed;
 	CEdit _cool_down;
 	CEdit _damage_value;
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

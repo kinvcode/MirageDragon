@@ -33,6 +33,7 @@ void PAGE2::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(PAGE2, CDialogEx)
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -49,4 +50,24 @@ BOOL PAGE2::OnInitDialog()
 	_damage_value.SetWindowText(L"196688");
 
 	return TRUE;
+}
+
+//void PAGE2::OnPaint()
+//{
+//	CPaintDC dc(this);
+//	CRect rect;
+//	GetClientRect(&rect);
+//	dc.FillSolidRect(rect, RGB(0, 255, 0));
+//}
+
+
+BOOL PAGE2::OnEraseBkgnd(CDC* pDC)
+{
+	CRect rect;
+	GetClientRect(&rect);
+	CBrush myBrush(RGB(0, 255, 255));
+	CBrush* pOld = pDC->SelectObject(&myBrush);
+	BOOL bRes = pDC->PatBlt(0, 0, rect.Width(), rect.Height(), PATCOPY);
+	pDC->SelectObject(pOld);
+	return bRes;
 }

@@ -19,6 +19,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
+	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 public:
 	CButton _switch_three_speed;
@@ -28,4 +29,5 @@ public:
 	CButton _switch_hook_damage;
 	CButton _switch_gather_monster;
 	CButton _switch_gather_items;
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };

@@ -15,6 +15,7 @@
 #define IDD_DIALOG_PAGE3                134
 #define IDD_DIALOG_PAGE4                135
 #define IDD_DIALOG_PAGE5                136
+#define IDR_ACCELERATOR1                137
 #define IDC_BUTTON1                     1000
 #define IDC_TAB1                        1001
 #define IDC_EDIT1                       1002
@@ -37,8 +38,8 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        134
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        138
+#define _APS_NEXT_COMMAND_VALUE         32772
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

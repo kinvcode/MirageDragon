@@ -30,6 +30,7 @@ void PAGE3::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(PAGE3, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &PAGE3::OnBnClickedButton1)
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 
@@ -53,4 +54,24 @@ void PAGE3::OnBnClickedButton1()
 {
 	// 遍历图内对象
 
+}
+
+//void PAGE3::OnPaint()
+//{
+//	CPaintDC dc(this);
+//	CRect rect;
+//	GetClientRect(&rect);
+//	dc.FillSolidRect(rect, RGB(0, 255, 0));
+//}
+
+
+BOOL PAGE3::OnEraseBkgnd(CDC* pDC)
+{
+	CRect rect;
+	GetClientRect(&rect);
+	CBrush myBrush(RGB(0, 255, 255));
+	CBrush* pOld = pDC->SelectObject(&myBrush);
+	BOOL bRes = pDC->PatBlt(0, 0, rect.Width(), rect.Height(), PATCOPY);
+	pDC->SelectObject(pOld);
+	return bRes;
 }
