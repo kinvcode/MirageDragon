@@ -27,7 +27,6 @@
 #define IDC_CHECK1                      1007
 #define IDC_CHECK2                      1008
 #define IDC_CHECK3                      1009
-#define IDC_LIST2                       1009
 #define IDC_CHECK4                      1010
 #define IDC_LIST3                       1010
 #define IDC_CHECK5                      1011

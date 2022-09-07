@@ -7,6 +7,7 @@
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
 #include "afxdialogex.h"
+#include "jobs.h"
 
 
 #ifdef _DEBUG
@@ -63,6 +64,7 @@ void CMirageDragonDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_TAB1, m_ctl_tab);
 	DDX_Control(pDX, IDC_EDIT1, m_ctl_edit_console);
+	DDX_Control(pDX, IDC_BUTTON1, m_ctl_btn_init);
 }
 
 BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
@@ -70,6 +72,7 @@ BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMirageDragonDlg::OnBnClickedButton1)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMirageDragonDlg::OnTcnSelchangeTab1)
 END_MESSAGE_MAP()
 
 
@@ -167,8 +170,6 @@ HCURSOR CMirageDragonDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 void CMirageDragonDlg::OnBnClickedButton1()
 {
 	// 获取DNF进程ID
@@ -183,8 +184,67 @@ void CMirageDragonDlg::OnBnClickedButton1()
 		return;
 	}
 
-	// 初始化tab控件
-	//initTabCtl();
+	// 显示控件
+	m_ctl_btn_init.ShowWindow(SW_HIDE);
+	m_ctl_edit_console.ShowWindow(SW_SHOW);
+	m_ctl_tab.ShowWindow(SW_SHOW);
 
-	// 隐藏按钮
+	// 初始化tab控件
+	initTabCtl();
+	
+	Log(L"初始化完毕");
+
+	// 启动线程
+	AfxBeginThread(userPointerThread, this);
+}
+
+void CMirageDragonDlg::initTabCtl() 
+{
+	// 初始化tab控件
+	m_ctl_tab.InsertItem(0, L"主界面");
+	m_ctl_tab.InsertItem(1, L"地图遍历");
+	m_ctl_tab.InsertItem(2, L"配置界面");
+	page1.Create(IDD_DIALOG_PAGE1, &m_ctl_tab);
+	page2.Create(IDD_DIALOG_PAGE2, &m_ctl_tab);
+	page3.Create(IDD_DIALOG_PAGE3, &m_ctl_tab);
+	CRect rc;
+	m_ctl_tab.GetClientRect(rc);
+	rc.top += 26;
+	rc.bottom -= 0;
+	rc.left += 0;
+	rc.right -= 0;
+	page1.MoveWindow(&rc);
+	page2.MoveWindow(&rc);
+	page3.MoveWindow(&rc);
+	page1.ShowWindow(SW_SHOW);
+	page2.ShowWindow(SW_HIDE);
+	page3.ShowWindow(SW_HIDE);
+	m_tab_box[0] = &page1;
+	m_tab_box[1] = &page2;
+	m_tab_box[2] = &page3;
+	m_cur_tab_index = 0;
+}
+
+
+void CMirageDragonDlg::OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	int index = m_ctl_tab.GetCurSel();
+	int count = m_ctl_tab.GetItemCount();
+
+	for (int i = 0; i < count; i++)
+	{
+		m_tab_box[i]->ShowWindow(SW_HIDE);
+	}
+
+	m_tab_box[index]->ShowWindow(SW_SHOW);
+
+	*pResult = 0;
+}
+
+void CMirageDragonDlg::Log(CString msg)
+{
+	m_ctl_edit_console.SetSel(-1);
+	m_ctl_edit_console.ReplaceSel(msg);
+	m_ctl_edit_console.SetSel(-1);
+	m_ctl_edit_console.ReplaceSel(L"\r\n");
 }

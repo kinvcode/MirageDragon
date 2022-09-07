@@ -187,10 +187,14 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="constant.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="jobs.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="MirageDragon.h" />
     <ClInclude Include="MirageDragonDlg.h" />
     <ClInclude Include="msdk.h" />
+    <ClInclude Include="PAGE1.h" />
+    <ClInclude Include="PAGE2.h" />
+    <ClInclude Include="PAGE3.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
@@ -198,9 +202,13 @@
     <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="jobs.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="MirageDragon.cpp" />
     <ClCompile Include="MirageDragonDlg.cpp" />
+    <ClCompile Include="PAGE1.cpp" />
+    <ClCompile Include="PAGE2.cpp" />
+    <ClCompile Include="PAGE3.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

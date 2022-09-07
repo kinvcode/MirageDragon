@@ -54,6 +54,18 @@
     <ClInclude Include="msdk.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PAGE2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PAGE3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PAGE1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="jobs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -69,6 +81,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="memory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PAGE2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PAGE3.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PAGE1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="jobs.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
