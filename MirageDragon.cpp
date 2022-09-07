@@ -6,10 +6,6 @@
 #include "framework.h"
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
-#include "process.h"
-#include "memory.h"
-#include "common.h"
-#include "constant.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -68,14 +64,7 @@ BOOL CMirageDragonApp::InitInstance()
 	// 激活“Windows Native”视觉管理器，以便在 MFC 控件中启用主题
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
 
-	// 标准初始化
-	// 如果未使用这些功能并希望减小
-	// 最终可执行文件的大小，则应移除下列
-	// 不需要的特定初始化例程
-	// 更改用于存储设置的注册表项
-	// TODO: 应适当修改该字符串，
-	// 例如修改为公司或组织名
-	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
+	// 初始化
 
 	CMirageDragonDlg dlg;
 	m_pMainWnd = &dlg;

@@ -1,13 +1,36 @@
 #include "pch.h"
+#include "common.h"
 #include "memory.h"
 
-DWORD PID = 0;
+DWORD PID;
 
+// 读int类型
+int readInt(__int64 address)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	int value;
+	if (ReadProcessMemory(handle, (void*)address, &value, 4, NULL))
+	{
+		return value;
+	}
+	CloseHandle(handle);
+	return 0;
+}
+
+// 写入int数据
+bool writeInt(__int64 address, __int64 value)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	bool res = WriteProcessMemory(handle, (void*)address, &value, 4, NULL);
+	CloseHandle(handle);
+	return res;
+}
+
+// 读取long类型
 __int64 readLong(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
 	__int64 value;
-	bool res = ReadProcessMemory(handle, (void*)address, &value, 8, NULL);
 	if (ReadProcessMemory(handle, (void*)address, &value, 8, NULL))
 	{
 		return value;
@@ -16,6 +39,58 @@ __int64 readLong(__int64 address)
 	return 0;
 }
 
+// 写入long数据
+bool writeLong(__int64 address, __int64 value)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	bool res = WriteProcessMemory(handle, (void*)address, &value, 8, NULL);
+	CloseHandle(handle);
+	return res;
+}
+
+// 读取浮点数
+float readFloat(__int64 address)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	float value;
+	if (ReadProcessMemory(handle, (void*)address, &value, 4, NULL))
+	{
+		return value;
+	}
+	CloseHandle(handle);
+	return 0;
+}
+
+// 写入浮点数据
+bool writeFloat(__int64 address, float value)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	bool res = WriteProcessMemory(handle, (void*)address, &value, 4, NULL);
+	CloseHandle(handle);
+	return res;
+}
+
+// 读取字节数组
+vector<byte> readByteArray(__int64 address, int length)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+
+	byte* tempResult;
+	tempResult = new byte[length];
+	memset(tempResult, 0, length);
+	ReadProcessMemory(handle, (LPCVOID)address, tempResult, length, NULL);
+	vector<byte> result;
+	result.resize(length);
+	for (int i = 0; i < length; i++)
+	{
+		result[i] = tempResult[i];
+	}
+
+	CloseHandle(handle);
+	return result;
+}
+
+// 写入字节数组
 bool writeByteArray(__int64 address, vector<byte> Data)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
@@ -31,7 +106,8 @@ bool writeByteArray(__int64 address, vector<byte> Data)
 	return res;
 }
 
-vector<byte> cstringToBytes(wstring w_string)
+// wstring转字节数组
+vector<byte> wstringToBytes(wstring w_string)
 {
 	vector<byte> data;
 	// 获取宽字符串指针

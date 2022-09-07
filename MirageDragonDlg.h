@@ -3,7 +3,8 @@
 //
 
 #pragma once
-
+#include "msdk.h"
+#include "UsbHidKeyCode.h"
 
 // CMirageDragonDlg 对话框
 class CMirageDragonDlg : public CDialogEx
@@ -33,4 +34,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+	CTabCtrl m_ctl_tab;
+	CEdit m_ctl_edit_console;
 };

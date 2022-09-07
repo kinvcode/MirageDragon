@@ -7,14 +7,13 @@
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
 #include "afxdialogex.h"
-#include "process.h"
-#include "constant.h"
-#include "memory.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+HANDLE MSDK_HANDLE;
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -56,12 +55,14 @@ END_MESSAGE_MAP()
 CMirageDragonDlg::CMirageDragonDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MIRAGEDRAGON_DIALOG, pParent)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_hIcon = AfxGetApp()->LoadIcon(IDI_ICON2);
 }
 
 void CMirageDragonDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_TAB1, m_ctl_tab);
+	DDX_Control(pDX, IDC_EDIT1, m_ctl_edit_console);
 }
 
 BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
@@ -103,7 +104,14 @@ BOOL CMirageDragonDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	// 设置窗口标题
 	SetWindowText(L"幻镜龙");
+
+	// 设置日志框字符数
+	m_ctl_edit_console.SetLimitText(UINT_MAX);
+
+	// 开启驱动按键功能
+	MSDK_HANDLE = M_Open(1);
 
 	// TODO: 在此添加额外的初始化代码
 
@@ -163,14 +171,20 @@ HCURSOR CMirageDragonDlg::OnQueryDragIcon()
 
 void CMirageDragonDlg::OnBnClickedButton1()
 {
+	// 获取DNF进程ID
 	PID = getProcessPID(L"DNF.exe");
-	if (PID != 0) {
-		__int64 userNameAddress = readLong(readLong(C_USER_ADDRESS) + C_NAME_OFFSET);
-		if (userNameAddress)
-		{
-			if (writeByteArray(userNameAddress, cstringToBytes(L"地下城与勇士"))) {
-				AfxMessageBox(L"修改名字成功！");
-			}
-		}
+	if (PID == 0) {
+		AfxMessageBox(L"请先运行游戏");
+		return;
 	}
+
+	if (readInt(0x140000000) != 0x905A4D) {
+		AfxMessageBox(L"无读写权限，请获取图标!");
+		return;
+	}
+
+	// 初始化tab控件
+	//initTabCtl();
+
+	// 隐藏按钮
 }

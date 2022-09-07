@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="静态库">
+      <UniqueIdentifier>{45396492-d188-44ce-8e6b-cd492ad1a0ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MirageDragon.h">
@@ -43,6 +46,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="constant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="usbhidkeycode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="msdk.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,5 +86,19 @@
     <Image Include="res\MirageDragon.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="images\mirage2.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\mirage3.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="msdk.lib">
+      <Filter>静态库</Filter>
+    </Library>
   </ItemGroup>
 </Project>

@@ -10,4 +10,10 @@
 // 添加要在此处预编译的标头
 #include "framework.h"
 
+// 全局头
+#include "common.h"
+#include "process.h"
+#include "constant.h"
+#include "memory.h"
+
 #endif //PCH_H

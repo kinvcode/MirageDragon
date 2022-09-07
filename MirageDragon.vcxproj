@@ -190,10 +190,12 @@
     <ClInclude Include="memory.h" />
     <ClInclude Include="MirageDragon.h" />
     <ClInclude Include="MirageDragonDlg.h" />
+    <ClInclude Include="msdk.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="memory.cpp" />
@@ -214,7 +216,13 @@
     <None Include="res\MirageDragon.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\mirage2.ico" />
+    <Image Include="images\mirage3.ico" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\MirageDragon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="msdk.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
