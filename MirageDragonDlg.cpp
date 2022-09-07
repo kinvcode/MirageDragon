@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMirageDragonDlg::OnBnClickedButton1)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMirageDragonDlg::OnTcnSelchangeTab1)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -247,4 +248,20 @@ void CMirageDragonDlg::Log(CString msg)
 	m_ctl_edit_console.ReplaceSel(msg);
 	m_ctl_edit_console.SetSel(-1);
 	m_ctl_edit_console.ReplaceSel(L"\r\n");
+}
+
+HBRUSH CMirageDragonDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+	if (pWnd->GetDlgCtrlID() == IDC_EDIT1)
+	{
+		
+		pDC->SetTextColor(RGB(171, 192, 35));//设置编辑框字体的颜色
+		pDC->SetBkColor(RGB(43, 43, 43));//设置字体背景颜色
+	}
+
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	return hbr;
 }
