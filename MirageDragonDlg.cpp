@@ -273,9 +273,7 @@ void CMirageDragonDlg::Log(CString msg)
 {
 	m_log_time = CTime::GetCurrentTime();
 	CString time = m_log_time.Format("%H:%M:%S");
-
 	msg = time + L" " + msg;
-
 	m_ctl_edit_console.SetSel(-1);
 	m_ctl_edit_console.ReplaceSel(msg);
 	m_ctl_edit_console.SetSel(-1);

@@ -8,11 +8,12 @@
 #include "PAGE1.h"
 #include "PAGE2.h"
 #include "PAGE3.h"
+#include "Lock.h"
 
 // CMirageDragonDlg 对话框
-class CMirageDragonDlg : public CDialogEx
+class CMirageDragonDlg : public CDialogEx, public InstanceLockBase
 {
-// 构造
+	// 构造
 public:
 	CBrush m_brush;
 	CMirageDragonDlg(CWnd* pParent = nullptr);	// 标准构造函数
@@ -22,7 +23,7 @@ public:
 	enum { IDD = IDD_MIRAGEDRAGON_DIALOG };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
 

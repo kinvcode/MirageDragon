@@ -2,6 +2,7 @@
 #include "jobs.h"
 #include "MirageDragonDlg.h"
 #include "dnfData.h"
+#include "Lock.h"
 
 int game_status = 0;
 bool window_top = false;
@@ -16,7 +17,11 @@ UINT updateDataThread(LPVOID pParam)
 	bool statusChange = false;
 	__int64 emptyAddress;
 
-	MainDlg->Log(L"数据更新线程已启动");
+	{
+		InstanceLock lock(MainDlg);
+		MainDlg->Log(L"数据更新线程已启动");
+	}
+
 	while (true)
 	{
 		// 获取DNF窗口状态
@@ -64,8 +69,13 @@ UINT updateDataThread(LPVOID pParam)
 UINT playGameThead(LPVOID pParam)
 {
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
-	MainDlg->Log(L"数据更新线程已启动");
+	
+	{
+		InstanceLock lock(MainDlg);
+		MainDlg->Log(L"刷图线程已启动");
 
-	MainDlg->Log(L"数据更新线程已结束");
+		MainDlg->Log(L"刷图线程已结束");
+	}
+
 	return 0;
 }

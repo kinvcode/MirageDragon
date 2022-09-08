@@ -190,6 +190,7 @@
     <ClInclude Include="dnfData.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="jobs.h" />
+    <ClInclude Include="Lock.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="MirageDragon.h" />
     <ClInclude Include="MirageDragonDlg.h" />
