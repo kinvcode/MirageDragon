@@ -3,6 +3,7 @@
 #include "dnfBase.h"
 #include "memory.h"
 
+// 获取角色指针
 __int64 getUserPointer(__int64 emptyAddress)
 {
 	vector<byte>asm_code;
@@ -15,4 +16,17 @@ __int64 getUserPointer(__int64 emptyAddress)
 	memoryAssambly(asm_code);
 
 	return readLong(emptyAddress);
+}
+
+// 获取地图名称
+wstring getMapName()
+{
+	vector<byte> data = readByteArray(readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_OFFSET) + C_MAP_NAME) + 0, 100);
+	return bytesToWstring(data);
+}
+
+// 获取地图编号
+int getMapNumber()
+{
+	return readInt(C_MAP_NUMBER);
 }

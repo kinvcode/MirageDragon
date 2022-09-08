@@ -12,3 +12,5 @@ void asSystemRunning();
 bool windowIsTop();
 
 bool programDelay(int time, int delayUnit);
+
+void handleEvents();

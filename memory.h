@@ -26,7 +26,11 @@ bool writeByteArray(__int64 address, vector<byte> Data);
 
 vector<byte> wstringToBytes(wstring w_string);
 
+wstring bytesToWstring(vector<byte> data);
+
 vector<byte> makeByteArray(vector<byte> data);
+
+vector<byte> makeEmptyByteArray(int length);
 
 vector<byte> intToBytes(int length);
 

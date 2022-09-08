@@ -126,9 +126,42 @@ vector<byte> wstringToBytes(wstring w_string)
 	return data;
 }
 
+// 字节数组转wstring
+wstring bytesToWstring(vector<byte> data)
+{
+	// 声明宽字符串
+	wstring wstr;
+	// 获取字符长度（不包含\0）;
+	size_t length = data.size() - 2;
+	// 重新设置字符串大小
+	wstr.resize(length / 2, 0);
+	// 获取字符串指针
+	byte* pByte = (byte*)wstr.data();
+	// 填充字符串
+	for (size_t i = 0; i < length; i++)
+	{
+		*pByte = data[i];
+		pByte++;
+	}
+
+	return wstr;
+}
+
 // 创建字节数组
 vector<byte> makeByteArray(vector<byte> data)
 {
+	return data;
+}
+
+// 创建指定长度的字节数组
+vector<byte> makeEmptyByteArray(int length)
+{
+	vector<byte> data;
+	for (int i = 0; i < length; i++)
+	{
+		data.push_back(NULL);
+	}
+
 	return data;
 }
 

@@ -25,4 +25,7 @@ extern bool is_auto_play;
 // 自动类型
 extern int auto_play_type;
 
+// 人物穿透状态
+extern int penetrate_status;
+
 #endif

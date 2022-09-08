@@ -35,7 +35,6 @@ UINT updateDataThread(LPVOID pParam)
 			MainDlg->Log(L"游戏已结束");
 			// 停止线程
 			return 0;
-			break;
 		}
 
 		// 读取游戏状态

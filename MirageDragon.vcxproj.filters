@@ -75,6 +75,12 @@
     <ClInclude Include="Lock.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="dnfCALL.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfUser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -108,6 +114,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dnfData.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfCALL.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfUser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

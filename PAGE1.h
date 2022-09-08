@@ -31,4 +31,8 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	CComboBox m_ctl_sel_autoplay;
 	afx_msg void OnCbnSelchangeCombo2();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
+	afx_msg void OnBnClickedButton4();
 };

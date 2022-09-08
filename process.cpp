@@ -107,6 +107,7 @@ bool windowIsTop()
 	return cur_top_window == dnf_window;
 }
 
+// 程序延迟
 bool programDelay(int time = 0, int delayUnit = 0)
 {
 	INT_PTR Interval = time, Unit = 0;
@@ -154,4 +155,18 @@ bool programDelay(int time = 0, int delayUnit = 0)
 
 	CloseHandle(handle[0]);
 	return true;
+}
+
+// 事件处理
+void handleEvents()
+{
+	CWinThread* pWinThread = AfxGetThread();
+	if (pWinThread != NULL)
+	{
+		MSG msg;
+		while (::PeekMessage(&msg, NULL, NULL, NULL, PM_NOREMOVE) && msg.message != WM_QUIT)
+		{
+			AfxGetThread()->PumpMessage();
+		}
+	}
 }

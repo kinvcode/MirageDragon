@@ -7,14 +7,19 @@ extern __int64 C_USER;
 extern __int64 C_USER_POINTER;
 ////////////////////////[ 七 度 基 址 区 域  ]///////////////////////////////////
 
-#define C_USER_ADDRESS 0x149891708 // 人物基址
+#define C_USER_ADDRESS 0x1498916F0 // 人物基址
 #define C_USER_CALL 0x143E8FD60 // 人物CALL
 #define C_SCORE_ADDRESS 0x1495E2728 // 评分基址
+#define C_TOWN_WORLD 0x1495A693C // 城镇大区域
+#define C_TOWN_AREA 0x1495A6940 // 城镇小区域
+#define C_TOWN_X 0x1495E4DE8 // 城镇坐标X
+#define C_TOWN_Y 0x1495E4DEC // 城镇坐标Y
 #define C_GAME_STATUS 0x1492C46A4 // 游戏状态
 #define C_EMPTY_ADDRESS 0x13FCA04C0 // 全局空白
 #define C_ASM_CALL 0x13FDC0000 // 汇编CALL
 #define C_SKILL_CALL 0x1439CD830 // 技能CALL
 #define C_AUTO_PICKUP 0x143D9D4F3 // 自动捡物
+#define C_MAP_NUMBER 0x1495C9C40 // 副本编号
 #define C_TIME_ADDRESS 0x20A050 // 时间基址
 #define C_ROOM_NUMBER 0x1495E3B90 // 房间编号
 #define C_FATIGUE_MAX 0x1498916B8 // 最大疲劳
@@ -59,6 +64,7 @@ extern __int64 C_USER_POINTER;
 #define C_AISLE_OFFSET 0x7C0 // 数组偏移
 #define C_BEGIN_ROOM_X 0x180 // 起始坐标X
 #define C_BEGIN_ROOM_Y 0x184 // 起始坐标Y
+#define C_MAP_NAME 0x320 // 地图名称
 #define C_PASS_ROOM_OFFSET 0xF0 // 顺图偏移
 #define C_COOR_CALL_OFFSET 0x1C8 // 坐标CALL偏移
 #define C_SKILL_LIST 0xAB00 // 技能栏
