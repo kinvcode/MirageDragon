@@ -194,6 +194,7 @@
     <ClInclude Include="dnfUser.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="jobs.h" />
+    <ClInclude Include="keyboardDriver.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="MirageDragon.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="scripts.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
@@ -216,6 +218,7 @@
     <ClCompile Include="dnfPacket.cpp" />
     <ClCompile Include="dnfUser.cpp" />
     <ClCompile Include="jobs.cpp" />
+    <ClCompile Include="keyboardDriver.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="MirageDragon.cpp" />
     <ClCompile Include="MirageDragonDlg.cpp" />
@@ -229,6 +232,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="process.cpp" />
+    <ClCompile Include="scripts.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MirageDragon.rc" />
