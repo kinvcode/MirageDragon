@@ -3,9 +3,10 @@
 #ifndef CONSTANT_H
 #define CONSTANT_H
 
+extern __int64 C_USER;
+extern __int64 C_USER_POINTER;
 ////////////////////////[ 七 度 基 址 区 域  ]///////////////////////////////////
 
-extern __int64 C_USER;
 #define C_USER_ADDRESS 0x149891708 // 人物基址
 #define C_USER_CALL 0x143E8FD60 // 人物CALL
 #define C_SCORE_ADDRESS 0x1495E2728 // 评分基址

@@ -186,6 +186,8 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="constant.h" />
+    <ClInclude Include="dnfBase.h" />
+    <ClInclude Include="dnfData.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="jobs.h" />
     <ClInclude Include="memory.h" />
@@ -202,6 +204,8 @@
     <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="dnfBase.cpp" />
+    <ClCompile Include="dnfData.cpp" />
     <ClCompile Include="jobs.cpp" />
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="MirageDragon.cpp" />

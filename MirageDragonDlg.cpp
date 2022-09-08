@@ -216,8 +216,14 @@ void CMirageDragonDlg::OnBnClickedButton1()
 
 	Log(L"初始化完毕");
 
-	//// 启动线程
-	AfxBeginThread(userPointerThread, this);
+	// 启动数据更新线程
+	AfxBeginThread(updateDataThread, this);
+
+	// 启动自动线程
+	AfxBeginThread(playGameThead, this);
+
+	// 启动手动线程
+
 }
 
 void CMirageDragonDlg::initTabCtl()
@@ -288,7 +294,7 @@ HBRUSH CMirageDragonDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		return CreateSolidBrush(RGB(43, 43, 43));
 	}
 
-	if (pWnd->GetDlgCtrlID() == IDC_TAB1) 
+	if (pWnd->GetDlgCtrlID() == IDC_TAB1)
 	{
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SetTextColor(RGB(0, 255, 0));

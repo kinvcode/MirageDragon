@@ -1,4 +1,7 @@
 #pragma once
 
-// 角色指针更新线程
-UINT userPointerThread(LPVOID pParam);
+// 游戏数据更新线程
+UINT updateDataThread(LPVOID pParam);
+
+// 刷图线程
+UINT playGameThead(LPVOID pParam);

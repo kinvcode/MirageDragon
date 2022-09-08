@@ -5,8 +5,9 @@
 #include "MirageDragon.h"
 #include "PAGE1.h"
 #include "afxdialogex.h"
+#include "MirageDragonDlg.h"
 
-
+int auto_play_type = 1;
 // PAGE1 对话框
 
 IMPLEMENT_DYNAMIC(PAGE1, CDialogEx)
@@ -31,6 +32,7 @@ void PAGE1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK7, _switch_hook_damage);
 	DDX_Control(pDX, IDC_CHECK4, _switch_gather_monster);
 	DDX_Control(pDX, IDC_CHECK5, _switch_gather_items);
+	DDX_Control(pDX, IDC_COMBO2, m_ctl_sel_autoplay);
 }
 
 
@@ -38,6 +40,7 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_WM_CTLCOLOR()
 	ON_WM_ERASEBKGND()
 	ON_WM_CTLCOLOR()
+	ON_CBN_SELCHANGE(IDC_COMBO2, &PAGE1::OnCbnSelchangeCombo2)
 END_MESSAGE_MAP()
 
 
@@ -55,6 +58,10 @@ BOOL PAGE1::OnInitDialog()
 	_switch_hook_damage.SetCheck(BST_CHECKED);
 	_switch_hidden_user.SetCheck(BST_CHECKED);
 
+	m_ctl_sel_autoplay.InsertString(0, L"自动刷图");
+	m_ctl_sel_autoplay.InsertString(1, L"自动剧情");
+	m_ctl_sel_autoplay.SetCurSel(0);
+
 	return TRUE;
 }
 
@@ -67,4 +74,19 @@ BOOL PAGE1::OnEraseBkgnd(CDC* pDC)
 	BOOL bRes = pDC->PatBlt(0, 0, rect.Width(), rect.Height(), PATCOPY);
 	pDC->SelectObject(pOld);
 	return bRes;
+}
+
+
+void PAGE1::OnCbnSelchangeCombo2()
+{
+	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+
+	if (m_ctl_sel_autoplay.GetCurSel() == 1) {
+		auto_play_type = 2;
+		pParentDlg->Log(L"切换为自动剧情模式");
+	}
+	else {
+		auto_play_type = 1;
+		pParentDlg->Log(L"切换为自动刷图模式");
+	}
 }

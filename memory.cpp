@@ -126,3 +126,42 @@ vector<byte> wstringToBytes(wstring w_string)
 	return data;
 }
 
+// 创建字节数组
+vector<byte> makeByteArray(vector<byte> data)
+{
+	return data;
+}
+
+// int转字节数组
+vector<byte> intToBytes(int length) {
+	__int64  adr = (__int64)&length;
+	vector<byte>c;
+	for (size_t i = 0; i < 4; i++) {
+		c.push_back(*(byte*)adr++);
+	}
+	return c;
+}
+
+// long转字节数组
+vector<byte> longToBytes(__int64 length) {
+	__int64  adr = (__int64)&length;
+	vector<byte>c;
+	for (size_t i = 0; i < 8; i++) {
+		c.push_back(*(byte*)adr++);
+	}
+	return c;
+}
+
+// 运算符重载
+vector<byte> operator+(vector<byte> a, vector<byte> b)
+{
+	for (int i = 0; i < b.size(); i++)
+	{
+		a.push_back(b[i]);
+	}
+
+	b.clear();
+
+	return a;
+}
+

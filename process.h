@@ -8,3 +8,7 @@ int getProcessPID(wchar_t Name[]);
 int asSystem(int Pid, char FileName[]);
 
 void asSystemRunning();
+
+bool windowIsTop();
+
+bool programDelay(int time, int delayUnit);

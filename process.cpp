@@ -98,3 +98,60 @@ void asSystemRunning()
 		TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, getProcessPID(L"cmd.exe")), 0);
 	}
 }
+
+// 判断DNF是否是置顶窗口
+bool windowIsTop()
+{
+	HWND cur_top_window = GetForegroundWindow();
+	HWND dnf_window = FindWindowA(NULL, "地下城与勇士");
+	return cur_top_window == dnf_window;
+}
+
+bool programDelay(int time = 0, int delayUnit = 0)
+{
+	INT_PTR Interval = time, Unit = 0;
+	if (!Interval && !Unit)
+	{
+		Interval = 5000 * 60 * 60;
+		Unit = 5000 * 60 * 60;
+	}
+	else {
+		switch (delayUnit)
+		{
+		case 0:
+			Unit = 1;
+			break;
+		case 1:
+			Unit = 1000;
+			break;
+		case 2:
+			Unit = 1000 * 60;
+			break;
+		case 3:
+			Unit = 1000 * 60 * 60;
+			break;
+		default:
+			break;
+		}
+	}
+
+	HANDLE handle[1];
+	handle[0] = CreateWaitableTimerW(NULL, false, NULL);
+	LARGE_INTEGER lpDueTime;
+	lpDueTime.QuadPart = -10 * Interval * 1000 * Unit;
+	SetWaitableTimer(handle[0], &lpDueTime, 0, NULL, NULL, false);
+	DWORD nCount = sizeof(handle) / sizeof(HANDLE);
+	while (MsgWaitForMultipleObjects(nCount, handle, false, -1, (QS_KEY | QS_MOUSEMOVE | QS_MOUSEBUTTON | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_SENDMESSAGE | QS_HOTKEY)) != WAIT_OBJECT_0)
+	{
+		// 系统处理事件
+		MSG msg;
+		while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	CloseHandle(handle[0]);
+	return true;
+}

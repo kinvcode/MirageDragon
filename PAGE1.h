@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-
 // PAGE1 对话框
 
 class PAGE1 : public CDialogEx
@@ -21,6 +20,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 public:
+
 	CButton _switch_three_speed;
 	CButton _switch_score;
 	CButton _switch_hidden_user;
@@ -29,4 +29,6 @@ public:
 	CButton _switch_gather_monster;
 	CButton _switch_gather_items;
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	CComboBox m_ctl_sel_autoplay;
+	afx_msg void OnCbnSelchangeCombo2();
 };
