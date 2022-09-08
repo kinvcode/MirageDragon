@@ -26,3 +26,23 @@ void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, i
 
 	memoryAssambly(asm_code);
 }
+
+// ×ø±êCALL
+void coorCall(int x, int y, int z)
+{
+	__int64 target_p = readLong(C_USER);
+
+	if (target_p < 1) {
+		return;
+	}
+
+	std::vector<byte> asm_code = makeByteArray({ 72,129,236,0,1,0,0 });
+	asm_code = asm_code + makeByteArray({ 65,185 }) + intToBytes(z);
+	asm_code = asm_code + makeByteArray({ 65,184 }) + intToBytes(y);
+	asm_code = asm_code + makeByteArray({ 186 }) + intToBytes(x);
+	asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(target_p);
+	asm_code = asm_code + makeByteArray({ 72,139,1 });
+	asm_code = asm_code + makeByteArray({ 255,144 }) + longToBytes(C_COOR_CALL_OFFSET);
+	asm_code = asm_code + makeByteArray({ 72,129,196,0,1,0,0 });
+	memoryAssambly(asm_code);
+}

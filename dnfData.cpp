@@ -35,6 +35,7 @@ int getMapNumber()
 	return readInt(C_MAP_NUMBER);
 }
 
+// 读取对象坐标
 COORDINATE readCoordinate(__int64 address)
 {
 	__int64 pointer;
@@ -135,5 +136,80 @@ void getMonsterAndItems()
 				}
 			}
 		}
+	}
+
+	// 对怪物容器进行排序(冒泡)
+	int i, j, len;
+	DUNGEONOBJ temp;
+	len = (int)monster_list.size();
+	for (i = 0; i < len - 1; i++) {
+		for (j = 0; j < len - 1 - i; j++) {
+			if (monster_list[j].coor.x > monster_list[j + 1].coor.x) {
+				temp = monster_list[j];
+				monster_list[j] = monster_list[j + 1];
+				monster_list[j + 1] = temp;
+			}
+		}
+	}
+}
+
+// 获取BOSS房间位置
+COORDINATE getBossRoom()
+{
+	COORDINATE coor;
+	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
+	coor.x = (int)decrypt(roomData + C_BOSS_ROOM_X);
+	coor.y = (int)decrypt(roomData + C_BOSS_ROOM_Y);
+	return coor;
+}
+
+// 获取当前房间位置
+COORDINATE getCurrentRoom()
+{
+	COORDINATE coor;
+
+	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
+	coor.x = readInt(roomData + C_CURRENT_ROOM_X);
+	coor.y = readInt(roomData + C_CURRENT_ROOM_Y);
+	return coor;
+}
+
+// 当前是否通关
+bool judgeClearance()
+{
+	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
+	__int64 result = readInt(roomData + C_BONFIRE_JUDGE);
+	if (result == 2 || result == 0)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// 当前是否开门
+bool judgeDoorOpen()
+{
+	if (decrypt2(readLong(readLong(readLong(C_USER) + C_MAP_OFFSET) + 16) + C_DOOR_OFFSET) == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+// 当前是否是BOOS房间
+bool judgeIsBossRoom()
+{
+	COORDINATE cur, boss;
+	cur = getCurrentRoom();
+	boss = getBossRoom();
+	if (cur.x == boss.x && cur.y == boss.y)
+	{
+		return true;
+	}
+	else {
+		return false;
 	}
 }

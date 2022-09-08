@@ -189,6 +189,7 @@
     <ClInclude Include="dnfBase.h" />
     <ClInclude Include="dnfCALL.h" />
     <ClInclude Include="dnfData.h" />
+    <ClInclude Include="dnfMap.h" />
     <ClInclude Include="dnfPacket.h" />
     <ClInclude Include="dnfUser.h" />
     <ClInclude Include="framework.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="dnfBase.cpp" />
     <ClCompile Include="dnfCALL.cpp" />
     <ClCompile Include="dnfData.cpp" />
+    <ClCompile Include="dnfMap.cpp" />
     <ClCompile Include="dnfPacket.cpp" />
     <ClCompile Include="dnfUser.cpp" />
     <ClCompile Include="jobs.cpp" />

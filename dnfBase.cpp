@@ -50,3 +50,29 @@ void memoryAssambly(vector<byte>asm_code)
 	writeByteArray(emptyAddress, makeEmptyByteArray((int)asm_code.size() + 16));
 	asyncExecute = false;
 }
+
+// 加密
+void encrypt(__int64 address, int value)
+{
+	__int64 data = value + 4;
+	data = 0x1F2A025C ^ data;
+	// 写长整数
+	writeLong(address, data);
+}
+
+// 解密
+__int64 decrypt(__int64 address)
+{
+	__int64 data = readLong(address) ^ 0x1F2A025C;
+	data -= 4;
+	return data;
+}
+
+// 解密方法2
+__int64 decrypt2(__int64 address)
+{
+	__int64 value = readInt(address);
+	value = value ^ 0x1F2A025C & 0xffffffff;
+	value -= 4;
+	return value;
+}

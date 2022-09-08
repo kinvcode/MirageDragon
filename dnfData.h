@@ -11,3 +11,11 @@ COORDINATE readCoordinate(__int64 address);
 vector<DUNGEONOBJ> getDungeonAllObj();
 
 void getMonsterAndItems();
+
+COORDINATE getBossRoom();
+
+COORDINATE getCurrentRoom();
+
+bool judgeClearance();
+
+bool judgeDoorOpen();
