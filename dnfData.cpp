@@ -213,3 +213,42 @@ bool judgeIsBossRoom()
 		return false;
 	}
 }
+
+// 聚集物品和怪物
+void convergeMonsterAndItems()
+{
+	COORDINATE monster_coordinate;
+	COORDINATE user_coordinate = readCoordinate(readLong(C_USER));
+
+	__int64 length = monster_list.size();
+
+	for (__int64 i = 0; i < length; i++)
+	{
+		monster_coordinate = readCoordinate(monster_list[i].p);
+		user_coordinate = readCoordinate(readLong(C_USER));
+		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
+		{
+			continue;
+		}
+
+		// 移动对象
+		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
+		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+	}
+
+	length = item_list.size();
+
+	for (__int64 i = 0; i < length; i++)
+	{
+		monster_coordinate = readCoordinate(item_list[i].p);
+		user_coordinate = readCoordinate(readLong(C_USER));
+		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
+		{
+			continue;
+		}
+
+		// 移动对象
+		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
+		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+	}
+}

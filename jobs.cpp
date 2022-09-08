@@ -3,6 +3,9 @@
 #include "MirageDragonDlg.h"
 #include "dnfData.h"
 #include "Lock.h"
+#include "scripts.h"
+#include "keyboardDriver.h"
+#include "dnfUser.h"
 
 int game_status = 0;
 bool window_top = false;
@@ -14,8 +17,8 @@ UINT updateDataThread(LPVOID pParam)
 {
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
 
-	bool statusChange = false;
 	__int64 emptyAddress;
+	bool statusChange = false; // 人物指针已改变
 
 	{
 		InstanceLock lock(MainDlg);
@@ -47,7 +50,6 @@ UINT updateDataThread(LPVOID pParam)
 			if (C_USER_POINTER != 0)
 			{
 				statusChange = true;
-				// 人物指针已改变
 				MainDlg->Log(L"人物指针已改变");
 			}
 			// 重新读取人物指针
@@ -56,20 +58,118 @@ UINT updateDataThread(LPVOID pParam)
 		// 游戏不同状态的处理
 		switch (game_status)
 		{
-			// 选择角色界面
 		case 0:
-			// 重新读取人物指针
+			// 选择角色界面
 			statusChange = false;
+			break;
+		case 1:
+			// 城镇中。关闭图内功能
+			break;
+		case 2:
+			// 选择副本界面
+			break;
+		case 3:
+			// 图内中
+			break;
+		default:
+			break;
+		}
+
+		programDelay(300, 0);
+	}
+	return 0;
+}
+
+UINT playGameThead(LPVOID pParam)
+{
+	bool is_boss = false; // 当前为BOOS房间
+	bool first_room = false; // 当前为第一个房间
+	bool is_open_door = false; // 是否可以进入下个房间
+	bool is_clearance = false; // 判断是否已通关
+
+	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
+
+	{
+		InstanceLock lock(MainDlg);
+		MainDlg->Log(L"刷图线程已启动");
+	}
+
+	while (true) {
+		// 游戏不同状态的处理
+		switch (game_status)
+		{
+		case 0:
+			// 选择角色界面
+			break;
+		case 1:
+			// 城镇中。关闭图内功能
+			first_room = false;
+			is_clearance = false;
+
 			break;
 		case 3:
 			// 遍历物品信息
 			getMonsterAndItems();
 
+			// 聚集怪物
+			convergeMonsterAndItems();
+
 			// 判断当前是否是boos房间
+			is_boss = judgeIsBossRoom();
 
 			// 判断当前是否是第一次进图
+			if (first_room == false && is_clearance == false)
+			{
+				MainDlg->Log(L"开启首图功能");
+				first_room = true;
+				firstRoomFunctions();
+			}
 
 			// 判断是否开门
+			is_open_door = judgeDoorOpen();
+
+			// 未开门时处理逻辑
+			if (is_open_door == false)
+			{
+				if (is_auto_play) {
+					// 判断技能冷却列表并释放随机技能
+					int key = getCoolDownKey();
+					MSDK_keyPress(key, 1);
+				}
+
+			}
+			else {
+				// 开门后的逻辑处理
+
+				if (item_list.size() > 0) {
+					//gather_item_times++;
+					MainDlg->Log(L"存在物品，关闭穿透，进行聚物");
+					penetrate(false);
+				}
+				else {
+					MainDlg->Log(L"没有物品，开启穿透");
+					penetrate(true);
+					// 普通房间进行跑图
+					if (!is_boss) {
+						MainDlg->Log(L"即将进入下个房间");
+						if (is_auto_play) {
+							autoNextRoom();
+						}
+					}
+				}
+
+				if (is_boss) 
+				{
+					// 判断是否通关
+					is_clearance = judgeClearance();
+					if (is_clearance) 
+					{
+						MainDlg->Log(L"关闭图内功能");
+						//closeDungeonFunctions();
+					}
+				}
+
+			}
 
 			// 判断是否已通关
 
@@ -80,22 +180,6 @@ UINT updateDataThread(LPVOID pParam)
 			break;
 		}
 
-
-		programDelay(300, 0);
-	}
-	return 0;
-}
-
-UINT playGameThead(LPVOID pParam)
-{
-	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
-
-	{
-		InstanceLock lock(MainDlg);
-		MainDlg->Log(L"刷图线程已启动");
-	}
-
-	while (true) {
 
 		// 自动开关
 		if (is_auto_play)

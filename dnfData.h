@@ -19,3 +19,7 @@ COORDINATE getCurrentRoom();
 bool judgeClearance();
 
 bool judgeDoorOpen();
+
+bool judgeIsBossRoom();
+
+void convergeMonsterAndItems();

@@ -11,6 +11,8 @@
 #include "dnfPacket.h"
 #include "dnfData.h"
 
+#include "scripts.h"
+
 int auto_play_type = 1;
 int penetrate_status = 0;
 // PAGE1 对话框
@@ -52,6 +54,7 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &PAGE1::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &PAGE1::OnBnClickedButton4)
 	ON_CBN_SELCHANGE(IDC_COMBO3, &PAGE1::OnCbnSelchangeCombo3)
+	ON_BN_CLICKED(IDC_BUTTON5, &PAGE1::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 
@@ -199,4 +202,11 @@ void PAGE1::OnCbnSelchangeCombo3()
 		return;
 	}
 	pParentDlg->Log(L"已完成城镇移动");
+}
+
+
+void PAGE1::OnBnClickedButton5()
+{
+	//firstRoomFunctions();
+	// TODO: 在此添加控件通知处理程序代码
 }

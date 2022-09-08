@@ -297,3 +297,56 @@ void runToNextRoom(int direction)
 		handleEvents();
 	}
 }
+
+void firstRoomFunctions()
+{
+	// 上上空格
+	//MSDK_keyPress(Keyboard_UpArrow, 1);
+	//MSDK_keyPress(Keyboard_UpArrow, 1);
+	MSDK_keyPress(Keyboard_RightArrow, 1);
+	MSDK_keyPress(Keyboard_RightArrow, 1);
+	MSDK_keyPress(Keyboard_KongGe, 1);
+
+	//M_KeyPress(MSDK_HANDLE, Keyboard_UpArrow, 1);
+	//M_KeyPress(MSDK_HANDLE, Keyboard_UpArrow, 1);
+	//M_KeyPress(MSDK_HANDLE, Keyboard_KongGe, 1);
+	//M_DelayRandom(200, 350);
+
+	// 右右空格
+	//M_KeyPress(MSDK_HANDLE, Keyboard_RightArrow, 1);
+	//M_KeyPress(MSDK_HANDLE, Keyboard_RightArrow, 1);
+	//M_KeyPress(MSDK_HANDLE, Keyboard_KongGe, 1);
+	//M_DelayRandom(200, 350);
+
+	//if (MainDlg->page1._switch_score.GetCheck() == BST_CHECKED)
+	//{
+	//	superScore();
+	//}
+
+	//if (MainDlg->page1._switch_cool_down.GetCheck() == BST_CHECKED)
+	//{
+	//	CString num;
+	//	MainDlg->page3._cool_down.GetWindowText(num);
+	//	float number = (float)_ttof(num);
+	//	skillCoolDown(number);
+	//}
+
+	//if (MainDlg->page1._switch_hook_damage.GetCheck() == BST_CHECKED)
+	//{
+	//	hookDamage(true);
+	//}
+
+	//if (MainDlg->page1._switch_three_speed.GetCheck() == BST_CHECKED)
+	//{
+	//	CString attack_speed, move_speed, casting_speed;
+	//	MainDlg->page3._attack_speed.GetWindowText(attack_speed);
+	//	MainDlg->page3._move_speed.GetWindowText(move_speed);
+	//	MainDlg->page3._casting_speed.GetWindowText(casting_speed);
+	//	threeSpeed(_ttoi(attack_speed), _ttoi(casting_speed), _ttoi(move_speed));
+	//}
+
+	//if (MainDlg->page1._switch_hidden_user.GetCheck() == BST_CHECKED)
+	//{
+	//	hiddenUser();
+	//}
+}

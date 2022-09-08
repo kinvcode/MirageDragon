@@ -37,4 +37,5 @@ public:
 	afx_msg void OnBnClickedButton4();
 	afx_msg void OnCbnSelchangeCombo3();
 	CComboBox m_ctl_sel_town;
+	afx_msg void OnBnClickedButton5();
 };
