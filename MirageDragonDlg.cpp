@@ -233,8 +233,8 @@ void CMirageDragonDlg::initTabCtl()
 {
 	// 初始化tab控件
 	m_ctl_tab.InsertItem(0, L"主界面");
-	m_ctl_tab.InsertItem(1, L"地图遍历");
-	m_ctl_tab.InsertItem(2, L"配置界面");
+	m_ctl_tab.InsertItem(1, L"配置界面");
+	m_ctl_tab.InsertItem(2, L"地图遍历");
 	page1.Create(IDD_DIALOG_PAGE1, &m_ctl_tab);
 	page2.Create(IDD_DIALOG_PAGE2, &m_ctl_tab);
 	page3.Create(IDD_DIALOG_PAGE3, &m_ctl_tab);
@@ -315,9 +315,11 @@ void CMirageDragonDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		// 自动开关切换
 		if (is_auto_play) {
 			is_auto_play = false;
+			Log(L"关闭自动");
 		}
 		else {
 			is_auto_play = true;
+			Log(L"开启自动");
 		}
 		break;
 	default:

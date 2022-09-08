@@ -51,12 +51,33 @@ UINT updateDataThread(LPVOID pParam)
 				MainDlg->Log(L"人物指针已改变");
 			}
 			// 重新读取人物指针
-
 		}
 
-		// 重新读取人物指针
-		if (game_status == 0) {
+		// 游戏不同状态的处理
+		switch (game_status)
+		{
+			// 选择角色界面
+		case 0:
+			// 重新读取人物指针
 			statusChange = false;
+			break;
+		case 3:
+			// 遍历物品信息
+			getMonsterAndItems();
+
+			// 判断当前是否是boos房间
+
+			// 判断当前是否是第一次进图
+
+			// 判断是否开门
+
+			// 判断是否已通关
+
+			// 
+
+			break;
+		default:
+			break;
 		}
 
 
@@ -76,11 +97,10 @@ UINT playGameThead(LPVOID pParam)
 
 	while (true) {
 
+		// 自动开关
+		if (is_auto_play)
 		{
-			InstanceLock lock(MainDlg);
-			CString msg;
-			msg.Format(L"自动开关:%d", (int)is_auto_play);
-			MainDlg->Log(msg);
+
 		}
 
 		programDelay(300, 0);

@@ -9,6 +9,7 @@
 #include "dnfCALL.h"
 #include "dnfUser.h"
 #include "dnfPacket.h"
+#include "dnfData.h"
 
 int auto_play_type = 1;
 int penetrate_status = 0;
@@ -148,6 +149,13 @@ void PAGE1::OnBnClickedButton3()
 		pParentDlg->Log(L"请在图内使用该功能");
 		return;
 	}
+	// 读取人物坐标
+	COORDINATE user = readCoordinate(readLong(C_USER));
+	wstring map_name = getMapName();
+	int map_number = getMapNumber();
+	CString msg;
+	msg.Format(L"副本名称：%s，副本编号：%d，坐标X：%d，坐标Y：%d", map_name.c_str(), map_number, user.x, user.y, user.z);
+	pParentDlg->Log(msg);
 }
 
 

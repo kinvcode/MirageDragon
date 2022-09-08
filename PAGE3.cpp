@@ -5,6 +5,7 @@
 #include "MirageDragon.h"
 #include "PAGE3.h"
 #include "afxdialogex.h"
+#include "dnfData.h"
 
 
 // PAGE3 对话框
@@ -52,8 +53,46 @@ BOOL PAGE3::OnInitDialog()
 
 void PAGE3::OnBnClickedButton1()
 {
-	// 遍历图内对象
+	_ctl_list.DeleteAllItems();
 
+	// 遍历怪物
+	if (game_status != 3)
+	{
+		return;
+	}
+
+	vector<DUNGEONOBJ> items = getDungeonAllObj();
+
+	int row = 0;
+	__int64 length = items.size();
+	for (__int64 i = 0; i < length; i++)
+	{
+		CString monster_name = bytesToWstring(readByteArray(readLong(items[i].p + C_NAME_OFFSET), 50)).c_str();
+
+		//if (monster_name.IsEmpty() && monster_code == 0) {
+		//	continue;
+		//}
+
+		COORDINATE monster_coor = readCoordinate(items[i].p);
+
+		CString str_camp, str_type, str_code, str_blood, str_name, str_coor;
+
+		str_camp.Format(_T("%d"), items[i].camp);
+		str_type.Format(_T("%d"), items[i].type);
+		str_code.Format(_T("%d"), items[i].code);
+		str_blood.Format(_T("%d"), items[i].blood);
+		str_coor.Format(_T("%d,%d,%d"), monster_coor.x, monster_coor.y, monster_coor.z);
+
+		_ctl_list.InsertItem(row, str_camp);
+		_ctl_list.SetItemText(row, 1, str_type);
+		_ctl_list.SetItemText(row, 2, str_code);
+		_ctl_list.SetItemText(row, 3, monster_name);
+		_ctl_list.SetItemText(row, 4, str_blood);
+		_ctl_list.SetItemText(row, 5, str_coor);
+		row++;
+
+		handleEvents();
+	}
 }
 
 BOOL PAGE3::OnEraseBkgnd(CDC* pDC)
