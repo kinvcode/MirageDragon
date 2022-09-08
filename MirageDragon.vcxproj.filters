@@ -81,6 +81,9 @@
     <ClInclude Include="dnfUser.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="dnfPacket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -120,6 +123,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dnfUser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfPacket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,7 @@
 #include "MirageDragonDlg.h"
 #include "dnfCALL.h"
 #include "dnfUser.h"
+#include "dnfPacket.h"
 
 int auto_play_type = 1;
 int penetrate_status = 0;
@@ -36,6 +37,7 @@ void PAGE1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK4, _switch_gather_monster);
 	DDX_Control(pDX, IDC_CHECK5, _switch_gather_items);
 	DDX_Control(pDX, IDC_COMBO2, m_ctl_sel_autoplay);
+	DDX_Control(pDX, IDC_COMBO3, m_ctl_sel_town);
 }
 
 
@@ -48,6 +50,7 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &PAGE1::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &PAGE1::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &PAGE1::OnBnClickedButton4)
+	ON_CBN_SELCHANGE(IDC_COMBO3, &PAGE1::OnCbnSelchangeCombo3)
 END_MESSAGE_MAP()
 
 
@@ -57,6 +60,7 @@ BOOL PAGE1::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	// 初始化图内功能
 	_switch_score.SetCheck(BST_CHECKED);
 	_switch_three_speed.SetCheck(BST_CHECKED);
 	_switch_gather_monster.SetCheck(BST_CHECKED);
@@ -65,9 +69,15 @@ BOOL PAGE1::OnInitDialog()
 	_switch_hook_damage.SetCheck(BST_CHECKED);
 	_switch_hidden_user.SetCheck(BST_CHECKED);
 
+	// 初始化刷图方式
 	m_ctl_sel_autoplay.InsertString(0, L"自动刷图");
 	m_ctl_sel_autoplay.InsertString(1, L"自动剧情");
 	m_ctl_sel_autoplay.SetCurSel(0);
+
+	// 初始化城镇列表
+	m_ctl_sel_town.InsertString(0, L"诺顿");
+	m_ctl_sel_town.InsertString(1, L"风振");
+	m_ctl_sel_town.SetCurSel(0);
 
 	return TRUE;
 }
@@ -159,4 +169,26 @@ void PAGE1::OnBnClickedButton4()
 	CString msg;
 	msg.Format(L"大区域：%d，小区域：%d，坐标X：%d，坐标Y：%d", word, area, X, Y);
 	pParentDlg->Log(msg);
+}
+
+
+void PAGE1::OnCbnSelchangeCombo3()
+{
+	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+
+	switch (m_ctl_sel_town.GetCurSel())
+	{
+	case 0:
+		// 40 3 598 225
+		moveOfTown(40, 3, 598, 225);
+		break;
+	case 1:
+		// 39 0 1809 256
+		moveOfTown(39, 0, 1809, 256);
+		break;
+	default:
+		pParentDlg->Log(L"未知的移动目标");
+		return;
+	}
+	pParentDlg->Log(L"已完成城镇移动");
 }

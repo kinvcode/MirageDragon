@@ -68,13 +68,27 @@ UINT updateDataThread(LPVOID pParam)
 UINT playGameThead(LPVOID pParam)
 {
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
-	
+
 	{
 		InstanceLock lock(MainDlg);
 		MainDlg->Log(L"刷图线程已启动");
-
-		MainDlg->Log(L"刷图线程已结束");
 	}
 
+	while (true) {
+
+		{
+			InstanceLock lock(MainDlg);
+			CString msg;
+			msg.Format(L"自动开关:%d", (int)is_auto_play);
+			MainDlg->Log(msg);
+		}
+
+		programDelay(300, 0);
+	}
+
+	{
+		InstanceLock lock(MainDlg);
+		MainDlg->Log(L"刷图线程已结束");
+	}
 	return 0;
 }

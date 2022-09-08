@@ -8,6 +8,7 @@
 #include "MirageDragonDlg.h"
 #include "afxdialogex.h"
 #include "jobs.h"
+#include "common.h"
 
 #include <gdiplus.h>
 #pragma comment(lib,"gdiplus.lib")
@@ -18,6 +19,7 @@
 #endif
 
 HANDLE MSDK_HANDLE;
+bool is_auto_play = false;
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -77,6 +79,7 @@ BEGIN_MESSAGE_MAP(CMirageDragonDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMirageDragonDlg::OnBnClickedButton1)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CMirageDragonDlg::OnTcnSelchangeTab1)
 	ON_WM_CTLCOLOR()
+	ON_WM_HOTKEY()
 END_MESSAGE_MAP()
 
 
@@ -211,19 +214,19 @@ void CMirageDragonDlg::OnBnClickedButton1()
 	m_ctl_edit_console.ShowWindow(SW_SHOW);
 	m_ctl_tab.ShowWindow(SW_SHOW);
 
-	//// 初始化tab控件
+	// 初始化tab控件
 	initTabCtl();
 
-	Log(L"初始化完毕");
+	// 初始化热键
+	RegisterHotKey(GetSafeHwnd(), 1, NULL, VK_END); // 自动开关
 
 	// 启动数据更新线程
 	AfxBeginThread(updateDataThread, this);
 
-	// 启动自动线程
+	// 启动刷图线程
 	AfxBeginThread(playGameThead, this);
 
-	// 启动手动线程
-
+	Log(L"初始化完毕");
 }
 
 void CMirageDragonDlg::initTabCtl()
@@ -301,4 +304,25 @@ HBRUSH CMirageDragonDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;
+}
+
+
+void CMirageDragonDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
+{
+	switch (nHotKeyId)
+	{
+	case 1:
+		// 自动开关切换
+		if (is_auto_play) {
+			is_auto_play = false;
+		}
+		else {
+			is_auto_play = true;
+		}
+		break;
+	default:
+		break;
+	}
+
+	__super::OnHotKey(nHotKeyId, nKey1, nKey2);
 }
