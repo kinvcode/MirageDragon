@@ -107,16 +107,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\MirageDragon.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="images\mirage2.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\icon1.ico">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="images\mirage3.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\mirage4.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\background.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

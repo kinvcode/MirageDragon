@@ -37,6 +37,7 @@ void PAGE1::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_WM_CTLCOLOR()
 	ON_WM_ERASEBKGND()
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -54,31 +55,8 @@ BOOL PAGE1::OnInitDialog()
 	_switch_hook_damage.SetCheck(BST_CHECKED);
 	_switch_hidden_user.SetCheck(BST_CHECKED);
 
-	SetWindowLong(GetSafeHwnd(), GWL_EXSTYLE, GetWindowLong(GetSafeHwnd(), GWL_EXSTYLE) | WS_EX_LAYERED);
-	SetLayeredWindowAttributes(0, 50, LWA_ALPHA);
-
 	return TRUE;
 }
-
-void PAGE1::OnPaint()
-{
-	CPaintDC dc(this);
-	CRect rect;
-	GetClientRect(&rect);
-	dc.FillSolidRect(rect, RGB(0, 0, 0));
-}
-
-//BOOL CAboutDlg::OnEraseBkgnd(CDC* pDC)
-//{
-//    CRect rect;
-//    GetClientRect(&rect);
-//    CBrush myBrush(RGB(255, 255, 255));    // dialog background color
-//    CBrush *pOld = pDC->SelectObject(&myBrush);
-//    BOOL bRes  = pDC->PatBlt(0, 0, rect.Width(), rect.Height(), PATCOPY);
-//    pDC->SelectObject(pOld);    // restore old brush
-//    return bRes;                       // CDialog::OnEraseBkgnd(pDC);
-//}
-
 
 BOOL PAGE1::OnEraseBkgnd(CDC* pDC)
 {

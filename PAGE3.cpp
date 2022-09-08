@@ -56,15 +56,6 @@ void PAGE3::OnBnClickedButton1()
 
 }
 
-//void PAGE3::OnPaint()
-//{
-//	CPaintDC dc(this);
-//	CRect rect;
-//	GetClientRect(&rect);
-//	dc.FillSolidRect(rect, RGB(0, 255, 0));
-//}
-
-
 BOOL PAGE3::OnEraseBkgnd(CDC* pDC)
 {
 	CRect rect;

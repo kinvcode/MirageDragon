@@ -52,15 +52,6 @@ BOOL PAGE2::OnInitDialog()
 	return TRUE;
 }
 
-//void PAGE2::OnPaint()
-//{
-//	CPaintDC dc(this);
-//	CRect rect;
-//	GetClientRect(&rect);
-//	dc.FillSolidRect(rect, RGB(0, 255, 0));
-//}
-
-
 BOOL PAGE2::OnEraseBkgnd(CDC* pDC)
 {
 	CRect rect;

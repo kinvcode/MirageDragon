@@ -9,6 +9,9 @@
 #include "afxdialogex.h"
 #include "jobs.h"
 
+#include <gdiplus.h>
+#pragma comment(lib,"gdiplus.lib")
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -160,12 +163,25 @@ void CMirageDragonDlg::OnPaint()
 	}
 	else
 	{
-		// 窗口颜色
+		// 背景颜色
+		//CPaintDC dc(this);
+		//CRect rect;
+		//GetClientRect(&rect);
+		//dc.FillSolidRect(rect, RGB(255, 255, 255));
+
+		// 背景图片
 		CPaintDC dc(this);
 		CRect rect;
 		GetClientRect(&rect);
-		//dc.FillSolidRect(rect, RGB(0, 255, 255));
-		dc.FillSolidRect(rect, RGB(255, 255, 255));
+		CBitmap bmpBackground;
+		bmpBackground.LoadBitmap(IDB_BITMAP1);
+		BITMAP m_bitmap;
+		bmpBackground.GetBitmap(&m_bitmap);
+		CDC dcBmp;
+		dcBmp.CreateCompatibleDC(&dc);
+		dcBmp.SelectObject(&bmpBackground);
+		dc.SetStretchBltMode(HALFTONE);
+		dc.StretchBlt(rect.left, rect.top, rect.Width(), rect.Height(), &dcBmp, 0, 0, m_bitmap.bmWidth, m_bitmap.bmHeight, SRCCOPY);
 	}
 }
 
@@ -270,6 +286,13 @@ HBRUSH CMirageDragonDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		pDC->SetTextColor(RGB(171, 192, 35));//设置编辑框字体的颜色
 		pDC->SetBkColor(RGB(43, 43, 43));//设置字体背景颜色
 		return CreateSolidBrush(RGB(43, 43, 43));
+	}
+
+	if (pWnd->GetDlgCtrlID() == IDC_TAB1) 
+	{
+		pDC->SetBkMode(TRANSPARENT);
+		pDC->SetTextColor(RGB(0, 255, 0));
+		return (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 	}
 
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
