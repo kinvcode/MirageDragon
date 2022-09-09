@@ -154,18 +154,24 @@ UINT playGameThead(LPVOID pParam)
 
 				if (item_list.size() > 0) {
 					//gather_item_times++;
+					if(is_auto_play)
 					{
-						InstanceLock lock(MainDlg);
-						MainDlg->Log(L"存在物品，关闭穿透");
+						{
+							InstanceLock lock(MainDlg);
+							MainDlg->Log(L"存在物品，关闭穿透");
+						}
+						penetrate(false);
 					}
-					penetrate(false);
 				}
 				else {
+					if(is_auto_play)
 					{
-						InstanceLock lock(MainDlg);
-						MainDlg->Log(L"没有物品，开启穿透");
+						{
+							InstanceLock lock(MainDlg);
+							MainDlg->Log(L"没有物品，开启穿透");
+						}
+						penetrate(true);
 					}
-					penetrate(true);
 					// 普通房间进行跑图
 					if (!is_boss) {
 						if (is_auto_play) {

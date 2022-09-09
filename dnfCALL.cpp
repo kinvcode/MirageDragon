@@ -46,3 +46,59 @@ void coorCall(int x, int y, int z)
 	asm_code = asm_code + makeByteArray({ 72,129,196,0,1,0,0 });
 	memoryAssambly(asm_code);
 }
+
+// 召唤人偶&怪物
+void summonFigureOrMonster(int code, int type = 1)
+{
+	if (type == 1) {
+		// 人偶
+		__int64 object_type = C_SUMMON_FIGURE;
+	}
+	else {
+		// 怪物
+		__int64 object_type = C_SUMMON_MONSTER;
+	}
+
+	std::vector<byte>asm_code;
+
+	__int64 emptyAddress = C_EMPTY_ADDRESS + 2900;
+
+	writeLong(emptyAddress, code);
+	writeLong(emptyAddress + 4, 135);
+	writeLong(emptyAddress + 8, 135);
+	writeLong(emptyAddress + 12, 600000);
+	writeLong(emptyAddress + 16, 1);
+
+	asm_code = asm_code + makeByteArray({ 72, 131, 236, 32 });
+	asm_code = asm_code + makeByteArray({ 73, 184 }) + longToBytes(emptyAddress);
+	asm_code = asm_code + makeByteArray({ 72, 186 }) + longToBytes(C_USER);
+	asm_code = asm_code + makeByteArray({ 72, 139, 18, 72, 185, 0, 0, 0, 0, 0, 0, 0, 0, 72, 184 }) + longToBytes(C_SUMMON_FIGURE);
+	asm_code = asm_code + makeByteArray({ 255, 208, 72, 131, 196, 32 });
+
+	memoryAssambly(asm_code);
+}
+
+// 透明CALL
+void hiddenUser()
+{
+	__int64 target = readLong(C_USER);
+
+	std::vector<byte>asm_code;
+	asm_code = makeByteArray({ 72, 129, 236, 0, 2, 0, 0 });
+	asm_code = asm_code + makeByteArray({ 65, 191, 255, 255, 255, 255 });
+	asm_code = asm_code + makeByteArray({ 199, 68, 36, 32, 255, 255, 0, 0 });
+	asm_code = asm_code + makeByteArray({ 65, 185, 1, 0, 0, 0 });
+	asm_code = asm_code + makeByteArray({ 73, 184, 1, 0, 0, 0, 0, 0, 0, 0 });
+	asm_code = asm_code + makeByteArray({ 186, 1, 0, 0, 0 });
+	asm_code = asm_code + makeByteArray({ 72, 185 }) + longToBytes(target);
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(C_HIDDEN_CALL);
+	asm_code = asm_code + makeByteArray({ 255, 208, 72, 129, 196, 0, 2, 0, 0 });
+
+	memoryAssambly(asm_code);
+}
+
+// 超级评分
+void superScore()
+{
+	writeLong(readLong(C_SCORE_ADDRESS) + C_CE_SCORE, 999999);
+}
