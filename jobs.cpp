@@ -96,6 +96,7 @@ UINT playGameThead(LPVOID pParam)
 	bool is_clearance = false; // 判断是否已通关
 	bool allow_next_map = false; // 允许进入下个地图
 	int pass_room_numbers = 0; // 进入下个房间次数
+	vector<ROOMCOOR> room_history; // 路过的房间历史数据
 
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
 
@@ -119,6 +120,7 @@ UINT playGameThead(LPVOID pParam)
 			allow_next_map = false;
 			use_pass_room_call = false;
 			pass_room_numbers = 0;
+			room_history.clear();
 			break;
 		case 3:
 			// 遍历物品信息
@@ -186,9 +188,17 @@ UINT playGameThead(LPVOID pParam)
 								MainDlg->Log(L"进入下个房间");
 							}
 							// 自动跑图
-							if (pass_room_numbers > 10) 
+							// 获取当前房间位置
+							ROOMCOOR current_room;
+							current_room.x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
+							current_room.y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+							room_history.push_back(current_room);
+							if (roomRepeats(room_history, current_room) > 2)
 							{
 								use_pass_room_call = true;
+							}
+							else {
+								use_pass_room_call = false;
 							}
 							autoNextRoom();
 							pass_room_numbers++;
@@ -218,6 +228,7 @@ UINT playGameThead(LPVOID pParam)
 							// 关闭自动功能
 							use_pass_room_call = false;
 							pass_room_numbers = 0;
+							room_history.clear();
 
 							if (item_list.size() < 1) {
 								// 翻牌
@@ -271,4 +282,24 @@ UINT playGameThead(LPVOID pParam)
 	}
 
 	return 0;
+}
+
+int roomRepeats(vector<ROOMCOOR> list, ROOMCOOR room)
+{
+	__int64 length = list.size();
+	if (length <= 1)
+	{
+		return 1;
+	}
+
+	int numbers = 0;
+
+	for (__int64 i = 0; i < length; i++)
+	{
+		if (list[i].x == room.x && list[i].y == room.y)
+		{
+			numbers++;
+		}
+	}
+	return numbers;
 }
