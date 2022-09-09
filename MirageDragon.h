@@ -20,6 +20,9 @@ class CMirageDragonApp : public CWinApp
 public:
 	CMirageDragonApp();
 
+	// 线程
+	CWinThread* thread_update;
+	CWinThread* thread_play;
 // 重写
 public:
 	virtual BOOL InitInstance();

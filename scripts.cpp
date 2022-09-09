@@ -7,6 +7,7 @@
 #include "keyboardDriver.h"
 #include "dnfCALL.h"
 #include "dnfUser.h"
+#include "dnfBase.h"
 
 // 跑到目标
 BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
@@ -27,12 +28,6 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 	{
 		InstanceLock lock(mainWindow);
 		mainWindow->Log(coor);
-	}
-
-	__int64 a, b;
-	if (is_room) {
-		a = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-		b = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
 	}
 
 	COORDINATE user_coor = readCoordinate(readLong(C_USER));
@@ -62,7 +57,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 	while (true) {
 
 		// 如果跑图时间超过5秒。则直接退出跑图
-		if (time(NULL) - cur_time > 5) {
+		if (time(NULL) - cur_time > 2) {
 			{
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"跑图超时，退出跑图");
@@ -75,7 +70,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		if (isFirst) {
 			{
 				InstanceLock lock(mainWindow);
-				mainWindow->Log(L"重新跑图");
+				mainWindow->Log(L"开始跑图");
 			}
 
 			MSDK_keyPress(direction_x, 1);
@@ -107,27 +102,18 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		}
 
 		// 判断人物动作
-		//if (decrypt(readLong(C_USER) + C_MOVEMENT_ID) != 14) {
-		//	MainDlg->Log(L"当前不是跑步动作，停止跑图");
-		//	// 弹起移动按键
-		//	keyboardUp(direction_x);
-		//	keyboardUp(direction_y);
-		//	break;
-		//}
-
-		// 判断房间：如果目标是下一个房间
-		if (is_room) {
-			if (readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X) != a ||
-				readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y) != b) {
-				arrive_next = true;
-				{
-					InstanceLock lock(mainWindow);
-					mainWindow->Log(L"房间发生变化，停止按键");
-				}
-				// 弹起移动按键
-				MSDK_ReleaseAllKey();
-				break;
+		__int64 user_action = decrypt(readLong(C_USER) + C_MOVEMENT_ID);
+		if ((int)user_action != 14) {
+			{
+				InstanceLock lock(mainWindow);
+				CString msg;
+				msg.Format(L"当前动作ID：%d，非跑动状态已停止跑图", user_action);
+				mainWindow->Log(msg);
 			}
+			// 弹起移动按键
+			MSDK_KeyUp(direction_x);
+			MSDK_KeyUp(direction_y);
+			break;
 		}
 
 		int y_range = 10;
@@ -278,6 +264,15 @@ void autoNextRoom()
 
 void runToNextRoom(int direction)
 {
+	int try_numbers = 0; // 尝试跑图次数
+	int arrived = false; // 是否已经到达下个房间
+	bool use_call = false; // 是否使用坐标CALL
+	__int64 target_room_x; // 目标的房间X
+	__int64 target_room_y; // 目标的房间Y
+
+	target_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
+	target_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+
 	__int64 pass_room_data = passRoomData(direction);
 	__int64 coor_struct = pass_room_data;
 
@@ -287,26 +282,32 @@ void runToNextRoom(int direction)
 	end_x = readInt(coor_struct + 8);
 	end_y = readInt(coor_struct + 12);
 
-	if (direction == 0)
+	int far_door = 100; // 远离门的距离，防止卡门
+	switch (direction)
 	{
-		calc_x = begin_x + end_x + 20; // 火魂向左顺图
+	case 0:
+		target_room_x--;
+		calc_x = begin_x + end_x + far_door;
 		calc_y = begin_y + end_y / 2;
-	}
-	if (direction == 1)
-	{
-		calc_x = begin_x - 20; // 火魂向右顺图
+		break;
+	case 1:
+		target_room_x++;
+		calc_x = begin_x - far_door;
 		calc_y = begin_y + end_y / 2;
-	}
-	if (direction == 2)
-	{
-		calc_x = begin_x + end_x / 2; // 火魂向上顺图
-		calc_y = begin_y + end_y + 20;
-
-	}
-	if (direction == 3)
-	{
-		calc_x = begin_x + end_x / 2; // 火魂向下顺图
-		calc_y = begin_y - 20;
+		break;
+	case 2:
+		target_room_y++;
+		calc_x = begin_x + end_x / 2;
+		calc_y = begin_y + end_y + far_door;
+		break;
+	case 3:
+		target_room_y--;
+		calc_x = begin_x + end_x / 2;
+		calc_y = begin_y - far_door;
+		break;
+	default:
+		return;
+		break;
 	}
 
 	if (calc_x < 0 || calc_y < 0)
@@ -314,37 +315,65 @@ void runToNextRoom(int direction)
 		return;
 	}
 
-	COORDINATE cur_room;
-	cur_room.x = (int)readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-	cur_room.y = (int)readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
-
-	// 跑目标地点，如果不是向上跑图，则优化传送门位置
-	if (direction != 2) {
-		runToDestination(begin_x + end_x / 2, begin_y + 40, true, 2);
-	}
-	else {
-		runToDestination(begin_x + end_x / 2, begin_y, true, 2);
-	}
-
-	// 查看房间是否改变
-	if (readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X) != cur_room.x ||
-		readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y) != cur_room.y)
+	// 如果没有到达，则一直进行跑图
+	while (!arrived)
 	{
-		{
-			CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
-			InstanceLock wind(mainWindow);
-			mainWindow->Log(L"房间跑图一次完成");
+		getMonsterAndItems();
+		// 部分房间会在开门后继续出现怪物，防止无限循环跑图
+		if (monster_list.size() > 0) {
+			break;
 		}
-	}
-	else {
+
+		// 尝试次数过多
+		if (try_numbers > 2)
+		{
+			use_call = true;
+		}
+
+		__int64 current_room_x, current_room_y;
+
+		// 跑目标地点，如果不是向上跑图，则优化传送门位置
+		int new_begin_y = begin_y;
+		if (direction != 2) {
+			new_begin_y = begin_y + 40;
+		}
+
+		// 跑目标处
+		if (use_call) {
+			coorCall(begin_x + end_x / 2, new_begin_y, 0);
+		}
+		else {
+			runToDestination(begin_x + end_x / 2, new_begin_y, true, 2);
+		}
+		current_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
+		current_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+		if (target_room_x != current_room_x || target_room_y != current_room_y)
+		{
+			arrived = true;
+			break;
+		}
+
 		Sleep(100);
-		//programDelay(100);
-		handleEvents();
 
 		// 远离目标地点（防止卡在入口处）
-		runToDestination(calc_x, calc_y, true, 2);
+		if (use_call) {
+			coorCall(calc_x, calc_y, 0);
+		}
+		else {
+			runToDestination(calc_x, calc_y, true, 2);
+		}
 
-		handleEvents();
+		// 判断是否已到达
+		current_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
+		current_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+		if (target_room_x != current_room_x || target_room_y != current_room_y)
+		{
+			arrived = true;
+			break;
+		}
+
+		try_numbers++; // 尝试次数累加
+		Sleep(300);
 	}
 }
 

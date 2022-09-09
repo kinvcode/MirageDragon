@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 #include "jobs.h"
 #include "common.h"
+#include "keyboardDriver.h"
 
 #include <gdiplus.h>
 #pragma comment(lib,"gdiplus.lib")
@@ -221,10 +222,10 @@ void CMirageDragonDlg::OnBnClickedButton1()
 	RegisterHotKey(GetSafeHwnd(), 1, NULL, VK_END); // 自动开关
 
 	// 启动数据更新线程
-	AfxBeginThread(updateDataThread, this);
+	theApp.thread_update = AfxBeginThread(updateDataThread, this);
 
 	// 启动刷图线程
-	AfxBeginThread(playGameThead, this);
+	theApp.thread_play = AfxBeginThread(playGameThead, this);
 
 	Log(L"初始化完毕");
 }
@@ -315,6 +316,7 @@ void CMirageDragonDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		// 自动开关切换
 		if (is_auto_play) {
 			is_auto_play = false;
+			MSDK_ReleaseAllKey();
 			Log(L"关闭自动");
 		}
 		else {

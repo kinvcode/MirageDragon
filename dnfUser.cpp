@@ -86,83 +86,85 @@ int getCoolDownKey()
 	address = readLong(address + C_SKILL_LIST);
 	address = readLong(address + C_SKILL_LIST_OFFSET);
 
-	__int64 position = rand() % 17;
-	//__int64 position = 0;
+	// 0 ~ 16
+	__int64 position;
+	//position = rand() % 17;
 
-	__int64 skill_p = readLong(address + position * 8);
+	for (position = 0; position < 17; position++)
+	{
+		__int64 skill_p = readLong(address + position * 8);
 
-	if (skill_p <= 0) {
-		return 0;
-	}
+		if (skill_p <= 0) {
+			return 0;
+		}
 
-	__int64 emptyAddress = C_EMPTY_ADDRESS + 3000;
-	std::vector<byte>asm_code;
+		__int64 emptyAddress = C_EMPTY_ADDRESS + 3000;
+		std::vector<byte>asm_code;
 
-	asm_code = makeByteArray({ 72,131,236,32 });
-	asm_code = asm_code + makeByteArray({ 49,210 });
-	asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(skill_p);
-	asm_code = asm_code + makeByteArray({ 255,21,2,0,0,0,235,8 });
-	asm_code = asm_code + longToBytes(C_COOL_DOWN_JUDGE_CALL);
-	asm_code = asm_code + makeByteArray({ 72,162 }) + longToBytes(emptyAddress);
-	asm_code = asm_code + makeByteArray({ 72,131,196,32 });
+		asm_code = makeByteArray({ 72,131,236,32 });
+		asm_code = asm_code + makeByteArray({ 49,210 });
+		asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(skill_p);
+		asm_code = asm_code + makeByteArray({ 255,21,2,0,0,0,235,8 });
+		asm_code = asm_code + longToBytes(C_COOL_DOWN_JUDGE_CALL);
+		asm_code = asm_code + makeByteArray({ 72,162 }) + longToBytes(emptyAddress);
+		asm_code = asm_code + makeByteArray({ 72,131,196,32 });
 
-	memoryAssambly(asm_code);
+		memoryAssambly(asm_code);
 
-	if (readLong(emptyAddress) < 1) {
-		switch (position)
-		{
-		case 0:
-			return Keyboard_a;
-			break;
-		case 1:
-			return Keyboard_s;
-			break;
-		case 2:
-			return Keyboard_d;
-			break;
-		case 3:
-			return Keyboard_f;
-			break;
-		case 4:
-			return Keyboard_g;
-			break;
-		case 5:
-			return Keyboard_h;
-			break;
-		case 6:
-			return Keyboard_x;
-			break;
-		case 7:
-			return Keyboard_q;
-			break;
-		case 8:
-			return Keyboard_w;
-			break;
-		case 9:
-			return Keyboard_e;
-			break;
-		case 10:
-			return Keyboard_r;
-			break;
-		case 11:
-			return Keyboard_t;
-			break;
-		case 12:
-			return Keyboard_y;
-			break;
-		case 14:
-			return Keyboard_LeftAlt;
-			break;
-		case 13:
-		case 15:
-		case 16:
-		default:
-			return Keyboard_x;
-			break;
+		if (readLong(emptyAddress) < 1) {
+			switch (position)
+			{
+			case 0:
+				return Keyboard_a;
+				break;
+			case 1:
+				return Keyboard_s;
+				break;
+			case 2:
+				return Keyboard_d;
+				break;
+			case 3:
+				return Keyboard_f;
+				break;
+			case 4:
+				return Keyboard_g;
+				break;
+			case 5:
+				return Keyboard_h;
+				break;
+			case 6:
+				return Keyboard_x;
+				break;
+			case 7:
+				return Keyboard_q;
+				break;
+			case 8:
+				return Keyboard_w;
+				break;
+			case 9:
+				return Keyboard_e;
+				break;
+			case 10:
+				return Keyboard_r;
+				break;
+			case 11:
+				return Keyboard_t;
+				break;
+			case 12:
+				return Keyboard_y;
+				break;
+			case 14:
+				return Keyboard_LeftAlt;
+				break;
+			case 13:
+			case 15:
+			case 16:
+			default:
+				return Keyboard_x;
+				break;
+			}
 		}
 	}
-	else {
-		return Keyboard_x;
-	}
+	// 如果全部冷却中，则返回X键位
 	return Keyboard_x;
 }

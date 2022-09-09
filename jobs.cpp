@@ -82,7 +82,8 @@ UINT updateDataThread(LPVOID pParam)
 			break;
 		}
 
-		programDelay(300, 0);
+		Sleep(300);
+		//programDelay(300, 0);
 	}
 	return 0;
 }
@@ -91,8 +92,12 @@ UINT playGameThead(LPVOID pParam)
 {
 	bool is_boss = false; // 当前为BOOS房间
 	bool first_room = false; // 当前为第一个房间
+	bool first_room_functions = false; // 首图功能是否开启
 	bool is_open_door = false; // 是否可以进入下个房间
 	bool is_clearance = false; // 判断是否已通关
+	bool allow_next_map = false; // 允许进入下个地图
+	bool pass_room_sucess = false; // 过图成功
+	int entry_nextRoom_tryNumbers = 0; // 进入下个房间尝试的次数
 
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
 
@@ -113,6 +118,7 @@ UINT playGameThead(LPVOID pParam)
 			// 城镇中。关闭图内功能
 			first_room = false;
 			is_clearance = false;
+			allow_next_map = false;
 
 			break;
 		case 3:
@@ -134,6 +140,7 @@ UINT playGameThead(LPVOID pParam)
 				}
 				first_room = true;
 				firstRoomFunctions();
+				first_room_functions = true;
 			}
 
 			// 判断是否开门
@@ -154,7 +161,7 @@ UINT playGameThead(LPVOID pParam)
 
 				if (item_list.size() > 0) {
 					//gather_item_times++;
-					if(is_auto_play)
+					if (is_auto_play)
 					{
 						{
 							InstanceLock lock(MainDlg);
@@ -164,7 +171,7 @@ UINT playGameThead(LPVOID pParam)
 					}
 				}
 				else {
-					if(is_auto_play)
+					if (is_auto_play)
 					{
 						{
 							InstanceLock lock(MainDlg);
@@ -179,6 +186,7 @@ UINT playGameThead(LPVOID pParam)
 								InstanceLock lock(MainDlg);
 								MainDlg->Log(L"进入下个房间");
 							}
+							// 自动跑图
 							autoNextRoom();
 						}
 					}
@@ -194,7 +202,37 @@ UINT playGameThead(LPVOID pParam)
 							InstanceLock lock(MainDlg);
 							MainDlg->Log(L"关闭图内功能");
 						}
-						//closeDungeonFunctions();
+
+						if (first_room_functions == true)
+						{
+							//closeDungeonFunctions();
+							first_room_functions = false;
+						}
+
+
+						if (is_auto_play) {
+							if (item_list.size() < 1) {
+								// 翻牌
+								MSDK_keyPress(1, 1);
+								MSDK_DelayRandom(500, 1000);
+								// 分解装备
+
+								allow_next_map = true;
+								// ESC
+								//MSDK_keyPress(Keyboard_ESCAPE, 1);
+
+								if (allow_next_map) {
+									if (auto_play_type == 1) {
+										// 再次挑战
+										MSDK_keyPress(Keyboard_F10, 1);
+									}
+									else {
+										// 返回城镇
+										MSDK_keyPress(Keyboard_F12, 1);
+									}
+								}
+							}
+						}
 					}
 				}
 
@@ -215,8 +253,8 @@ UINT playGameThead(LPVOID pParam)
 		{
 
 		}
-
-		programDelay(300, 0);
+		Sleep(300);
+		//programDelay(300, 0);
 	}
 
 	{

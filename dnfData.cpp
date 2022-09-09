@@ -2,6 +2,7 @@
 #include "dnfData.h"
 #include "dnfBase.h"
 #include "memory.h"
+#include "dnfCALL.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;
@@ -130,10 +131,7 @@ void getMonsterAndItems()
 		{
 			if (dungeon_object_list[i].camp != 0 && dungeon_object_list[i].blood != 0)
 			{
-				if (dungeon_object_list[i].coor.x != 0 && dungeon_object_list[i].coor.y != 0)
-				{
-					monster_list.push_back(dungeon_object_list[i]);
-				}
+				monster_list.push_back(dungeon_object_list[i]);
 			}
 		}
 	}
@@ -231,9 +229,15 @@ void convergeMonsterAndItems()
 			continue;
 		}
 
-		// 移动对象
-		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
-		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+		if (monster_list[i].code == 0) {
+			coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
+		}
+		else {
+			// 移动对象
+			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
+			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+		}
+
 	}
 
 	length = item_list.size();

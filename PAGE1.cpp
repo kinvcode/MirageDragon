@@ -216,6 +216,8 @@ void PAGE1::OnCbnSelchangeCombo3()
 
 void PAGE1::OnBnClickedButton5()
 {
+	CMirageDragonApp* app = &theApp;
+
 	//firstRoomFunctions();
 	// TODO: 在此添加控件通知处理程序代码
 }
