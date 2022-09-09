@@ -107,6 +107,11 @@ UINT playGameThead(LPVOID pParam)
 
 
 	while (true) {
+		// 判断运行状态
+		if (!is_running) {
+			goto threadEnd;
+		}
+
 		// 游戏不同状态的处理
 		switch (game_status)
 		{
@@ -272,6 +277,9 @@ UINT playGameThead(LPVOID pParam)
 		{
 
 		}
+
+		threadEnd:
+
 		Sleep(300);
 		//programDelay(300, 0);
 	}
