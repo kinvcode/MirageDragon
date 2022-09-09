@@ -2,18 +2,30 @@
 #include "keyboardDriver.h"
 #include "msdk.h"
 
-void keyboardUp(int key)
+// 获取按键状态: -1失败 0弹起状态 1按下状态
+int MSDK_KeyState(int code)
+{
+	if (!MSDK_HANDLE || !window_top) {
+		return -1;
+	}
+
+	return M_KeyState(MSDK_HANDLE, code);
+}
+
+// 按下某个按键
+void MSDK_KeyDown(int code)
 {
 	if (!MSDK_HANDLE || !window_top) {
 		return;
 	}
 
-	if (M_KeyState(MSDK_HANDLE, key) == 1) {
-		M_KeyUp(MSDK_HANDLE, key);
+	if (M_KeyState(MSDK_HANDLE, code) == 0) {
+		M_KeyDown(MSDK_HANDLE, code);
 	}
 }
 
-void MSDK_KeyboardUP(int code) 
+// 弹起某个按键
+void MSDK_KeyUp(int code)
 {
 	if (!MSDK_HANDLE || !window_top) {
 		return;
@@ -24,7 +36,18 @@ void MSDK_KeyboardUP(int code)
 	}
 }
 
-void MSDK_keyPress(int code,int repeats)
+// 弹起所有按键
+void MSDK_ReleaseAllKey()
+{
+	if (!MSDK_HANDLE || !window_top) {
+		return;
+	}
+
+	M_ReleaseAllKey(MSDK_HANDLE);
+}
+
+// 按键以及次数
+void MSDK_keyPress(int code, int repeats)
 {
 	if (!MSDK_HANDLE || !window_top) {
 		return;
@@ -33,7 +56,9 @@ void MSDK_keyPress(int code,int repeats)
 	M_KeyPress(MSDK_HANDLE, code, repeats);
 }
 
-void MSDK_DelayRandom(int min, int max) 
+
+// 随机延迟
+void MSDK_DelayRandom(int min, int max)
 {
 	if (!MSDK_HANDLE || !window_top) {
 		return;

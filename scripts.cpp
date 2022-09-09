@@ -75,11 +75,12 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"重新跑图");
 			}
-			M_KeyPress(MSDK_HANDLE, direction_x, 1);
-			M_DelayRandom(50, 100);
-			M_KeyDown(MSDK_HANDLE, direction_x);
-			M_DelayRandom(100, 150);
-			M_KeyDown(MSDK_HANDLE, direction_y);
+
+			MSDK_keyPress(direction_x, 1);
+			MSDK_DelayRandom(50, 100);
+			MSDK_KeyDown(direction_x);
+			MSDK_DelayRandom(100, 150);
+			MSDK_KeyDown(direction_y);
 
 			// 跑向房间优先跑Y轴，防止意外进入其他房间
 			if (is_room) {
@@ -88,7 +89,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 
 				// 如果是上下移动，则立刻弹起左右方向键
 				if (x_diff < y_diff) {
-					M_KeyUp(MSDK_HANDLE, direction_x);
+					MSDK_KeyUp(direction_x);
 				}
 			}
 		}
@@ -99,7 +100,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"人物已离开图内，停止跑图");
 			}
-			M_ReleaseAllKey(MSDK_HANDLE);
+			MSDK_ReleaseAllKey();
 			break;
 		}
 
@@ -122,7 +123,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 					mainWindow->Log(L"房间发生变化，停止按键");
 				}
 				// 弹起移动按键
-				M_ReleaseAllKey(MSDK_HANDLE);
+				MSDK_ReleaseAllKey();
 				break;
 			}
 		}
@@ -140,7 +141,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向上超出Y范围，停止");
 					}
-					M_ReleaseAllKey(MSDK_HANDLE);
+					MSDK_ReleaseAllKey();
 					break;
 				}
 			}
@@ -150,7 +151,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向下超出Y范围，停止");
 					}
-					M_ReleaseAllKey(MSDK_HANDLE);
+					MSDK_ReleaseAllKey();
 					break;
 				}
 			}
@@ -160,7 +161,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				continue;
 			}
 			else {
-				keyboardUp(direction_y);
+				MSDK_KeyUp(direction_y);
 				y_arrived = true;
 			}
 		}
@@ -172,7 +173,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向右超出X范围，停止");
 					}
-					M_ReleaseAllKey(MSDK_HANDLE);
+					MSDK_ReleaseAllKey();
 					break;
 				}
 			}
@@ -182,7 +183,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向左超出X范围，停止");
 					}
-					M_ReleaseAllKey(MSDK_HANDLE);
+					MSDK_ReleaseAllKey();
 					break;
 				}
 			}
@@ -191,7 +192,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				continue;
 			}
 			else {
-				keyboardUp(direction_x);
+				MSDK_KeyUp(direction_x);
 				x_arrived = true;
 			}
 		}
@@ -202,7 +203,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				mainWindow->Log(L"到达目标位置，停止按键");
 			}
 
-			M_ReleaseAllKey(MSDK_HANDLE);
+			MSDK_ReleaseAllKey();
 			return true;
 			break;
 		}
@@ -215,7 +216,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		InstanceLock lock(mainWindow);
 		mainWindow->Log(L"跑图结束，停止按键");
 	}
-	M_ReleaseAllKey(MSDK_HANDLE);
+	MSDK_ReleaseAllKey();
 
 	return false;
 }
@@ -348,10 +349,8 @@ void runToNextRoom(int direction)
 void firstRoomFunctions()
 {
 	// 上上空格
-	//MSDK_keyPress(Keyboard_UpArrow, 1);
-	//MSDK_keyPress(Keyboard_UpArrow, 1);
-	MSDK_keyPress(Keyboard_RightArrow, 1);
-	MSDK_keyPress(Keyboard_RightArrow, 1);
+	MSDK_keyPress(Keyboard_UpArrow, 1);
+	MSDK_keyPress(Keyboard_UpArrow, 1);
 	MSDK_keyPress(Keyboard_KongGe, 1);
 
 	//M_KeyPress(MSDK_HANDLE, Keyboard_UpArrow, 1);
