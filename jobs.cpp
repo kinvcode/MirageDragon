@@ -35,7 +35,11 @@ UINT updateDataThread(LPVOID pParam)
 		if (!is_running) {
 			// 游戏结束
 			statusChange = false;
-			MainDlg->Log(L"游戏已结束");
+			{
+				InstanceLock lock(MainDlg);
+				MainDlg->Log(L"游戏已结束");
+			}
+
 			// 停止线程
 			return 0;
 		}
@@ -50,7 +54,10 @@ UINT updateDataThread(LPVOID pParam)
 			if (C_USER_POINTER != 0)
 			{
 				statusChange = true;
-				MainDlg->Log(L"人物指针已改变");
+				{
+					InstanceLock lock(MainDlg);
+					MainDlg->Log(L"人物指针已改变");
+				}
 			}
 			// 重新读取人物指针
 		}
@@ -94,6 +101,7 @@ UINT playGameThead(LPVOID pParam)
 		MainDlg->Log(L"刷图线程已启动");
 	}
 
+
 	while (true) {
 		// 游戏不同状态的处理
 		switch (game_status)
@@ -120,7 +128,10 @@ UINT playGameThead(LPVOID pParam)
 			// 判断当前是否是第一次进图
 			if (first_room == false && is_clearance == false)
 			{
-				MainDlg->Log(L"开启首图功能");
+				{
+					InstanceLock lock(MainDlg);
+					MainDlg->Log(L"开启首图功能");
+				}
 				first_room = true;
 				firstRoomFunctions();
 			}
@@ -143,28 +154,40 @@ UINT playGameThead(LPVOID pParam)
 
 				if (item_list.size() > 0) {
 					//gather_item_times++;
-					MainDlg->Log(L"存在物品，关闭穿透，进行聚物");
+					{
+						InstanceLock lock(MainDlg);
+						MainDlg->Log(L"存在物品，关闭穿透");
+					}
 					penetrate(false);
 				}
 				else {
-					MainDlg->Log(L"没有物品，开启穿透");
+					{
+						InstanceLock lock(MainDlg);
+						MainDlg->Log(L"没有物品，开启穿透");
+					}
 					penetrate(true);
 					// 普通房间进行跑图
 					if (!is_boss) {
-						MainDlg->Log(L"即将进入下个房间");
 						if (is_auto_play) {
+							{
+								InstanceLock lock(MainDlg);
+								MainDlg->Log(L"进入下个房间");
+							}
 							autoNextRoom();
 						}
 					}
 				}
 
-				if (is_boss) 
+				if (is_boss)
 				{
 					// 判断是否通关
 					is_clearance = judgeClearance();
-					if (is_clearance) 
+					if (is_clearance)
 					{
-						MainDlg->Log(L"关闭图内功能");
+						{
+							InstanceLock lock(MainDlg);
+							MainDlg->Log(L"关闭图内功能");
+						}
 						//closeDungeonFunctions();
 					}
 				}
@@ -194,5 +217,6 @@ UINT playGameThead(LPVOID pParam)
 		InstanceLock lock(MainDlg);
 		MainDlg->Log(L"刷图线程已结束");
 	}
+
 	return 0;
 }

@@ -13,13 +13,19 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 	InstanceLock wind(mainWindow);
 
 	if (x < 1 || y < 1) {
-		mainWindow->Log(L"位置太近，放弃跑图");
+		{
+			InstanceLock lock(mainWindow);
+			mainWindow->Log(L"位置太近，放弃跑图");
+		}
 		return false;
 	}
 
 	CString coor;
 	coor.Format(L"目标坐标 X:%d Y:%d", x, y);
-	mainWindow->Log(coor);
+	{
+		InstanceLock lock(mainWindow);
+		mainWindow->Log(coor);
+	}
 
 	__int64 a, b;
 	if (is_room) {
@@ -55,14 +61,20 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 
 		// 如果跑图时间超过5秒。则直接退出跑图
 		if (time(NULL) - cur_time > 5) {
-			mainWindow->Log(L"跑图超时，退出跑图");
+			{
+				InstanceLock lock(mainWindow);
+				mainWindow->Log(L"跑图超时，退出跑图");
+			}
 			return false;
 		}
 
 		user_coor = readCoordinate(readLong(C_USER));
 
 		if (isFirst) {
-			mainWindow->Log(L"重新跑图");
+			{
+				InstanceLock lock(mainWindow);
+				mainWindow->Log(L"重新跑图");
+			}
 			M_KeyPress(MSDK_HANDLE, direction_x, 1);
 			M_DelayRandom(50, 100);
 			M_KeyDown(MSDK_HANDLE, direction_x);
@@ -83,7 +95,10 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 
 		if (game_status != 3) {
 			//不在图内，停止跑图;
-			mainWindow->Log(L"人物已离开图内，停止跑图");
+			{
+				InstanceLock lock(mainWindow);
+				mainWindow->Log(L"人物已离开图内，停止跑图");
+			}
 			M_ReleaseAllKey(MSDK_HANDLE);
 			break;
 		}
@@ -102,7 +117,10 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			if (readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X) != a ||
 				readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y) != b) {
 				arrive_next = true;
-				mainWindow->Log(L"房间发生变化，停止按键");
+				{
+					InstanceLock lock(mainWindow);
+					mainWindow->Log(L"房间发生变化，停止按键");
+				}
 				// 弹起移动按键
 				M_ReleaseAllKey(MSDK_HANDLE);
 				break;
@@ -118,14 +136,20 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		if (y_arrived == false) {
 			if (direction_y == Keyboard_UpArrow) {
 				if (y - user_coor.y > y_range) {
-					mainWindow->Log(L"向上超出Y范围，停止");
+					{
+						InstanceLock lock(mainWindow);
+						mainWindow->Log(L"向上超出Y范围，停止");
+					}
 					M_ReleaseAllKey(MSDK_HANDLE);
 					break;
 				}
 			}
 			else {
 				if (user_coor.y - y > y_range) {
-					mainWindow->Log(L"向下超出Y范围，停止");
+					{
+						InstanceLock lock(mainWindow);
+						mainWindow->Log(L"向下超出Y范围，停止");
+					}
 					M_ReleaseAllKey(MSDK_HANDLE);
 					break;
 				}
@@ -144,14 +168,20 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		if (x_arrived == false) {
 			if (direction_x == Keyboard_RightArrow) {
 				if (user_coor.x - x > target_range) {
-					mainWindow->Log(L"向右超出X范围，停止");
+					{
+						InstanceLock lock(mainWindow);
+						mainWindow->Log(L"向右超出X范围，停止");
+					}
 					M_ReleaseAllKey(MSDK_HANDLE);
 					break;
 				}
 			}
 			else {
 				if (x - user_coor.x > target_range) {
-					mainWindow->Log(L"向左超出X范围，停止");
+					{
+						InstanceLock lock(mainWindow);
+						mainWindow->Log(L"向左超出X范围，停止");
+					}
 					M_ReleaseAllKey(MSDK_HANDLE);
 					break;
 				}
@@ -167,7 +197,10 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		}
 
 		if (x_arrived && y_arrived) {
-			mainWindow->Log(L"到达目标位置，停止按键");
+			{
+				InstanceLock lock(mainWindow);
+				mainWindow->Log(L"到达目标位置，停止按键");
+			}
 
 			M_ReleaseAllKey(MSDK_HANDLE);
 			return true;
@@ -178,8 +211,10 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 	}
 
 	//handleEvents();
-
-	mainWindow->Log(L"跑图结束，停止按键");
+	{
+		InstanceLock lock(mainWindow);
+		mainWindow->Log(L"跑图结束，停止按键");
+	}
 	M_ReleaseAllKey(MSDK_HANDLE);
 
 	return false;
@@ -203,24 +238,36 @@ void autoNextRoom()
 	{
 		CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 		InstanceLock wind(mainWindow);
+
+		CString msg;
+
 		switch (next_direction)
 		{
 		case 0:
-			mainWindow->Log(L"向左奔跑");
+			msg = L"向左奔跑";
 			break;
 		case 1:
-			mainWindow->Log(L"向右奔跑");
+			msg = L"向右奔跑";
 			break;
 		case 2:
-			mainWindow->Log(L"向上奔跑");
+			msg = L"向上奔跑";
 			break;
 		case 3:
-			mainWindow->Log(L"向下奔跑");
+			msg = L"向下奔跑";
 			break;
 		default:
+		{
+			InstanceLock lock(mainWindow);
 			mainWindow->Log(L"获取下个房间入口失败！");
-			return;
 		}
+		return;
+		}
+
+		{
+			InstanceLock lock(mainWindow);
+			mainWindow->Log(msg);
+		}
+
 	}
 
 	runToNextRoom(next_direction);
