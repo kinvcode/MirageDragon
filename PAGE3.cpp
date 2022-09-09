@@ -69,10 +69,6 @@ void PAGE3::OnBnClickedButton1()
 	{
 		CString monster_name = bytesToWstring(readByteArray(readLong(items[i].p + C_NAME_OFFSET), 50)).c_str();
 
-		//if (monster_name.IsEmpty() && monster_code == 0) {
-		//	continue;
-		//}
-
 		COORDINATE monster_coor = readCoordinate(items[i].p);
 
 		CString str_camp, str_type, str_code, str_blood, str_name, str_coor;

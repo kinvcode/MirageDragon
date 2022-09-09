@@ -102,6 +102,7 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 		d_object.code = monster_code;
 		d_object.coor = monster_coor;
 		object_list.push_back(d_object);
+		handleEvents();
 	}
 
 	return object_list;
@@ -238,6 +239,7 @@ void convergeMonsterAndItems()
 			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
 		}
 
+		handleEvents();
 	}
 
 	length = item_list.size();
@@ -254,5 +256,7 @@ void convergeMonsterAndItems()
 		// “∆∂Ø∂‘œÛ
 		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
 		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+
+		handleEvents();
 	}
 }

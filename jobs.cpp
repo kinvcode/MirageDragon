@@ -12,6 +12,7 @@ bool window_top = false;
 bool is_running = false;
 __int64 C_USER = 0;
 __int64 C_USER_POINTER = 0;
+bool use_pass_room_call = false;
 
 UINT updateDataThread(LPVOID pParam)
 {
@@ -37,11 +38,10 @@ UINT updateDataThread(LPVOID pParam)
 			statusChange = false;
 			{
 				InstanceLock lock(MainDlg);
-				MainDlg->Log(L"游戏已结束");
+				MainDlg->Log(L"丢失读写权限！！！");
 			}
-
-			// 停止线程
-			return 0;
+			Sleep(3000);
+			continue;
 		}
 
 		// 读取游戏状态
@@ -81,7 +81,6 @@ UINT updateDataThread(LPVOID pParam)
 		default:
 			break;
 		}
-
 		Sleep(300);
 		//programDelay(300, 0);
 	}
@@ -96,8 +95,7 @@ UINT playGameThead(LPVOID pParam)
 	bool is_open_door = false; // 是否可以进入下个房间
 	bool is_clearance = false; // 判断是否已通关
 	bool allow_next_map = false; // 允许进入下个地图
-	bool pass_room_sucess = false; // 过图成功
-	int entry_nextRoom_tryNumbers = 0; // 进入下个房间尝试的次数
+	int pass_room_numbers = 0; // 进入下个房间次数
 
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
 
@@ -119,7 +117,8 @@ UINT playGameThead(LPVOID pParam)
 			first_room = false;
 			is_clearance = false;
 			allow_next_map = false;
-
+			use_pass_room_call = false;
+			pass_room_numbers = 0;
 			break;
 		case 3:
 			// 遍历物品信息
@@ -187,7 +186,12 @@ UINT playGameThead(LPVOID pParam)
 								MainDlg->Log(L"进入下个房间");
 							}
 							// 自动跑图
+							if (pass_room_numbers > 10) 
+							{
+								use_pass_room_call = true;
+							}
 							autoNextRoom();
+							pass_room_numbers++;
 						}
 					}
 				}
@@ -209,8 +213,12 @@ UINT playGameThead(LPVOID pParam)
 							first_room_functions = false;
 						}
 
-
 						if (is_auto_play) {
+
+							// 关闭自动功能
+							use_pass_room_call = false;
+							pass_room_numbers = 0;
+
 							if (item_list.size() < 1) {
 								// 翻牌
 								MSDK_keyPress(1, 1);

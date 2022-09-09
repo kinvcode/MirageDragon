@@ -107,7 +107,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			{
 				InstanceLock lock(mainWindow);
 				CString msg;
-				msg.Format(L"当前动作ID：%d，非跑动状态已停止跑图", user_action);
+				msg.Format(L"当前动作ID：%ld，非跑动状态已停止跑图", user_action);
 				mainWindow->Log(msg);
 			}
 			// 弹起移动按键
@@ -196,10 +196,11 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			break;
 		}
 
+		Sleep(100);
 		//programDelay(100);
 	}
 
-	//handleEvents();
+	handleEvents();
 	{
 		InstanceLock lock(mainWindow);
 		mainWindow->Log(L"跑图结束，停止按键");
@@ -264,9 +265,6 @@ void autoNextRoom()
 
 void runToNextRoom(int direction)
 {
-	int try_numbers = 0; // 尝试跑图次数
-	int arrived = false; // 是否已经到达下个房间
-	bool use_call = false; // 是否使用坐标CALL
 	__int64 target_room_x; // 目标的房间X
 	__int64 target_room_y; // 目标的房间Y
 
@@ -282,7 +280,14 @@ void runToNextRoom(int direction)
 	end_x = readInt(coor_struct + 8);
 	end_y = readInt(coor_struct + 12);
 
-	int far_door = 100; // 远离门的距离，防止卡门
+	int far_door;
+	if (use_pass_room_call) {
+		far_door = 20;
+	}
+	else {
+		far_door = 100; // 远离门的距离，防止卡门
+	}
+
 	switch (direction)
 	{
 	case 0:
@@ -315,65 +320,32 @@ void runToNextRoom(int direction)
 		return;
 	}
 
-	// 如果没有到达，则一直进行跑图
-	while (!arrived)
-	{
-		getMonsterAndItems();
-		// 部分房间会在开门后继续出现怪物，防止无限循环跑图
-		if (monster_list.size() > 0) {
-			break;
-		}
 
-		// 尝试次数过多
-		if (try_numbers > 2)
-		{
-			use_call = true;
-		}
-
-		__int64 current_room_x, current_room_y;
-
+	if (use_pass_room_call) {
+		coorCall(calc_x, calc_y, 0);
+		Sleep(50);
+		coorCall(begin_x + end_x / 2, begin_y, 0);
+	}
+	else {
 		// 跑目标地点，如果不是向上跑图，则优化传送门位置
 		int new_begin_y = begin_y;
 		if (direction != 2) {
 			new_begin_y = begin_y + 40;
 		}
 
-		// 跑目标处
-		if (use_call) {
-			coorCall(begin_x + end_x / 2, new_begin_y, 0);
-		}
-		else {
-			runToDestination(begin_x + end_x / 2, new_begin_y, true, 2);
-		}
+		runToDestination(begin_x + end_x / 2, new_begin_y, true, 2);
+		__int64 current_room_x, current_room_y;
 		current_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
 		current_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
 		if (target_room_x != current_room_x || target_room_y != current_room_y)
 		{
-			arrived = true;
-			break;
+			return;
 		}
 
 		Sleep(100);
 
 		// 远离目标地点（防止卡在入口处）
-		if (use_call) {
-			coorCall(calc_x, calc_y, 0);
-		}
-		else {
-			runToDestination(calc_x, calc_y, true, 2);
-		}
-
-		// 判断是否已到达
-		current_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-		current_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
-		if (target_room_x != current_room_x || target_room_y != current_room_y)
-		{
-			arrived = true;
-			break;
-		}
-
-		try_numbers++; // 尝试次数累加
-		Sleep(300);
+		runToDestination(calc_x, calc_y, true, 2);
 	}
 }
 

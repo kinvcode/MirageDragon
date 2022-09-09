@@ -115,4 +115,7 @@ extern vector<DUNGEONOBJ> dungeon_object_list;
 // 功能开关
 extern FUNCTIONSWITCH function_switch;
 
+// 使用过图CALL开关
+extern bool use_pass_room_call;
+
 #endif

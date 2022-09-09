@@ -164,6 +164,7 @@ int getCoolDownKey()
 				break;
 			}
 		}
+		handleEvents();
 	}
 	// 如果全部冷却中，则返回X键位
 	return Keyboard_x;
