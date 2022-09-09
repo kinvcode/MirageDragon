@@ -15,6 +15,8 @@
 
 int auto_play_type = 1;
 int penetrate_status = 0;
+FUNCTIONSWITCH function_switch = { true,true,true,true,true,true,true };
+
 // PAGE1 对话框
 
 IMPLEMENT_DYNAMIC(PAGE1, CDialogEx)
@@ -55,6 +57,13 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON4, &PAGE1::OnBnClickedButton4)
 	ON_CBN_SELCHANGE(IDC_COMBO3, &PAGE1::OnCbnSelchangeCombo3)
 	ON_BN_CLICKED(IDC_BUTTON5, &PAGE1::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_CHECK1, &PAGE1::OnBnClickedCheck1)
+	ON_BN_CLICKED(IDC_CHECK2, &PAGE1::OnBnClickedCheck2)
+	ON_BN_CLICKED(IDC_CHECK3, &PAGE1::OnBnClickedCheck3)
+	ON_BN_CLICKED(IDC_CHECK4, &PAGE1::OnBnClickedCheck4)
+	ON_BN_CLICKED(IDC_CHECK5, &PAGE1::OnBnClickedCheck5)
+	ON_BN_CLICKED(IDC_CHECK6, &PAGE1::OnBnClickedCheck6)
+	ON_BN_CLICKED(IDC_CHECK7, &PAGE1::OnBnClickedCheck7)
 END_MESSAGE_MAP()
 
 
@@ -157,7 +166,7 @@ void PAGE1::OnBnClickedButton3()
 	wstring map_name = getMapName();
 	int map_number = getMapNumber();
 	CString msg;
-	msg.Format(L"副本名称：%s，副本编号：%d，坐标X：%d，坐标Y：%d", map_name.c_str(), map_number, user.x, user.y, user.z);
+	msg.Format(L"副本名称：%s，副本编号：%d，坐标X：%d，坐标Y：%d，坐标Z：%d", map_name.c_str(), map_number, user.x, user.y, user.z);
 	pParentDlg->Log(msg);
 }
 
@@ -209,4 +218,95 @@ void PAGE1::OnBnClickedButton5()
 {
 	//firstRoomFunctions();
 	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void PAGE1::OnBnClickedCheck1()
+{
+	// 三速
+	if (_switch_three_speed.GetCheck() == BST_CHECKED)
+	{
+		function_switch.three_speed = true;
+	}
+	else {
+		function_switch.three_speed = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck2()
+{
+	// 评分
+	if (_switch_score.GetCheck() == BST_CHECKED)
+	{
+		function_switch.score = true;
+	}
+	else {
+		function_switch.score = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck3()
+{
+	// 透明
+	if (_switch_hidden_user.GetCheck() == BST_CHECKED)
+	{
+		function_switch.hidden_user = true;
+	}
+	else {
+		function_switch.hidden_user = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck4()
+{
+	// 聚怪
+	if (_switch_gather_monster.GetCheck() == BST_CHECKED)
+	{
+		function_switch.gather_monster = true;
+	}
+	else {
+		function_switch.gather_monster = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck5()
+{
+	// 聚集物品
+	if (_switch_gather_items.GetCheck() == BST_CHECKED)
+	{
+		function_switch.gather_items = true;
+	}
+	else {
+		function_switch.gather_items = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck6()
+{
+	// 技能冷却
+	if (_switch_cool_down.GetCheck() == BST_CHECKED)
+	{
+		function_switch.cool_down = true;
+	}
+	else {
+		function_switch.cool_down = false;
+	}
+}
+
+
+void PAGE1::OnBnClickedCheck7()
+{
+	// HOOK伤害
+	if (_switch_hook_damage.GetCheck() == BST_CHECKED)
+	{
+		function_switch.hook_damage = true;
+	}
+	else {
+		function_switch.hook_damage = false;
+	}
 }

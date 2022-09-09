@@ -38,4 +38,11 @@ public:
 	afx_msg void OnCbnSelchangeCombo3();
 	CComboBox m_ctl_sel_town;
 	afx_msg void OnBnClickedButton5();
+	afx_msg void OnBnClickedCheck1();
+	afx_msg void OnBnClickedCheck2();
+	afx_msg void OnBnClickedCheck3();
+	afx_msg void OnBnClickedCheck4();
+	afx_msg void OnBnClickedCheck5();
+	afx_msg void OnBnClickedCheck6();
+	afx_msg void OnBnClickedCheck7();
 };

@@ -64,6 +64,19 @@ struct DUNGEONOBJ
 	COORDINATE coor;
 };
 
+
+// 功能开关结构
+struct FUNCTIONSWITCH{
+	bool score;
+	bool three_speed;
+	bool gather_monster;
+	bool gather_items;
+	bool cool_down;
+	bool hook_damage;
+	bool hidden_user;
+};
+
+
 //////////////////////////////// [ 全 局 变 量 ] /////////////////////////////////////////
 
 // 进程ID
@@ -98,5 +111,8 @@ extern vector<DUNGEONOBJ> item_list;
 
 // 图内所有对象列表
 extern vector<DUNGEONOBJ> dungeon_object_list;
+
+// 功能开关
+extern FUNCTIONSWITCH function_switch;
 
 #endif
