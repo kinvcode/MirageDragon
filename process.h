@@ -9,6 +9,8 @@ int asSystem(int Pid, char FileName[]);
 
 void asSystemRunning();
 
+void asDNFUserRunning();
+
 bool windowIsTop();
 
 bool programDelay(int time, int delayUnit);

@@ -54,7 +54,7 @@ int asSystem(int Pid, char FileName[])
 
 	if (!UpdateProcThreadAttribute(AttributeList, 0, 131072, &ProcessHandle, sizeof(HANDLE), NULL, NULL))
 	{
-		MessageBoxW(NULL, L"UpdateProcThreadAttribute 失败 !", L"凉城", MB_OK);
+		MessageBoxW(NULL, L"更新进程属性失败 !", L"幻镜龙", MB_OK);
 		ExitProcess(0);
 	}
 	si.lpAttributeList = AttributeList;
@@ -70,7 +70,7 @@ int asSystem(int Pid, char FileName[])
 	}
 	else
 	{
-		MessageBoxW(NULL, L"CreateProcessAsUserA 失败!", L"凉城", MB_OK);
+		MessageBoxW(NULL, L"创建新进程失败!", L"幻镜龙", MB_OK);
 		ExitProcess(0);
 	}
 	CloseHandle(ProcessHandle);
@@ -94,8 +94,49 @@ void asSystemRunning()
 		//WinExec("C:\\Windows\\System32\\cmd.exe", SW_HIDE);
 		CreateProcess(L"C:\\Windows\\System32\\cmd.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, 0, 0);
 		asSystem(getProcessPID(L"winlogon.exe"), path);
-		ExitProcess(0);
 		TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, getProcessPID(L"cmd.exe")), 0);
+		ExitProcess(0);
+	}
+}
+
+void asDNFUserRunning()
+{
+	int dnf_pid = getProcessPID(L"DNF.exe");
+	if (dnf_pid == 0)
+	{
+		AfxMessageBox(L"DNF未启动");
+		ExitProcess(0);
+	}
+
+	bool is_dnf_child = false;
+
+	HANDLE h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PROCESSENTRY32 pe = { 0 };
+	pe.dwSize = sizeof(PROCESSENTRY32);
+	int self_pid = GetCurrentProcessId();
+
+	if (Process32First(h, &pe)) {
+		do {
+			if (pe.th32ProcessID == self_pid) {
+				if (dnf_pid == pe.th32ParentProcessID) 
+				{
+					is_dnf_child = true;
+				}
+			}
+		} while (Process32Next(h, &pe));
+	}
+
+	if (!is_dnf_child) {
+		// 关闭cmd
+		TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, getProcessPID(L"cmd.exe")), 0);
+		char path[MAX_PATH];
+		memset(path, 0, MAX_PATH);
+		DWORD nSize = ::GetModuleFileNameA(NULL, path, MAX_PATH);
+		//WinExec("C:\\Windows\\System32\\cmd.exe", SW_HIDE);
+		CreateProcess(L"C:\\Windows\\System32\\cmd.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, 0, 0);
+		asSystem(dnf_pid, path);
+		TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, getProcessPID(L"cmd.exe")), 0);
+		ExitProcess(0);
 	}
 }
 

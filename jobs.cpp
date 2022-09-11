@@ -34,11 +34,15 @@ UINT updateDataThread(LPVOID pParam)
 		// 游戏运行状态
 		is_running = readInt(0x140000000) == 0x905A4D;
 		if (!is_running) {
-			// 游戏结束
 			statusChange = false;
+			PID = getProcessPID(L"DNF.exe");
 			{
 				InstanceLock lock(MainDlg);
 				MainDlg->Log(L"丢失读写权限！！！");
+				if (PID == 0) 
+				{
+					MainDlg->Log(L"DNF进程已结束");
+				}
 			}
 			Sleep(3000);
 			continue;
