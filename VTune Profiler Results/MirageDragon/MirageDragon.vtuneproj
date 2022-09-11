@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <rdmgr>
+  <timestamp type="u64_t">1662551111</timestamp>
+  <hostname>织女星超级计算机</hostname>
+  <os>windows</os>
+  <product>Intel® VTune™ Profiler 2020 Update 3</product>
+  <buildNumber type="s32_t">612611</buildNumber>
+  <logicalCPUCount type="s32_t">24</logicalCPUCount>
+  <physicalCoreCount type="s32_t">12</physicalCoreCount>
+  <processorPackageCount type="s32_t">1</processorPackageCount>
+  <CPUFrequency type="s64_t">3700000000</CPUFrequency>
+  <CPUFamily type="s32_t">25</CPUFamily>
+  <CPUModel type="s32_t">33</CPUModel>
+  <CPUStepping type="s32_t">0</CPUStepping>
+  <CPUBrandName>AMD Ryzen 9 5900X 12-Core Processor            </CPUBrandName>
+  <isa>avx2</isa>
+ </rdmgr>
+</root>

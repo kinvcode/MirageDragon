@@ -219,6 +219,10 @@ void convergeMonsterAndItems()
 	COORDINATE monster_coordinate;
 	COORDINATE user_coordinate = readCoordinate(readLong(C_USER));
 
+	if (!function_switch.gather_monster) 
+	{
+		goto item;
+	}
 	__int64 length = monster_list.size();
 
 	for (__int64 i = 0; i < length; i++)
@@ -230,18 +234,18 @@ void convergeMonsterAndItems()
 			continue;
 		}
 
-		if (monster_list[i].code == 0) {
-			coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
-		}
-		else {
-			// 移动对象
-			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
-			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
-		}
+		// 移动对象
+		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
+		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
 
 		handleEvents();
 	}
 
+item:
+	if(!function_switch.gather_items)
+	{
+		return;
+	}
 	length = item_list.size();
 
 	for (__int64 i = 0; i < length; i++)

@@ -8,41 +8,65 @@ DWORD PID;
 int readInt(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return -1;
+	}
+
 	int value;
 	if (ReadProcessMemory(handle, (void*)address, &value, 4, NULL))
 	{
 		return value;
 	}
+
 	CloseHandle(handle);
-	return 0;
+	return -1;
 }
 
 // 写入int数据
 bool writeInt(__int64 address, __int64 value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	bool res = WriteProcessMemory(handle, (void*)address, &value, 4, NULL);
-	CloseHandle(handle);
-	return res;
+	if (handle == NULL)
+	{
+		return false;
+	}
+
+	if (WriteProcessMemory(handle, (void*)address, &value, 4, NULL)) {
+		CloseHandle(handle);
+		return true;
+	}
+	return false;
 }
 
 // 读取long类型
 __int64 readLong(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return -1;
+	}
+
 	__int64 value;
 	if (ReadProcessMemory(handle, (void*)address, &value, 8, NULL))
 	{
 		return value;
 	}
+
 	CloseHandle(handle);
-	return 0;
+	return -1;
 }
 
 // 写入long数据
 bool writeLong(__int64 address, __int64 value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return false;
+	}
+
 	bool res = WriteProcessMemory(handle, (void*)address, &value, 8, NULL);
 	CloseHandle(handle);
 	return res;
@@ -52,19 +76,28 @@ bool writeLong(__int64 address, __int64 value)
 float readFloat(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return -1;
+	}
+
 	float value;
 	if (ReadProcessMemory(handle, (void*)address, &value, 4, NULL))
 	{
 		return value;
 	}
 	CloseHandle(handle);
-	return 0;
+	return -1;
 }
 
 // 写入浮点数据
 bool writeFloat(__int64 address, float value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return false;
+	}
 	bool res = WriteProcessMemory(handle, (void*)address, &value, 4, NULL);
 	CloseHandle(handle);
 	return res;
@@ -73,13 +106,18 @@ bool writeFloat(__int64 address, float value)
 // 读取字节数组
 vector<byte> readByteArray(__int64 address, int length)
 {
+	vector<byte> result;
+
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return result;
+	}
 
 	byte* tempResult;
 	tempResult = new byte[length];
 	memset(tempResult, 0, length);
 	ReadProcessMemory(handle, (LPCVOID)address, tempResult, length, NULL);
-	vector<byte> result;
 	result.resize(length);
 	for (int i = 0; i < length; i++)
 	{
@@ -94,6 +132,11 @@ vector<byte> readByteArray(__int64 address, int length)
 bool writeByteArray(__int64 address, vector<byte> Data)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	if (handle == NULL)
+	{
+		return false;
+	}
+
 	int length;
 	length = (int)Data.size();
 	byte* val = new byte[length];

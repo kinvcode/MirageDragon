@@ -7,3 +7,5 @@ void autoNextRoom();
 void runToNextRoom(int direction);
 
 void firstRoomFunctions();
+
+void closeDungeonFunctions();

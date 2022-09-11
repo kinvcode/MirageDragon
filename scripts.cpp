@@ -320,7 +320,6 @@ void runToNextRoom(int direction)
 		return;
 	}
 
-
 	if (use_pass_room_call) {
 		coorCall(calc_x, calc_y, 0);
 		Sleep(50);
@@ -353,17 +352,20 @@ void firstRoomFunctions()
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 
-	// 上上空格
-	MSDK_keyPress(Keyboard_UpArrow, 1);
-	MSDK_keyPress(Keyboard_UpArrow, 1);
-	MSDK_keyPress(Keyboard_KongGe, 1);
-	MSDK_DelayRandom(200, 350);
+	if (is_auto_play) 
+	{
+		// 上上空格
+		MSDK_keyPress(Keyboard_UpArrow, 1);
+		MSDK_keyPress(Keyboard_UpArrow, 1);
+		MSDK_keyPress(Keyboard_KongGe, 1);
+		MSDK_DelayRandom(200, 350);
 
-	// 右右空格
-	MSDK_keyPress(Keyboard_RightArrow, 1);
-	MSDK_keyPress(Keyboard_RightArrow, 1);
-	MSDK_keyPress(Keyboard_KongGe, 1);
-	MSDK_DelayRandom(200, 350);
+		// 右右空格
+		MSDK_keyPress(Keyboard_RightArrow, 1);
+		MSDK_keyPress(Keyboard_RightArrow, 1);
+		MSDK_keyPress(Keyboard_KongGe, 1);
+		MSDK_DelayRandom(200, 350);
+	}
 
 	if (function_switch.score)
 	{
@@ -395,5 +397,26 @@ void firstRoomFunctions()
 	if (function_switch.hidden_user)
 	{
 		hiddenUser();
+	}
+}
+
+void closeDungeonFunctions()
+{
+	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
+
+
+	if (function_switch.cool_down)
+	{
+		skillCoolDown(0);
+	}
+
+	if (function_switch.hook_damage)
+	{
+		hookDamage(false);
+	}
+
+	if (function_switch.three_speed)
+	{
+		threeSpeed(0, 0, 0);
 	}
 }

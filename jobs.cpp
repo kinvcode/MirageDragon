@@ -90,7 +90,7 @@ UINT updateDataThread(LPVOID pParam)
 UINT playGameThead(LPVOID pParam)
 {
 	bool is_boss = false; // 当前为BOOS房间
-	bool first_room = false; // 当前为第一个房间
+	bool first_room = true; // 当前为第一个房间
 	bool first_room_functions = false; // 首图功能是否开启
 	bool is_open_door = false; // 是否可以进入下个房间
 	bool is_clearance = false; // 判断是否已通关
@@ -120,10 +120,11 @@ UINT playGameThead(LPVOID pParam)
 			break;
 		case 1:
 			// 城镇中。关闭图内功能
-			first_room = false;
+			first_room = true;
 			is_clearance = false;
 			allow_next_map = false;
 			use_pass_room_call = false;
+			first_room_functions = false;
 			pass_room_numbers = 0;
 			room_history.clear();
 			break;
@@ -137,16 +138,27 @@ UINT playGameThead(LPVOID pParam)
 			// 判断当前是否是boos房间
 			is_boss = judgeIsBossRoom();
 
+			// 判断是否通关
+			is_clearance = judgeClearance();
+
 			// 判断当前是否是第一次进图
-			if (first_room == false && is_clearance == false)
+			if (first_room == true && is_clearance == false)
 			{
 				{
 					InstanceLock lock(MainDlg);
 					MainDlg->Log(L"开启首图功能");
 				}
-				first_room = true;
+				first_room = false;
 				firstRoomFunctions();
 				first_room_functions = true;
+
+				if (is_auto_play) 
+				{
+					MSDK_keyPress(Keyboard_m, 1);
+					MSDK_DelayRandom(700, 1600);
+					MSDK_keyPress(Keyboard_m, 1);
+				}
+
 			}
 
 			// 判断是否开门
@@ -198,7 +210,7 @@ UINT playGameThead(LPVOID pParam)
 							current_room.x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
 							current_room.y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
 							room_history.push_back(current_room);
-							if (roomRepeats(room_history, current_room) > 2)
+							if (roomRepeats(room_history, current_room) > 3)
 							{
 								use_pass_room_call = true;
 							}
@@ -213,8 +225,6 @@ UINT playGameThead(LPVOID pParam)
 
 				if (is_boss)
 				{
-					// 判断是否通关
-					is_clearance = judgeClearance();
 					if (is_clearance)
 					{
 						{
@@ -222,9 +232,11 @@ UINT playGameThead(LPVOID pParam)
 							MainDlg->Log(L"关闭图内功能");
 						}
 
+						first_room = true;
+
 						if (first_room_functions == true)
 						{
-							//closeDungeonFunctions();
+							closeDungeonFunctions();
 							first_room_functions = false;
 						}
 
@@ -243,7 +255,8 @@ UINT playGameThead(LPVOID pParam)
 
 								allow_next_map = true;
 								// ESC
-								//MSDK_keyPress(Keyboard_ESCAPE, 1);
+								MSDK_keyPress(Keyboard_ESCAPE, 1);
+								MSDK_DelayRandom(600, 2000);
 
 								if (allow_next_map) {
 									if (auto_play_type == 1) {

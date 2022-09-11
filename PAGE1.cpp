@@ -10,6 +10,7 @@
 #include "dnfUser.h"
 #include "dnfPacket.h"
 #include "dnfData.h"
+#include "dllPackage.h"
 
 #include "scripts.h"
 
@@ -216,7 +217,33 @@ void PAGE1::OnCbnSelchangeCombo3()
 
 void PAGE1::OnBnClickedButton5()
 {
-	CMirageDragonApp* app = &theApp;
+	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+
+	HANDLE hNtdllfile = CreateFileA("c:\\windows\\system32\\ntdll.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hNtdllMapping = CreateFileMapping(hNtdllfile, NULL, PAGE_READONLY | SEC_IMAGE, 0, 0, NULL);
+	LPVOID lpNtdllmaping = MapViewOfFile(hNtdllMapping, FILE_MAP_READ, 0, 0, 0);
+	pNtAllocateVirtualMemory NtAllocateVirtualMemory = (pNtAllocateVirtualMemory)GetProcAddressR((HMODULE)lpNtdllmaping, "NtAllocateVirtualMemory");
+	_NtOpenProcess NtOpenProcess = (_NtOpenProcess)GetProcAddressR((HMODULE)lpNtdllmaping, "NtOpenProcess");
+
+	HANDLE trarget_handle;
+	OBJECT_ATTRIBUTES objAttr;
+	CLIENT_ID cID;
+	cID.UniqueProcess = (PVOID)PID;
+	cID.UniqueThread = 0;
+	InitializeObjectAttributes(&objAttr, NULL, 0, NULL, NULL);
+	NTSTATUS target_status = NtOpenProcess(&trarget_handle, PROCESS_ALL_ACCESS, &objAttr, &cID);
+
+	if (target_status == 0) {
+		pParentDlg->Log(L"打开句柄成功");
+
+
+		int value;
+		if (ReadProcessMemory(trarget_handle, (void*)0x140000000, &value, 4, NULL))
+		{
+			pParentDlg->Log(L"读数据成功");
+		}
+
+	}
 
 	//firstRoomFunctions();
 	// TODO: 在此添加控件通知处理程序代码
