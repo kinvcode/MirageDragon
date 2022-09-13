@@ -219,8 +219,10 @@ UINT playGameThead(LPVOID pParam)
 								use_pass_room_call = true;
 							}
 							else {
-								//use_pass_room_call = true;
-								use_pass_room_call = false;
+								use_pass_room_call = true;
+
+								// 该模拟按键会被检测，暂时不使用模拟按键
+								//use_pass_room_call = false;
 							}
 							autoNextRoom();
 							pass_room_numbers++;
