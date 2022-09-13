@@ -27,7 +27,6 @@ int getProcessPID(wchar_t Name[])
 			Processhandle = Process32Next(Processsnapshot, &Processinformation);
 		}
 		CloseHandle(Processsnapshot);
-
 	}
 	return 0;
 }
@@ -118,7 +117,7 @@ void asDNFUserRunning()
 	if (Process32First(h, &pe)) {
 		do {
 			if (pe.th32ProcessID == self_pid) {
-				if (dnf_pid == pe.th32ParentProcessID) 
+				if (dnf_pid == pe.th32ParentProcessID)
 				{
 					is_dnf_child = true;
 				}
@@ -210,4 +209,19 @@ void handleEvents()
 			AfxGetThread()->PumpMessage();
 		}
 	}
+}
+
+// 重新启动应用
+void reloadProcess()
+{
+	ExitProcess(0);
+
+	//char path[MAX_PATH];
+	//memset(path, 0, MAX_PATH);
+	//DWORD nSize = ::GetModuleFileNameA(NULL, path, MAX_PATH);
+	//if (nSize != 0)
+	//{
+	//	UINT status = WinExec(path, SW_SHOW);
+	//	ExitProcess(0);
+	//}
 }

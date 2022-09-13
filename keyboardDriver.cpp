@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "keyboardDriver.h"
 #include "msdk.h"
+#include "usbhidkeycode.h"
 
 // »ñÈ¡°´¼ü×´Ì¬: -1Ê§°Ü 0µ¯Æð×´Ì¬ 1°´ÏÂ×´Ì¬
 int MSDK_KeyState(int code)
@@ -65,4 +66,27 @@ void MSDK_DelayRandom(int min, int max)
 	}
 
 	M_DelayRandom(min, max);
+}
+
+void closeRunKey()
+{
+	if (!MSDK_HANDLE || !window_top) {
+		return;
+	}
+
+	if (M_KeyState(MSDK_HANDLE, Keyboard_UpArrow) == 1) {
+		M_KeyUp(MSDK_HANDLE, Keyboard_UpArrow);
+	}
+
+	if (M_KeyState(MSDK_HANDLE, Keyboard_RightArrow) == 1) {
+		M_KeyUp(MSDK_HANDLE, Keyboard_RightArrow);
+	}
+
+	if (M_KeyState(MSDK_HANDLE, Keyboard_DownArrow) == 1) {
+		M_KeyUp(MSDK_HANDLE, Keyboard_DownArrow);
+	}
+
+	if (M_KeyState(MSDK_HANDLE, Keyboard_LeftArrow) == 1) {
+		M_KeyUp(MSDK_HANDLE, Keyboard_LeftArrow);
+	}
 }

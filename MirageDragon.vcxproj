@@ -190,7 +190,6 @@
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="constant.h" />
-    <ClInclude Include="dllPackage.h" />
     <ClInclude Include="dnfBase.h" />
     <ClInclude Include="dnfCALL.h" />
     <ClInclude Include="dnfData.h" />
@@ -216,7 +215,6 @@
     <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllPackage.cpp" />
     <ClCompile Include="dnfBase.cpp" />
     <ClCompile Include="dnfCALL.cpp" />
     <ClCompile Include="dnfData.cpp" />

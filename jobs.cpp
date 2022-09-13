@@ -39,12 +39,13 @@ UINT updateDataThread(LPVOID pParam)
 			{
 				InstanceLock lock(MainDlg);
 				MainDlg->Log(L"丢失读写权限！！！");
-				if (PID == 0) 
+				if (PID == 0)
 				{
-					MainDlg->Log(L"DNF进程已结束");
+					MainDlg->Log(L"即将重启应用");
+					//reloadProcess();
 				}
 			}
-			Sleep(3000);
+			programDelay(3000,0);
 			continue;
 		}
 
@@ -85,8 +86,7 @@ UINT updateDataThread(LPVOID pParam)
 		default:
 			break;
 		}
-		Sleep(300);
-		//programDelay(300, 0);
+		programDelay(300, 0);
 	}
 	return 0;
 }
@@ -156,10 +156,10 @@ UINT playGameThead(LPVOID pParam)
 				firstRoomFunctions();
 				first_room_functions = true;
 
-				if (is_auto_play) 
+				if (is_auto_play)
 				{
 					MSDK_keyPress(Keyboard_m, 1);
-					MSDK_DelayRandom(700, 1600);
+					programDelay(400, 0);
 					MSDK_keyPress(Keyboard_m, 1);
 				}
 
@@ -219,6 +219,7 @@ UINT playGameThead(LPVOID pParam)
 								use_pass_room_call = true;
 							}
 							else {
+								//use_pass_room_call = true;
 								use_pass_room_call = false;
 							}
 							autoNextRoom();
@@ -254,13 +255,13 @@ UINT playGameThead(LPVOID pParam)
 							if (item_list.size() < 1) {
 								// 翻牌
 								MSDK_keyPress(1, 1);
-								MSDK_DelayRandom(500, 1000);
+								programDelay(1000, 0);
 								// 分解装备
 
 								allow_next_map = true;
 								// ESC
 								MSDK_keyPress(Keyboard_ESCAPE, 1);
-								MSDK_DelayRandom(600, 2000);
+								programDelay(600, 0);
 
 								if (allow_next_map) {
 									if (auto_play_type == 1) {
@@ -295,10 +296,8 @@ UINT playGameThead(LPVOID pParam)
 
 		}
 
-		threadEnd:
-
-		Sleep(300);
-		//programDelay(300, 0);
+	threadEnd:
+		programDelay(300, 0);
 	}
 
 	{

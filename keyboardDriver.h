@@ -11,3 +11,5 @@ void MSDK_ReleaseAllKey();
 void MSDK_keyPress(int code, int repeats);
 
 void MSDK_DelayRandom(int min, int max);
+
+void closeRunKey();

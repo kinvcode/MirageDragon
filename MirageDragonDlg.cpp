@@ -124,6 +124,27 @@ BOOL CMirageDragonDlg::OnInitDialog()
 	// 开启驱动按键功能
 	MSDK_HANDLE = M_Open(1);
 
+	/////////////////////////////////////
+
+	// 初始化tab控件
+	initTabCtl();
+
+	// 初始化热键
+	RegisterHotKey(GetSafeHwnd(), 1, NULL, VK_END); // 自动开关
+
+	// 启动数据更新线程
+	theApp.thread_update = AfxBeginThread(updateDataThread, this);
+
+	// 启动刷图线程
+	theApp.thread_play = AfxBeginThread(playGameThead, this);
+
+	Log(L"初始化完毕");
+
+	/////////////////////////////////////
+
+
+
+
 	// TODO: 在此添加额外的初始化代码
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -211,9 +232,9 @@ void CMirageDragonDlg::OnBnClickedButton1()
 	}
 
 	// 显示控件
-	m_ctl_btn_init.ShowWindow(SW_HIDE);
-	m_ctl_edit_console.ShowWindow(SW_SHOW);
-	m_ctl_tab.ShowWindow(SW_SHOW);
+	//m_ctl_btn_init.ShowWindow(SW_HIDE);
+	//m_ctl_edit_console.ShowWindow(SW_SHOW);
+	//m_ctl_tab.ShowWindow(SW_SHOW);
 
 	// 初始化tab控件
 	initTabCtl();
@@ -316,7 +337,7 @@ void CMirageDragonDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		// 自动开关切换
 		if (is_auto_play) {
 			is_auto_play = false;
-			MSDK_ReleaseAllKey();
+			closeRunKey();
 			Log(L"关闭自动");
 		}
 		else {

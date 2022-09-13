@@ -10,7 +10,7 @@
 #include "dnfBase.h"
 
 // 跑到目标
-BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
+void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 	InstanceLock wind(mainWindow);
@@ -20,7 +20,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			InstanceLock lock(mainWindow);
 			mainWindow->Log(L"位置太近，放弃跑图");
 		}
-		return false;
+		return;
 	}
 
 	CString coor;
@@ -62,7 +62,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"跑图超时，退出跑图");
 			}
-			return false;
+			return;
 		}
 
 		user_coor = readCoordinate(readLong(C_USER));
@@ -74,9 +74,9 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			}
 
 			MSDK_keyPress(direction_x, 1);
-			MSDK_DelayRandom(50, 100);
+			programDelay(100, 0);
 			MSDK_KeyDown(direction_x);
-			MSDK_DelayRandom(100, 150);
+			programDelay(100, 0);
 			MSDK_KeyDown(direction_y);
 
 			// 跑向房间优先跑Y轴，防止意外进入其他房间
@@ -97,7 +97,8 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"人物已离开图内，停止跑图");
 			}
-			MSDK_ReleaseAllKey();
+			MSDK_KeyUp(direction_x);
+			MSDK_KeyUp(direction_y);
 			break;
 		}
 
@@ -129,7 +130,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向上超出Y范围，停止");
 					}
-					MSDK_ReleaseAllKey();
+					MSDK_KeyUp(direction_y);
 					break;
 				}
 			}
@@ -139,7 +140,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向下超出Y范围，停止");
 					}
-					MSDK_ReleaseAllKey();
+					MSDK_KeyUp(direction_y);
 					break;
 				}
 			}
@@ -161,7 +162,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向右超出X范围，停止");
 					}
-					MSDK_ReleaseAllKey();
+					MSDK_KeyUp(direction_x);
 					break;
 				}
 			}
@@ -171,7 +172,7 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 						InstanceLock lock(mainWindow);
 						mainWindow->Log(L"向左超出X范围，停止");
 					}
-					MSDK_ReleaseAllKey();
+					MSDK_KeyUp(direction_x);
 					break;
 				}
 			}
@@ -190,24 +191,23 @@ BOOL runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 				InstanceLock lock(mainWindow);
 				mainWindow->Log(L"到达目标位置，停止按键");
 			}
-
-			MSDK_ReleaseAllKey();
-			return true;
+			MSDK_KeyUp(direction_x);
+			MSDK_KeyUp(direction_y);
 			break;
 		}
 
-		Sleep(100);
-		//programDelay(100);
+		handleEvents();
 	}
 
-	handleEvents();
 	{
 		InstanceLock lock(mainWindow);
 		mainWindow->Log(L"跑图结束，停止按键");
 	}
-	MSDK_ReleaseAllKey();
 
-	return false;
+	MSDK_KeyUp(direction_x);
+	MSDK_KeyUp(direction_y);
+
+	return;
 }
 
 void autoNextRoom()
@@ -322,7 +322,7 @@ void runToNextRoom(int direction)
 
 	if (use_pass_room_call) {
 		coorCall(calc_x, calc_y, 0);
-		Sleep(50);
+		programDelay(100,0);
 		coorCall(begin_x + end_x / 2, begin_y, 0);
 	}
 	else {
@@ -341,7 +341,7 @@ void runToNextRoom(int direction)
 			return;
 		}
 
-		Sleep(100);
+		programDelay(100,0);
 
 		// 远离目标地点（防止卡在入口处）
 		runToDestination(calc_x, calc_y, true, 2);
@@ -352,19 +352,19 @@ void firstRoomFunctions()
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 
-	if (is_auto_play) 
+	if (is_auto_play)
 	{
 		// 上上空格
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		MSDK_DelayRandom(200, 350);
+		programDelay(350,0);
 
 		// 右右空格
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		MSDK_DelayRandom(200, 350);
+		programDelay(350,0);
 	}
 
 	if (function_switch.score)
