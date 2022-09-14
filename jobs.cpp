@@ -16,6 +16,7 @@ __int64 C_USER_POINTER = 0;
 bool use_pass_room_call = false;
 int play_user_index = 0;
 int autoMapNumber = 100002962;
+bool room_has_urgent = false;
 
 UINT updateDataThread(LPVOID pParam)
 {

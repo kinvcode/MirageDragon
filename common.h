@@ -124,4 +124,7 @@ extern int play_user_index;
 // ×Ô¶¯Ë¢Í¼±àºÅ
 extern int autoMapNumber;
 
+// ´æÔÚÊ±¿ÕĞıÎĞ
+extern bool room_has_urgent;
+
 #endif

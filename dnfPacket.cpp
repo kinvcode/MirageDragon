@@ -2,6 +2,7 @@
 #include "dnfPacket.h"
 #include "dnfBase.h"
 #include "memory.h"
+#include "dnfData.h"
 
 std::vector<byte> packetData;
 
@@ -73,7 +74,7 @@ void selectRole(int index)
 // 组包进图，难度：0普通 1冒险 2勇士 3王者 4噩梦
 void entryDungeon(int id, int difficulty, int abyss = 0, int practice = 0)
 {
-	if (id == 100000151) 
+	if (id == 100000151)
 	{
 		abyss = 1;
 	}
@@ -90,11 +91,11 @@ void entryDungeon(int id, int difficulty, int abyss = 0, int practice = 0)
 	encryptCall(abyss, 1);
 	encryptCall(practice, 1);
 	encryptCall(65535, 2);
-	encryptCall(0,4);
-	encryptCall(1,1);
-	encryptCall(0,4);
-	encryptCall(0,1);
-	encryptCall(-1,4);
+	encryptCall(0, 4);
+	encryptCall(1, 1);
+	encryptCall(0, 4);
+	encryptCall(0, 1);
+	encryptCall(-1, 4);
 	sendPacketCall();
 }
 
@@ -103,5 +104,43 @@ void selectMap()
 {
 	bufferCall(15);
 	encryptCall(0, 4);
+	sendPacketCall();
+}
+
+// 组包过图
+void passRoomByPacket(int x,int y)
+{
+	if (monster_list.size() > 0)
+	{
+		return;
+	}
+
+	bufferCall(45);
+	encryptCall(x,1);
+	encryptCall(y,1);
+	encryptCall(0,4);
+	encryptCall(0,4);
+	encryptCall(0,1);
+	for (int i=0;i<9;i++)
+	{
+		encryptCall(0, 2);
+	}
+	for (int j = 0; j < 8; j++)
+	{
+		encryptCall(0, 4);
+	}
+	for (int k = 0; k < 7; k++)
+	{
+		encryptCall(0, 2);
+	}
+	encryptCall(0,4);
+	encryptCall(0,2);
+	encryptCall(0,2);
+	encryptCall(0,2);
+	encryptCall(0, 4);
+	encryptCall(0, 4);
+	encryptCall(0, 4);
+	encryptCall(0,2);
+	encryptCall(0,1);
 	sendPacketCall();
 }

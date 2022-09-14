@@ -218,6 +218,10 @@ void autoCalcTask()
 		programDelay(200, 0);
 		while (true)
 		{
+			if (game_status != 2) 
+			{
+				return;
+			}
 			if (mapCodeOfSelected() == autoMapNumber)
 			{
 				break;
@@ -228,14 +232,18 @@ void autoCalcTask()
 
 		while (true)
 		{
+			if (game_status != 2)
+			{
+				return;
+			}
 			int difficulty = 0;
-			__int64 user_level = getUserLevel();
+			int user_level = getUserLevel();
 			if (user_level < 110)
 			{
 				difficulty = 4;
 			}
 			else {
-				__int64 user_prestige = getUserPrestige();
+				int user_prestige = getUserPrestige();
 				if (user_prestige >= 33989) {
 					difficulty = 9;
 				}
@@ -290,15 +298,15 @@ end:
 }
 
 // 获取角色等级
-__int64 getUserLevel()
+int getUserLevel()
 {
-	return readLong(C_USER_LEVEL);
+	return (int)readLong(C_USER_LEVEL);
 }
 
 // 获取角色名望值
-__int64 getUserPrestige()
+int getUserPrestige()
 {
-	return decrypt(readLong(C_USER) + C_USER_PRESTIGE);
+	return (int)decrypt(readLong(C_USER) + C_USER_PRESTIGE);
 }
 
 void updateHookNumber(int number)

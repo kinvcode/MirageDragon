@@ -123,6 +123,7 @@ void getMonsterAndItems()
 
 	int monster_max_blood = 0;
 
+	room_has_urgent = false;
 	for (__int64 i = 0; i < object_number; i++)
 	{
 		// ÎïÆ·
@@ -142,6 +143,12 @@ void getMonsterAndItems()
 					monster_max_blood = dungeon_object_list[i].blood;
 				}
 			}
+		}
+
+		// Ê±¿ÕÐýÎÐ
+		if (dungeon_object_list[i].camp == 200 && dungeon_object_list[i].type == 33 && dungeon_object_list[i].code == 490019076) 
+		{
+			room_has_urgent = true;
 		}
 	}
 

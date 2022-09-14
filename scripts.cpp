@@ -8,6 +8,7 @@
 #include "dnfCALL.h"
 #include "dnfUser.h"
 #include "dnfBase.h"
+#include "dnfPacket.h"
 
 // 跑到目标
 void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
@@ -321,9 +322,16 @@ void runToNextRoom(int direction)
 	}
 
 	if (use_pass_room_call) {
-		coorCall(calc_x, calc_y, 0);
-		programDelay(100,0);
-		coorCall(begin_x + end_x / 2, begin_y, 0);
+		if (room_has_urgent)
+		{
+			COORDINATE room = getCurrentRoom();
+			passRoomByPacket(room.x, room.y);
+		}
+		else {
+			coorCall(calc_x, calc_y, 0);
+			programDelay(100, 0);
+			coorCall(begin_x + end_x / 2, begin_y, 0);
+		}
 	}
 	else {
 		// 跑目标地点，如果不是向上跑图，则优化传送门位置
@@ -341,7 +349,7 @@ void runToNextRoom(int direction)
 			return;
 		}
 
-		programDelay(100,0);
+		programDelay(100, 0);
 
 		// 远离目标地点（防止卡在入口处）
 		runToDestination(calc_x, calc_y, true, 2);
@@ -358,13 +366,13 @@ void firstRoomFunctions()
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350,0);
+		programDelay(350, 0);
 
 		// 右右空格
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350,0);
+		programDelay(350, 0);
 	}
 
 	if (function_switch.score)

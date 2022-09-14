@@ -15,3 +15,5 @@ void selectRole(int index);
 void entryDungeon(int id, int difficulty, int abyss, int practice);
 
 void selectMap();
+
+void passRoomByPacket(int x, int y);

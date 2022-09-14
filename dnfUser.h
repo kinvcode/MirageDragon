@@ -20,8 +20,8 @@ void switchUser();
 
 void autoCalcTask();
 
-__int64 getUserLevel();
+int getUserLevel();
 
-__int64 getUserPrestige();
+int getUserPrestige();
 
 void updateHookNumber(int number);
