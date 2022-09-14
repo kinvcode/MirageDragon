@@ -6,6 +6,7 @@
 #include "scripts.h"
 #include "keyboardDriver.h"
 #include "dnfUser.h"
+#include "dnfTask.h"
 
 int game_status = 0;
 bool window_top = false;
@@ -13,6 +14,8 @@ bool is_running = false;
 __int64 C_USER = 0;
 __int64 C_USER_POINTER = 0;
 bool use_pass_room_call = false;
+int play_user_index = 0;
+int autoMapNumber = 192;
 
 UINT updateDataThread(LPVOID pParam)
 {
@@ -45,7 +48,7 @@ UINT updateDataThread(LPVOID pParam)
 					//reloadProcess();
 				}
 			}
-			programDelay(3000,0);
+			programDelay(3000, 0);
 			continue;
 		}
 
@@ -127,13 +130,30 @@ UINT playGameThead(LPVOID pParam)
 			first_room = true;
 			is_clearance = false;
 			allow_next_map = false;
-			use_pass_room_call = false;
 			first_room_functions = false;
-			pass_room_numbers = 0;
-			room_history.clear();
+
+			if (is_auto_play) 
+			{
+				use_pass_room_call = false;
+				pass_room_numbers = 0;
+				room_history.clear();
+				calc_hook_number = 0;
+
+				// 剧情处理
+				if (auto_play_type == 2) 
+				{
+					// 对话处理
+					dialogue();
+				}
+
+				// 自动进图
+				autoEntryDungeon();
+			}
+
 			break;
 		case 3:
-			// 遍历物品信息
+			roomBegin:
+			// 遍历物品和怪物信息
 			getMonsterAndItems();
 
 			// 聚集怪物
@@ -172,6 +192,12 @@ UINT playGameThead(LPVOID pParam)
 			if (is_open_door == false)
 			{
 				if (is_auto_play) {
+					if (is_boss) 
+					{
+						// 更新一下伤害
+						calc_hook_number = 0;
+					}
+
 					// 判断技能冷却列表并释放随机技能
 					int key = getCoolDownKey();
 					MSDK_keyPress(key, 1);
@@ -180,9 +206,10 @@ UINT playGameThead(LPVOID pParam)
 			}
 			else {
 				// 开门后的逻辑处理
-
-				if (item_list.size() > 0) {
-					//gather_item_times++;
+				programDelay(1000, 0);
+				getMonsterAndItems();
+				convergeMonsterAndItems();
+				if (item_list.size() > 0 || monster_list.size() > 0) {
 					if (is_auto_play)
 					{
 						{
@@ -190,6 +217,10 @@ UINT playGameThead(LPVOID pParam)
 							MainDlg->Log(L"存在物品，关闭穿透");
 						}
 						penetrate(false);
+					}
+					if (!is_boss) {
+						// 给个延迟，防止没有捡到物品
+						goto roomBegin;
 					}
 				}
 				else {
@@ -253,6 +284,7 @@ UINT playGameThead(LPVOID pParam)
 							use_pass_room_call = false;
 							pass_room_numbers = 0;
 							room_history.clear();
+							calc_hook_number = 0;
 
 							if (item_list.size() < 1) {
 								// 翻牌

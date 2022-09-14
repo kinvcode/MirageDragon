@@ -400,3 +400,15 @@ int arrangeCoor(vector<COORDINATE>imitation, vector<COORDINATE>& real_cross)
 	}
 	return(k);
 }
+
+// 选中地图编号
+int mapCodeOfSelected()
+{
+	return readInt(readLong(readLong(C_MAP_SELECTED)) + C_MAP_CODE_SELECTED);
+}
+
+// 选中地图难度
+int mapDifficultyOfSelected()
+{
+	readLong(readLong(C_MAP2_SELECTED) + C_MAP_DIFFICULTY_SELECTED);
+}

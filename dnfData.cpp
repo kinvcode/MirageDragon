@@ -3,6 +3,7 @@
 #include "dnfBase.h"
 #include "memory.h"
 #include "dnfCALL.h"
+#include "dnfUser.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;
@@ -119,6 +120,8 @@ void getMonsterAndItems()
 
 	__int64 object_number = dungeon_object_list.size();
 
+	int monster_max_blood = 0;
+
 	for (__int64 i = 0; i < object_number; i++)
 	{
 		// 物品
@@ -133,9 +136,22 @@ void getMonsterAndItems()
 			if (dungeon_object_list[i].camp != 0 && dungeon_object_list[i].blood != 0)
 			{
 				monster_list.push_back(dungeon_object_list[i]);
+				if (dungeon_object_list[i].blood > monster_max_blood)
+				{
+					monster_max_blood = dungeon_object_list[i].blood;
+				}
 			}
 		}
 	}
+
+	if (is_auto_play) 
+	{
+		if (calc_hook_number == 0 && monster_list.size() > 0)
+		{
+			updateHookNumber(monster_max_blood);
+		}
+	}
+
 
 	// 对怪物容器进行排序(冒泡)
 	int i, j, len;
@@ -219,7 +235,7 @@ void convergeMonsterAndItems()
 	COORDINATE monster_coordinate;
 	COORDINATE user_coordinate = readCoordinate(readLong(C_USER));
 
-	if (!function_switch.gather_monster) 
+	if (!function_switch.gather_monster)
 	{
 		goto item;
 	}
@@ -234,15 +250,23 @@ void convergeMonsterAndItems()
 			continue;
 		}
 
-		// 移动对象
-		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
-		writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+		if (monster_list[i].code == 109013676)
+		{
+			// 移动到怪物
+			coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
+		}
+		else {
+			// 移动对象
+			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
+			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+		}
+
 
 		handleEvents();
 	}
 
 item:
-	if(!function_switch.gather_items)
+	if (!function_switch.gather_items)
 	{
 		return;
 	}

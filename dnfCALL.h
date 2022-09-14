@@ -10,3 +10,5 @@ void hiddenUser();
 
 void superScore();
 
+void areaCall(int code);
+

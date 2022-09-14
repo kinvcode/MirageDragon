@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "dnfCALL.h"
 #include "dnfBase.h"
+#include "dnfPacket.h"
 
 void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, int skillSize)
 {
@@ -27,7 +28,7 @@ void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, i
 	memoryAssambly(asm_code);
 }
 
-// 坐标CALL
+// 坐标CALL(时间久了会掉游戏)
 void coorCall(int x, int y, int z)
 {
 	__int64 target_p = readLong(C_USER);
@@ -101,4 +102,36 @@ void hiddenUser()
 void superScore()
 {
 	writeLong(readLong(C_SCORE_ADDRESS) + C_CE_SCORE, 999999);
+}
+
+// 区域CALL
+void areaCall(int code)
+{
+	if (code == 100000003)
+	{
+		code = 100000151;
+	}
+
+	__int64 area_address = readLong(C_AREA_PARAM);
+	__int64 area_call = C_AREA_CALL;
+
+	vector<byte> asm_data = makeByteArray({ 72,131,236,48 });
+
+	asm_data = asm_data + makeByteArray({ 65,184 }) + intToBytes(code);
+	asm_data = asm_data + makeByteArray({ 186,174,12,0,0 });
+	asm_data = asm_data + makeByteArray({ 72,184,255,255,255,255,0,0,0,0 });
+	asm_data = asm_data + makeByteArray({ 72,185 }) + longToBytes(C_AREA_PARAM);
+	asm_data = asm_data + makeByteArray({ 72,139,9 });
+	asm_data = asm_data + makeByteArray({ 72,184 }) + longToBytes(area_call);
+	asm_data = asm_data + makeByteArray({ 255,208,72,131,196,48 });
+	memoryAssambly(asm_data);
+
+	programDelay(50, 0);
+
+	int world = readInt(area_address + C_AREA_OFFSET);
+	int town = readInt(area_address + C_AREA_OFFSET + 4);
+	int x = readInt(area_address + C_AREA_OFFSET + 8);
+	int y = readInt(area_address + C_AREA_OFFSET + 12);
+
+	moveOfTown(world, town, x, y);
 }

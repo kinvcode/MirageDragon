@@ -118,4 +118,13 @@ extern FUNCTIONSWITCH function_switch;
 // 使用过图CALL开关
 extern bool use_pass_room_call;
 
+// 刷图角色索引
+extern int play_user_index;
+
+// 自动刷图编号
+extern int autoMapNumber;
+
+// 自动计算的hook伤害
+extern int calc_hook_number;
+
 #endif

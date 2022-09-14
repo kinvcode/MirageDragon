@@ -12,3 +12,16 @@ void hookDamage(bool on);
 
 int getCoolDownKey();
 
+__int64 getUserFatigue();
+
+void autoEntryDungeon();
+
+void switchUser();
+
+void autoCalcTask();
+
+__int64 getUserLevel();
+
+__int64 getUserPrestige();
+
+void updateHookNumber(int number);

@@ -17,3 +17,7 @@ bool judgeDirection(int aisle, int direction);
 void pathCalc(vector<vector<AISLEDATA>> map_tag, COORDINATE begin, COORDINATE end, int width, int height, vector<COORDINATE>& cross_way);
 
 int arrangeCoor(vector<COORDINATE>imitation, vector<COORDINATE>& real_cross);
+
+int mapCodeOfSelected();
+
+int mapDifficultyOfSelected();

@@ -43,6 +43,7 @@ void PAGE1::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK5, _switch_gather_items);
 	DDX_Control(pDX, IDC_COMBO2, m_ctl_sel_autoplay);
 	DDX_Control(pDX, IDC_COMBO3, m_ctl_sel_town);
+	DDX_Control(pDX, IDC_EDIT2, m_ctl_mapNumber);
 }
 
 
@@ -64,6 +65,7 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK5, &PAGE1::OnBnClickedCheck5)
 	ON_BN_CLICKED(IDC_CHECK6, &PAGE1::OnBnClickedCheck6)
 	ON_BN_CLICKED(IDC_CHECK7, &PAGE1::OnBnClickedCheck7)
+	ON_EN_UPDATE(IDC_EDIT2, &PAGE1::OnEnUpdateEdit2)
 END_MESSAGE_MAP()
 
 
@@ -90,7 +92,11 @@ BOOL PAGE1::OnInitDialog()
 	// 初始化城镇列表
 	m_ctl_sel_town.InsertString(0, L"诺顿");
 	m_ctl_sel_town.InsertString(1, L"风振");
+	m_ctl_sel_town.InsertString(2, L"哈林");
+	m_ctl_sel_town.InsertString(3, L"诺斯匹斯");
 	m_ctl_sel_town.SetCurSel(0);
+
+	m_ctl_mapNumber.SetWindowText(L"192");
 
 	return TRUE;
 }
@@ -200,11 +206,16 @@ void PAGE1::OnCbnSelchangeCombo3()
 	{
 	case 0:
 		// 40 3 598 225
-		moveOfTown(40, 3, 598, 225);
+		moveOfTown(40, 1, 1337, 231);
 		break;
 	case 1:
 		// 39 0 1809 256
 		moveOfTown(39, 0, 1809, 256);
+	case 2:
+		moveOfTown(54, 2, 972, 227);
+		break;
+	case 3:
+		moveOfTown(137, 1, 864, 196);
 		break;
 	default:
 		pParentDlg->Log(L"未知的移动目标");
@@ -311,4 +322,17 @@ void PAGE1::OnBnClickedCheck7()
 	else {
 		function_switch.hook_damage = false;
 	}
+}
+
+
+void PAGE1::OnEnUpdateEdit2()
+{
+	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+	
+	pParentDlg->Log(L"改变了地图值");
+
+	CString code;
+	m_ctl_mapNumber.GetWindowText(code);
+
+	autoMapNumber = _wtoi(code);
 }

@@ -93,6 +93,9 @@
     <ClInclude Include="keyboardDriver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="dnfTask.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -144,6 +147,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="keyboardDriver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

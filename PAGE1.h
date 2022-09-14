@@ -45,4 +45,6 @@ public:
 	afx_msg void OnBnClickedCheck5();
 	afx_msg void OnBnClickedCheck6();
 	afx_msg void OnBnClickedCheck7();
+	CEdit m_ctl_mapNumber;
+	afx_msg void OnEnUpdateEdit2();
 };

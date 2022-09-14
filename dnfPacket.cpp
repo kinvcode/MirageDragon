@@ -39,18 +39,69 @@ void sendPacketCall()
 	packetData.clear();
 }
 
-// 城镇移动
+// 组包移动
 void moveOfTown(int world, int area, int x, int y)
 {
 	bufferCall(36);
 	encryptCall(world, 4);
 	encryptCall(area, 1);
 	encryptCall(x, 2);
-	encryptCall(y, 3);
+	encryptCall(y, 2);
 	encryptCall(5, 1);
 	encryptCall(38, 4);
 	encryptCall(2, 2);
 	encryptCall(0, 4);
 	encryptCall(0, 1);
+	sendPacketCall();
+}
+
+// 组包角色列表
+void roleList()
+{
+	bufferCall(7);
+	sendPacketCall();
+}
+
+// 组包选择角色
+void selectRole(int index)
+{
+	bufferCall(4);
+	encryptCall(index, 4);
+	sendPacketCall();
+}
+
+// 组包进图，难度：0普通 1冒险 2勇士 3王者 4噩梦
+void entryDungeon(int id, int difficulty, int abyss = 0, int practice = 0)
+{
+	if (id == 100000151) 
+	{
+		abyss = 1;
+	}
+
+	if (id == 100000212 || id == 100000215 || id == 100000199 || id == 100000209 || id == 100000214)
+	{
+		abyss = 6;
+	}
+
+	bufferCall(16);
+	encryptCall(id, 4);
+	encryptCall(difficulty, 1);
+	encryptCall(0, 2);
+	encryptCall(abyss, 1);
+	encryptCall(practice, 1);
+	encryptCall(65535, 2);
+	encryptCall(0,4);
+	encryptCall(1,1);
+	encryptCall(0,4);
+	encryptCall(0,1);
+	encryptCall(-1,4);
+	sendPacketCall();
+}
+
+// 组包选图
+void selectMap()
+{
+	bufferCall(15);
+	encryptCall(0, 4);
 	sendPacketCall();
 }

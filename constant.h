@@ -9,6 +9,7 @@ extern __int64 C_USER_POINTER;
 
 #define C_USER_ADDRESS 0x1498916F0 // 人物基址
 #define C_USER_CALL 0x143E8FD60 // 人物CALL
+#define C_USER_LEVEL 0x1495C9CB0 // 角色等级
 #define C_SCORE_ADDRESS 0x1495E2728 // 评分基址
 #define C_TOWN_WORLD 0x1495A693C // 城镇大区域
 #define C_TOWN_AREA 0x1495A6940 // 城镇小区域
@@ -19,11 +20,21 @@ extern __int64 C_USER_POINTER;
 #define C_ASM_CALL 0x13FDC0000 // 汇编CALL
 #define C_SKILL_CALL 0x1439CD830 // 技能CALL
 #define C_AUTO_PICKUP 0x143D9D4F3 // 自动捡物
+#define C_MAP_SELECTED 0x1498D7F30 // 选图基址
+#define C_MAP2_SELECTED 0x1495E37E0 // 选图基址2
+#define C_MAP_CODE_SELECTED 0x3B0 // 选中地图编号
+#define C_MAP_DIFFICULTY_SELECTED 0x2C0 // 选中地图难度
+#define C_DIALOGUE 0x1498DDFC0 // 对话基址
+#define C_DIALOGUE_B 0x1495E4A0C // 对话基址B
+#define C_DIALOGUE_ESC 0x1495E4A6C // Esc对话基址
 #define C_MAP_NUMBER 0x1495C9C40 // 副本编号
 #define C_TIME_ADDRESS 0x20A050 // 时间基址
 #define C_ROOM_NUMBER 0x1495E3B90 // 房间编号
 #define C_FATIGUE_MAX 0x1498916B8 // 最大疲劳
 #define C_FATIGUE_CURRENT 0x1498916B0 // 当前疲劳
+#define C_AREA_PARAM 0x1498E2168 // 区域参数
+#define C_AREA_CALL 0x144D3A820 // 区域CALL
+#define C_AREA_OFFSET 0x84988 // 区域偏移
 #define C_COORDINATE_PASS_ROOM 0x142E12F30 // 坐标顺图CALL
 #define C_COOL_DOWN_JUDGE_CALL 0x143E7BE00 // 冷却判断CALL
 #define C_PACKET_SEND 0x1498E3418 // 发包基址
@@ -37,6 +48,7 @@ extern __int64 C_USER_POINTER;
 #define C_CASTING_SPEED 0xD10 // 释放速度
 #define C_ATTACK_SPEED 0xD08 // 攻击速度
 #define C_MOVE_SPEED 0xD00 // 移动速度
+#define C_USER_PRESTIGE 0x30E0 // 冒险家名望
 #define C_FLOAT_COOL_DOWN2 0x2288 // 浮点冷却2
 #define C_MOVEMENT_ID 0x5378 // 动作ID
 #define C_MAP_HEAD 0x1C8 // 地图开始2

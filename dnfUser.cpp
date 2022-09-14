@@ -4,6 +4,12 @@
 #include "MirageDragonDlg.h"
 #include "Lock.h"
 #include "dnfBase.h"
+#include "dnfPacket.h"
+#include "dnfCALL.h"
+#include "dnfMap.h"
+#include "keyboardDriver.h"
+
+int calc_hook_number = 0;
 
 // 切换地图&建筑穿透
 void penetrate(bool on)
@@ -60,14 +66,19 @@ void hookDamage(bool on)
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 	InstanceLock wind(mainWindow);
 
-	CString value;
-	mainWindow->page2._damage_value.GetWindowText(value);
-
-	vector<byte>damge_data;
+	__int64 damage_value;
+	if (calc_hook_number > 0)
+	{
+		damage_value = calc_hook_number;
+	}
+	else {
+		CString value;
+		mainWindow->page2._damage_value.GetWindowText(value);
+		damage_value = _ttoi(value);
+	}
 
 	__int64 damage_address = C_GLOBAL_ADDRESS;
-	__int64 damage_value = _ttoi(value);
-
+	vector<byte>damge_data;
 	if (on) {
 		damge_data = readByteArray(damage_address, 10);
 		writeByteArray(damage_address, (makeByteArray({ 72,190 }) + longToBytes(damage_value)));
@@ -92,6 +103,11 @@ int getCoolDownKey()
 
 	for (position = 0; position < 17; position++)
 	{
+		if (position == 6)
+		{
+			continue;
+		}
+
 		__int64 skill_p = readLong(address + position * 8);
 
 		if (skill_p <= 0) {
@@ -132,9 +148,6 @@ int getCoolDownKey()
 			case 5:
 				return Keyboard_h;
 				break;
-			case 6:
-				return Keyboard_x;
-				break;
 			case 7:
 				return Keyboard_q;
 				break;
@@ -156,8 +169,11 @@ int getCoolDownKey()
 			case 14:
 				return Keyboard_LeftAlt;
 				break;
-			case 13:
 			case 15:
+				return Keyboard_LeftControl;
+				break;
+			case 6: // 因为普通攻击无冷却，所有会卡技能
+			case 13:
 			case 16:
 			default:
 				return Keyboard_x;
@@ -168,4 +184,133 @@ int getCoolDownKey()
 	}
 	// 如果全部冷却中，则返回X键位
 	return Keyboard_x;
+}
+
+// 获取当前疲劳
+__int64 getUserFatigue()
+{
+	return (decrypt(C_FATIGUE_MAX) - decrypt(C_FATIGUE_CURRENT));
+}
+
+// 自动进图
+void autoEntryDungeon()
+{
+	programDelay(100, 0);
+	if (getUserFatigue() <= 0)
+	{
+		switchUser();
+	}
+
+	autoCalcTask();
+	programDelay(2000, 0);
+}
+
+// 切换角色
+void switchUser()
+{
+	play_user_index += 1;
+	programDelay(20, 0);
+	roleList();
+	programDelay(500, 0);
+	selectRole(play_user_index);
+	programDelay(500, 0);
+}
+
+// 自动计算任务、自动进图
+void autoCalcTask()
+{
+	if (auto_play_type == 1)
+	{
+		areaCall(autoMapNumber);
+		selectMap();
+		programDelay(200, 0);
+		while (true)
+		{
+			if (mapCodeOfSelected() == autoMapNumber)
+			{
+				break;
+			}
+			programDelay(100, 0);
+			MSDK_keyPress(Keyboard_UpArrow, 1);
+		}
+
+		while (true)
+		{
+			int difficulty;
+			__int64 user_level = getUserLevel();
+			if (user_level < 110)
+			{
+				difficulty = 4;
+			}
+			else {
+				__int64 user_prestige = getUserPrestige();
+				if (difficulty >= 33989) {
+					difficulty = 9;
+				}
+				else if (difficulty >= 32523) {
+					difficulty = 8;
+				}
+				else if (difficulty >= 30946) {
+					difficulty = 7;
+				}
+				else if (difficulty >= 29369) {
+					difficulty = 6;
+				}
+				else if (difficulty >= 25837) {
+					difficulty = 5;
+				}
+				else if (difficulty >= 23529) {
+					difficulty = 4;
+				}
+				else if (difficulty >= 21675) {
+					difficulty = 3;
+				}
+				else if (difficulty >= 13195) {
+					difficulty = 2;
+				}
+				else if (difficulty >= 8602) {
+					difficulty = 1;
+				}
+				else if (difficulty >= 4176) {
+					difficulty = 0;
+				}
+				else {
+					goto end;
+				}
+			}
+			for (int i = difficulty; i > 0; i--)
+			{
+				entryDungeon(autoMapNumber, i, 0, 0);
+				programDelay(500, 0);
+				if (game_status == 3)
+				{
+					goto end;
+				}
+				MSDK_keyPress(Keyboard_LeftArrow, 1);
+			}
+		}
+	}
+	else {
+
+	}
+end:
+	return;
+}
+
+// 获取角色等级
+__int64 getUserLevel()
+{
+	return readLong(C_USER_LEVEL);
+}
+
+// 获取角色名望值
+__int64 getUserPrestige()
+{
+	return decrypt(readLong(C_USER) + C_USER_PRESTIGE);
+}
+
+void updateHookNumber(int number)
+{
+	calc_hook_number = (int)(number / 10);
+	hookDamage(true);
 }
