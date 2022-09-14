@@ -124,7 +124,4 @@ extern int play_user_index;
 // 自动刷图编号
 extern int autoMapNumber;
 
-// 自动计算的hook伤害
-extern int calc_hook_number;
-
 #endif

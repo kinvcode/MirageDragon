@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "dnfCALL.h"
 #include "dnfUser.h"
+#include "common.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;
@@ -141,14 +142,6 @@ void getMonsterAndItems()
 					monster_max_blood = dungeon_object_list[i].blood;
 				}
 			}
-		}
-	}
-
-	if (is_auto_play) 
-	{
-		if (calc_hook_number == 0 && monster_list.size() > 0)
-		{
-			updateHookNumber(monster_max_blood);
 		}
 	}
 

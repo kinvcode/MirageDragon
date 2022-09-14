@@ -9,8 +9,6 @@
 #include "dnfMap.h"
 #include "keyboardDriver.h"
 
-int calc_hook_number = 0;
-
 // ÇÐ»»µØÍ¼&½¨Öþ´©Í¸
 void penetrate(bool on)
 {
@@ -67,15 +65,9 @@ void hookDamage(bool on)
 	InstanceLock wind(mainWindow);
 
 	__int64 damage_value;
-	if (calc_hook_number > 0)
-	{
-		damage_value = calc_hook_number;
-	}
-	else {
-		CString value;
-		mainWindow->page2._damage_value.GetWindowText(value);
-		damage_value = _ttoi(value);
-	}
+	CString value;
+	mainWindow->page2._damage_value.GetWindowText(value);
+	damage_value = _ttoi(value);
 
 	__int64 damage_address = C_GLOBAL_ADDRESS;
 	vector<byte>damge_data;
@@ -236,7 +228,7 @@ void autoCalcTask()
 
 		while (true)
 		{
-			int difficulty;
+			int difficulty = 0;
 			__int64 user_level = getUserLevel();
 			if (user_level < 110)
 			{
@@ -244,34 +236,34 @@ void autoCalcTask()
 			}
 			else {
 				__int64 user_prestige = getUserPrestige();
-				if (difficulty >= 33989) {
+				if (user_prestige >= 33989) {
 					difficulty = 9;
 				}
-				else if (difficulty >= 32523) {
+				else if (user_prestige >= 32523) {
 					difficulty = 8;
 				}
-				else if (difficulty >= 30946) {
+				else if (user_prestige >= 30946) {
 					difficulty = 7;
 				}
-				else if (difficulty >= 29369) {
+				else if (user_prestige >= 29369) {
 					difficulty = 6;
 				}
-				else if (difficulty >= 25837) {
+				else if (user_prestige >= 25837) {
 					difficulty = 5;
 				}
-				else if (difficulty >= 23529) {
+				else if (user_prestige >= 23529) {
 					difficulty = 4;
 				}
-				else if (difficulty >= 21675) {
+				else if (user_prestige >= 21675) {
 					difficulty = 3;
 				}
-				else if (difficulty >= 13195) {
+				else if (user_prestige >= 13195) {
 					difficulty = 2;
 				}
-				else if (difficulty >= 8602) {
+				else if (user_prestige >= 8602) {
 					difficulty = 1;
 				}
-				else if (difficulty >= 4176) {
+				else if (user_prestige >= 4176) {
 					difficulty = 0;
 				}
 				else {
@@ -311,6 +303,5 @@ __int64 getUserPrestige()
 
 void updateHookNumber(int number)
 {
-	calc_hook_number = (int)(number / 10);
 	hookDamage(true);
 }

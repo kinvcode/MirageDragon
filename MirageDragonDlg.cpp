@@ -123,6 +123,10 @@ BOOL CMirageDragonDlg::OnInitDialog()
 
 	// 开启驱动按键功能
 	MSDK_HANDLE = M_Open(1);
+	if (MSDK_HANDLE != NULL) 
+	{
+		this->Log(L"键鼠设备已安装！");
+	}
 
 	// TODO: 在此添加额外的初始化代码
 

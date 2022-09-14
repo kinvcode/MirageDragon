@@ -96,7 +96,7 @@ BOOL PAGE1::OnInitDialog()
 	m_ctl_sel_town.InsertString(3, L"诺斯匹斯");
 	m_ctl_sel_town.SetCurSel(0);
 
-	m_ctl_mapNumber.SetWindowText(L"192");
+	m_ctl_mapNumber.SetWindowText(L"100002962");
 
 	return TRUE;
 }

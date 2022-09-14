@@ -15,7 +15,7 @@ __int64 C_USER = 0;
 __int64 C_USER_POINTER = 0;
 bool use_pass_room_call = false;
 int play_user_index = 0;
-int autoMapNumber = 192;
+int autoMapNumber = 100002962;
 
 UINT updateDataThread(LPVOID pParam)
 {
@@ -137,7 +137,6 @@ UINT playGameThead(LPVOID pParam)
 				use_pass_room_call = false;
 				pass_room_numbers = 0;
 				room_history.clear();
-				calc_hook_number = 0;
 
 				// 剧情处理
 				if (auto_play_type == 2) 
@@ -192,15 +191,13 @@ UINT playGameThead(LPVOID pParam)
 			if (is_open_door == false)
 			{
 				if (is_auto_play) {
-					if (is_boss) 
-					{
-						// 更新一下伤害
-						calc_hook_number = 0;
-					}
 
-					// 判断技能冷却列表并释放随机技能
-					int key = getCoolDownKey();
-					MSDK_keyPress(key, 1);
+					if (monster_list.size() > 0) 
+					{
+						// 判断技能冷却列表并释放随机技能
+						int key = getCoolDownKey();
+						MSDK_keyPress(key, 1);
+					}
 				}
 
 			}
@@ -284,7 +281,6 @@ UINT playGameThead(LPVOID pParam)
 							use_pass_room_call = false;
 							pass_room_numbers = 0;
 							room_history.clear();
-							calc_hook_number = 0;
 
 							if (item_list.size() < 1) {
 								// 翻牌
