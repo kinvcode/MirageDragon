@@ -151,6 +151,12 @@ UINT playGameThead(LPVOID pParam)
 			}
 
 			break;
+		case 2:
+			// 选图界面处理
+
+			// 如果选图时间过长，则退出城镇
+
+			break;
 		case 3:
 			roomBegin:
 			// 遍历物品和怪物信息
@@ -290,18 +296,23 @@ UINT playGameThead(LPVOID pParam)
 								// 分解装备
 
 								allow_next_map = true;
+								
 								// ESC
 								MSDK_keyPress(Keyboard_ESCAPE, 1);
 								programDelay(600, 0);
 
+								// 疲劳为空返回城镇
+
 								if (allow_next_map) {
+									if (getUserFatigue() < 1) 
+									{
+										// 返回城镇
+										MSDK_keyPress(Keyboard_F12, 1);
+									}
+
 									if (auto_play_type == 1) {
 										// 再次挑战
 										MSDK_keyPress(Keyboard_F10, 1);
-									}
-									else {
-										// 返回城镇
-										MSDK_keyPress(Keyboard_F12, 1);
 									}
 								}
 							}
