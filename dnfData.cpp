@@ -5,6 +5,7 @@
 #include "dnfCALL.h"
 #include "dnfUser.h"
 #include "common.h"
+#include "constant.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;

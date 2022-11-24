@@ -2,6 +2,8 @@
 #include "dnfTask.h"
 #include "keyboardDriver.h"
 #include "usbhidkeycode.h"
+#include "constant.h"
+
 
 void dialogue()
 {

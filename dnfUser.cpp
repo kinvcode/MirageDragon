@@ -8,6 +8,7 @@
 #include "dnfCALL.h"
 #include "dnfMap.h"
 #include "keyboardDriver.h"
+#include "constant.h"
 
 // ÇÐ»»µØÍ¼&½¨Öþ´©Í¸
 void penetrate(bool on)

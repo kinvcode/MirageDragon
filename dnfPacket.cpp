@@ -3,6 +3,7 @@
 #include "dnfBase.h"
 #include "memory.h"
 #include "dnfData.h"
+#include "constant.h"
 
 std::vector<byte> packetData;
 
@@ -45,12 +46,12 @@ void moveOfTown(int world, int area, int x, int y)
 {
 	bufferCall(36);
 	encryptCall(world, 4);
-	encryptCall(area, 1);
+	encryptCall(area, 4);
 	encryptCall(x, 2);
 	encryptCall(y, 2);
 	encryptCall(5, 1);
 	encryptCall(38, 4);
-	encryptCall(2, 2);
+	encryptCall(0, 2);
 	encryptCall(0, 4);
 	encryptCall(0, 1);
 	sendPacketCall();

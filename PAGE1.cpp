@@ -10,6 +10,7 @@
 #include "dnfUser.h"
 #include "dnfPacket.h"
 #include "dnfData.h"
+#include "constant.h"
 
 #include "scripts.h"
 
@@ -201,6 +202,11 @@ void PAGE1::OnBnClickedButton4()
 void PAGE1::OnCbnSelchangeCombo3()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+
+	if (game_status != 1) {
+		pParentDlg->Log(L"请在城镇中使用该功能");
+		return;
+	}
 
 	switch (m_ctl_sel_town.GetCurSel())
 	{

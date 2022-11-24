@@ -269,15 +269,13 @@ UINT playGameThead(LPVOID pParam)
 				{
 					if (is_clearance)
 					{
-						{
-							InstanceLock lock(MainDlg);
-							MainDlg->Log(L"关闭图内功能");
-						}
-
 						first_room = true;
-
 						if (first_room_functions == true)
 						{
+							{
+								InstanceLock lock(MainDlg);
+								MainDlg->Log(L"关闭图内功能");
+							}
 							closeDungeonFunctions();
 							first_room_functions = false;
 						}
