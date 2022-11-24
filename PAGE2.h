@@ -28,4 +28,6 @@ public:
 	CEdit _cool_down;
 	CEdit _damage_value;
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnEnUpdateEdit2();
+	afx_msg void OnEnKillfocusEdit2();
 };

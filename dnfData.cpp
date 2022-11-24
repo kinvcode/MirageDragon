@@ -253,8 +253,9 @@ void convergeMonsterAndItems()
 
 		if (monster_list[i].code == 109013676)
 		{
-			// 移动到怪物
-			coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
+			// 恩山的机关枪不可移动，
+			continue;
+			//coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
 		}
 		else {
 			// 移动对象
