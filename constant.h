@@ -40,7 +40,11 @@ extern __int64 C_USER_POINTER;
 #define C_PACKET_SEND 0x149D22D50 // 发包基址
 #define C_BUFFER_CALL 0x144FF3390 // 缓冲CALL
 #define C_PACKET_SEND_CALL 0x144FF3FA0 // 发包CALL
-#define C_ENCRYPT_CALL 0x1450A5C60 // 加密CALL
+#define C_ENCRYPT_CALL 0x // 加密CALL
+#define C_ENCRYPT_PACKET_CALL 0x144FF4150 // 加密包CALL
+#define C_ENCRYPT_PACKET_CALL2 0x144FF4490 // 加密包CALL2
+#define C_ENCRYPT_PACKET_CALL4 0x144FF4170 // 加密包CALL4
+#define C_ENCRYPT_PACKET_CALL8 0x144FF4190 // 加密包CALL8
 #define C_SUMMON_MONSTER 0x143C920A0 // 召唤怪物CALL
 #define C_SUMMON_FIGURE 0x143CA0910 // 召唤人偶CALL
 #define C_HIDDEN_CALL 0x145008F60 // 透明CALL
@@ -82,6 +86,7 @@ extern __int64 C_USER_POINTER;
 #define C_SKILL_LIST 0xB568 // 技能栏
 #define C_SKILL_LIST_OFFSET 0x90 // 技能栏偏移
 #define C_SHOE_OFFSET 0x5390 // 鞋子偏移
+
 
 ////////////////////////[ 心 悦 基 址 区 域  ]///////////////////////////////////
 

@@ -11,9 +11,8 @@ std::vector<byte> packetData;
 void bufferCall(int param)
 {
 	packetData = packetData + makeByteArray({ 72,131,236,96 });
-	packetData = packetData + makeByteArray({ 186 }) + intToBytes(param);
 	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(C_PACKET_SEND);
-	packetData = packetData + makeByteArray({ 72,139,9 });
+	packetData = packetData + makeByteArray({ 186 }) + intToBytes(param);
 	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_BUFFER_CALL);
 	packetData = packetData + makeByteArray({ 255,208 });
 }
@@ -21,13 +20,20 @@ void bufferCall(int param)
 // 加密CALL
 void encryptCall(__int64 param, int length)
 {
-	packetData = packetData + makeByteArray({ 73,199,192 }) + intToBytes(length);
-	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(param);
-	packetData = packetData + makeByteArray({ 72,137,68,36,32 });
-	packetData = packetData + makeByteArray({ 72,141,84,36,32 });
 	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(C_PACKET_SEND);
-	packetData = packetData + makeByteArray({ 72,139,9 });
-	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_CALL);
+	packetData = packetData + makeByteArray({ 72,186 }) + longToBytes(param);
+	if (length == 1) {
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL);
+	}
+	else if (length == 2) {
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL2);
+	}
+	else if (length == 4) {
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL4);
+	}
+	else if (length == 8) {
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL8);
+	}
 	packetData = packetData + makeByteArray({ 255,208 });
 }
 
@@ -39,6 +45,21 @@ void sendPacketCall()
 	packetData = packetData + makeByteArray({ 72,131,196,96 });
 	memoryAssambly(packetData);
 	packetData.clear();
+}
+
+// 组包翻牌
+void turnOverCard(int x = 0, int y = 0)
+{
+	bufferCall(69);
+	sendPacketCall();
+	bufferCall(70);
+	sendPacketCall();
+	bufferCall(71);
+	encryptCall(x, 1);
+	encryptCall(y, 1);
+	sendPacketCall();
+	bufferCall(1426);
+	sendPacketCall();
 }
 
 // 组包移动
@@ -109,7 +130,7 @@ void selectMap()
 }
 
 // 组包过图
-void passRoomByPacket(int x,int y)
+void passRoomByPacket(int x, int y)
 {
 	if (monster_list.size() > 0)
 	{
@@ -117,12 +138,12 @@ void passRoomByPacket(int x,int y)
 	}
 
 	bufferCall(45);
-	encryptCall(x,1);
-	encryptCall(y,1);
-	encryptCall(0,4);
-	encryptCall(0,4);
-	encryptCall(0,1);
-	for (int i=0;i<9;i++)
+	encryptCall(x, 1);
+	encryptCall(y, 1);
+	encryptCall(0, 4);
+	encryptCall(0, 4);
+	encryptCall(0, 1);
+	for (int i = 0; i < 9; i++)
 	{
 		encryptCall(0, 2);
 	}
@@ -134,14 +155,14 @@ void passRoomByPacket(int x,int y)
 	{
 		encryptCall(0, 2);
 	}
-	encryptCall(0,4);
-	encryptCall(0,2);
-	encryptCall(0,2);
-	encryptCall(0,2);
+	encryptCall(0, 4);
+	encryptCall(0, 2);
+	encryptCall(0, 2);
+	encryptCall(0, 2);
 	encryptCall(0, 4);
 	encryptCall(0, 4);
 	encryptCall(0, 4);
-	encryptCall(0,2);
-	encryptCall(0,1);
+	encryptCall(0, 2);
+	encryptCall(0, 1);
 	sendPacketCall();
 }

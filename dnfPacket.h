@@ -6,6 +6,8 @@ void encryptCall(__int64 param, int length);
 
 void sendPacketCall();
 
+void turnOverCard(int x, int y);
+
 void moveOfTown(int world, int area, int x, int y);
 
 void roleList();
