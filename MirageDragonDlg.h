@@ -53,14 +53,14 @@ public:
 	PAGE2 page2;
 	PAGE3 page3;
 
+	// 运行日志
 	void CMirageDragonDlg::Log(CString msg);
 
-	afx_msg void OnBnClickedButton1();
-	CTabCtrl m_ctl_tab;
-	//CMFCTabCtrl m_ctl_tab;
-	CEdit m_ctl_edit_console;
-	CButton m_ctl_btn_init;
-	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
-	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+	afx_msg void OnBnClickedButton1(); // 初始化事件
+	CTabCtrl m_ctl_tab; // 分页控件
+	CEdit m_ctl_edit_console; // 运行日志控件
+	CButton m_ctl_btn_init; // 初始化按钮
+	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult); // 切换分页
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor); // 界面渲染
+	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2); // 热键事件
 };

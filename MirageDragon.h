@@ -20,9 +20,19 @@ class CMirageDragonApp : public CWinApp
 public:
 	CMirageDragonApp();
 
+	// 任务队列
+
+	// 线程池
 	// 线程
 	CWinThread* thread_update;
 	CWinThread* thread_play;
+
+	// 进程数据：进程ID、进程运行状态、窗口置顶状态
+	// 游戏数据：qq号、角色ID、角色疲劳值（总值、当前值）
+	// 当前副本信息：副本信息 + 当前房间信息
+
+	// 主窗口控件
+
 // 重写
 public:
 	virtual BOOL InitInstance();

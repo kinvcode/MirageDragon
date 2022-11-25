@@ -13,10 +13,20 @@ bool window_top = false;
 bool is_running = false;
 __int64 C_USER = 0;
 __int64 C_USER_POINTER = 0;
-bool use_pass_room_call = false;
+bool use_pass_room_call = true;
 int play_user_index = 0;
 int autoMapNumber = 100002962;
 bool room_has_urgent = false;
+
+// 图内对象
+struct dungeonInfo 
+{
+	// 下个房间的方向
+	// BOSS房间位置
+	// 当前房间结构体：是否是BOSS房间，是否已开门，是否存在怪物，是否存在物品
+	// 功能是否已开启
+	// 
+};
 
 UINT updateDataThread(LPVOID pParam)
 {
@@ -90,7 +100,7 @@ UINT updateDataThread(LPVOID pParam)
 		default:
 			break;
 		}
-		programDelay(300, 0);
+		programDelay(1000, 0);
 	}
 	return 0;
 }
@@ -135,7 +145,6 @@ UINT playGameThead(LPVOID pParam)
 
 			if (is_auto_play) 
 			{
-				use_pass_room_call = false;
 				pass_room_numbers = 0;
 				room_history.clear();
 
@@ -158,6 +167,8 @@ UINT playGameThead(LPVOID pParam)
 
 			break;
 		case 3:
+			// 刷图线程开启，关闭选角线程、城镇线程、选图线程
+
 			roomBegin:
 			// 遍历物品和怪物信息
 			getMonsterAndItems();
@@ -249,16 +260,6 @@ UINT playGameThead(LPVOID pParam)
 							current_room.x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
 							current_room.y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
 							room_history.push_back(current_room);
-							if (roomRepeats(room_history, current_room) > 3)
-							{
-								use_pass_room_call = true;
-							}
-							else {
-								use_pass_room_call = true;
-
-								// 该模拟按键会被检测，暂时不使用模拟按键
-								//use_pass_room_call = false;
-							}
 							autoNextRoom();
 							pass_room_numbers++;
 						}

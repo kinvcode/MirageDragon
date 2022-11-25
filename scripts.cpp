@@ -232,6 +232,9 @@ void autoNextRoom()
 
 		CString msg;
 
+		mainWindow->Log(L"获取下个房间入口");
+
+
 		switch (next_direction)
 		{
 		case 0:

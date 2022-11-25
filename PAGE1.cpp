@@ -93,8 +93,10 @@ BOOL PAGE1::OnInitDialog()
 	// 初始化城镇列表
 	m_ctl_sel_town.InsertString(0, L"诺顿");
 	m_ctl_sel_town.InsertString(1, L"风振");
-	m_ctl_sel_town.InsertString(2, L"哈林");
-	m_ctl_sel_town.InsertString(3, L"诺斯匹斯");
+	m_ctl_sel_town.InsertString(2, L"教堂");
+	m_ctl_sel_town.InsertString(3, L"寂静城");
+	m_ctl_sel_town.InsertString(4, L"哈林");
+	m_ctl_sel_town.InsertString(5, L"诺斯匹斯");
 	m_ctl_sel_town.SetCurSel(0);
 
 	m_ctl_mapNumber.SetWindowText(L"100002962");
@@ -211,16 +213,18 @@ void PAGE1::OnCbnSelchangeCombo3()
 	switch (m_ctl_sel_town.GetCurSel())
 	{
 	case 0:
-		// 40 3 598 225
 		moveOfTown(40, 1, 1337, 231);
 		break;
 	case 1:
-		// 39 0 1809 256
 		moveOfTown(39, 0, 1809, 256);
 	case 2:
+		moveOfTown(89, 0, 557, 417);
+	case 3:
+		moveOfTown(22, 2, 945, 273);
+	case 4:
 		moveOfTown(54, 2, 972, 227);
 		break;
-	case 3:
+	case 5:
 		moveOfTown(137, 1, 864, 196);
 		break;
 	default:
