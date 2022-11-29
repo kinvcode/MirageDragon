@@ -411,5 +411,5 @@ int mapCodeOfSelected()
 // 选中地图难度
 int mapDifficultyOfSelected()
 {
-	readLong(readLong(C_MAP2_SELECTED) + C_MAP_DIFFICULTY_SELECTED);
+	return readLong(readLong(C_MAP2_SELECTED) + C_MAP_DIFFICULTY_SELECTED);
 }

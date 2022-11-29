@@ -235,12 +235,14 @@ void PAGE1::OnCbnSelchangeCombo3()
 }
 
 
+// 测试按钮
 void PAGE1::OnBnClickedButton5()
 {
-	is_running = readInt(0x140000000) == 0x905A4D;
-	//reloadProcess();
-	//firstRoomFunctions();
-	// TODO: 在此添加控件通知处理程序代码
+	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
+
+	// 获取角色名称
+	//CString name = bytesToWstring(readByteArray(readLong(readLong(0x149CCF220)+0x850), 12)).c_str();
+	//pParentDlg->Log(name);
 }
 
 
@@ -338,7 +340,7 @@ void PAGE1::OnBnClickedCheck7()
 void PAGE1::OnEnUpdateEdit2()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
-	
+
 	pParentDlg->Log(L"改变了地图值");
 
 	CString code;

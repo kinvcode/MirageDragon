@@ -22,8 +22,6 @@ vector<byte> readByteArray(__int64 address, int length);
 
 bool writeByteArray(__int64 address, vector<byte> Data);
 
-bool writeByteArray(__int64 address, vector<byte> Data);
-
 vector<byte> wstringToBytes(wstring w_string);
 
 wstring bytesToWstring(vector<byte> data);

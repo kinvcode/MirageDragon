@@ -37,7 +37,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
-// 实现
+	// 实现
 protected:
 	DECLARE_MESSAGE_MAP()
 };
@@ -121,7 +121,7 @@ BOOL CMirageDragonDlg::OnInitDialog()
 	// 设置日志框字符数
 	m_ctl_edit_console.SetLimitText(UINT_MAX);
 
-	// 开启驱动按键功能
+	// 开启易键鼠按键功能
 	MSDK_HANDLE = M_Open(1);
 	if (MSDK_HANDLE != NULL) 
 	{
