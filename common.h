@@ -15,7 +15,7 @@ struct COORDINATE {
 	int z;
 };
 
-struct ROOMCOORDINATE 
+struct ROOMCOORDINATE
 {
 	int x;
 	int y;
@@ -72,7 +72,7 @@ struct DUNGEONOBJ
 
 
 // 功能开关结构
-struct FUNCTIONSWITCH{
+struct FUNCTIONSWITCH {
 	bool score;
 	bool three_speed;
 	bool gather_monster;
@@ -94,10 +94,14 @@ struct CURRENTROOM {
 // 副本结构
 struct DUNGEONINFO
 {
-	int next_room = 0; // 下个房间的方向
-	ROOMCOORDINATE boos_room; // BOSS房间位置
-	CURRENTROOM current_room; // 当前房间
-	// 功能是否已开启
+	bool entered;				// 是否已进入房间
+	int next_room;				// 下个房间的方向
+	__int64 time_pointer;		// 时间指针
+	__int64 door_pointer;		// 门型指针
+	COORDINATE user_coordinate; // 人物坐标
+	ROOMCOORDINATE boos_room;	// BOSS房间位置
+	ROOMCOORDINATE start_room;	// 起始房间位置
+	CURRENTROOM current_room;	// 当前房间
 };
 
 #endif

@@ -38,6 +38,8 @@ public:
 	int autoMapNumber = 0; // 副本编号
 
 	DUNGEONINFO dungeon_info; // 当前副本信息
+
+	void dungeonInfoClean(); // 清除副本信息
 };
 
 extern GameData GLOBAL;

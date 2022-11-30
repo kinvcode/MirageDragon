@@ -2,7 +2,7 @@
 
 __int64 passRoomData(int direction);
 
-int judgeNextRoomDiretion(COORDINATE current, COORDINATE boss);
+int judgeNextRoomDiretion(ROOMCOORDINATE current, ROOMCOORDINATE boss);
 
 DUNGEONMAP mapData();
 

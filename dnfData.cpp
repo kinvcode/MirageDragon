@@ -63,14 +63,22 @@ COORDINATE readCoordinate(__int64 address)
 	}
 }
 
-// 遍历图内对象信息
-vector<DUNGEONOBJ> getDungeonAllObj()
+void updateUserCoor()
 {
-	vector<DUNGEONOBJ> object_list;
+	GLOBAL.dungeon_info.user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
+}
+
+// 遍历图内对象信息
+void getDungeonAllObj()
+{
+	CURRENTROOM* p_current_room = &GLOBAL.dungeon_info.current_room;
+	p_current_room->dungeon_object_list.clear();
+	p_current_room->item_list.clear();
+	p_current_room->monster_list.clear();
 
 	if (GLOBAL.game_status != 3)
 	{
-		return object_list;
+		return;
 	}
 
 	__int64 map_base = readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16);
@@ -78,13 +86,16 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 	__int64 end_address = readLong(map_base + ADDR.x64("C_MAP_END"));
 
 	if (head_address == 0 || end_address == 0) {
-		return object_list;
+		return;
 	}
 
 	int object_quantity = (int)(end_address - head_address) / 32;
 	if (object_quantity == 0 || object_quantity > 1000) {
-		return object_list;
+		return;
 	}
+
+	// 怪物列表中血量最大值
+	int monster_max_blood = 0;
 
 	for (__int64 i = 1; i <= object_quantity; i++)
 	{
@@ -95,7 +106,7 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 		int monster_blood = readInt(monster_address + ADDR.x64("C_MONSTER_BLOOD"));
 		COORDINATE monster_coor = readCoordinate(monster_address);
 
-		// 对象
+		// 图内对象结构体
 		DUNGEONOBJ d_object;
 		d_object.p = monster_address;
 		d_object.blood = monster_blood;
@@ -103,62 +114,52 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 		d_object.camp = monster_camp;
 		d_object.code = monster_code;
 		d_object.coor = monster_coor;
-		object_list.push_back(d_object);
-		handleEvents();
-	}
 
-	return object_list;
-}
-
-// 更新怪物和物品列表
-void getMonsterAndItems()
-{
-	CURRENTROOM* p_current_room = &GLOBAL.dungeon_info.current_room;
-
-	p_current_room->dungeon_object_list.clear();
-	p_current_room->item_list.clear();
-	p_current_room->monster_list.clear();
-
-	p_current_room->dungeon_object_list = getDungeonAllObj();
-
-	__int64 object_number = p_current_room->dungeon_object_list.size();
-
-	int monster_max_blood = 0;
-
-	p_current_room->room_has_urgent = false;
-	for (__int64 i = 0; i < object_number; i++)
-	{
-		// 临时对象
-		DUNGEONOBJ tmp = p_current_room->dungeon_object_list[i];
-
-		if (tmp.type == 289 && tmp.coor.z == 0)
+		// 物品
+		if (d_object.type == 289 && d_object.coor.z == 0)
 		{
-			// 物品
-			p_current_room->item_list.push_back(tmp);
-		}
-		else if (tmp.type == 273 || tmp.type == 529)
-		{
-			// 敌对怪物和人偶类型怪物
-			if (tmp.camp == 100 && tmp.blood != 0)
+			p_current_room->item_list.push_back(d_object);
+
+			// 聚物处理
+			if (GLOBAL.function_switch.gather_monster)
 			{
-				p_current_room->monster_list.push_back(tmp);
-				if (tmp.blood > monster_max_blood)
+				gatherAtUser(GLOBAL.dungeon_info.user_coordinate, d_object);
+			}
+		}
+		// 敌对怪物和人偶类型怪物
+		else if (d_object.type == 273 || d_object.type == 529)
+		{
+			if (d_object.camp == 100 && d_object.blood != 0)
+			{
+				p_current_room->monster_list.push_back(d_object);
+				
+				// 最大血量值保存 
+				if (d_object.blood > monster_max_blood)
 				{
-					monster_max_blood = tmp.blood;
+					monster_max_blood = d_object.blood;
+				}
+
+				// 聚怪处理
+				if (!GLOBAL.function_switch.gather_items)
+				{
+					// 恩山的机关枪不可移动
+					if (p_current_room->monster_list[i].code != 109013676)
+					{
+						gatherAtUser(GLOBAL.dungeon_info.user_coordinate, d_object);
+					}
 				}
 			}
 		}
 
 		// 如果存在时空旋涡
-		if (tmp.camp == 200 && tmp.type == 33 && tmp.code == 490019076)
+		if (d_object.camp == 200 && d_object.type == 33 && d_object.code == 490019076)
 		{
-			GLOBAL.dungeon_info.current_room.room_has_urgent = true;
+			p_current_room->room_has_urgent = true;
 		}
+		//handleEvents();
 	}
 
-
-	// 对怪物容器进行排序(冒泡)
-	// X坐标从小到大排序
+	// 调用冒泡算法对怪物数组进行排序
 	int i, j, len;
 	DUNGEONOBJ temp;
 	len = (int)p_current_room->monster_list.size() - 1;
@@ -173,32 +174,52 @@ void getMonsterAndItems()
 	}
 }
 
-// 获取BOSS房间位置
-COORDINATE getBossRoom()
+void gatherAtUser(COORDINATE user, DUNGEONOBJ item)
 {
-	COORDINATE coor;
-	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
-	coor.x = (int)decrypt(roomData + ADDR.x64("C_BOSS_ROOM_X"));
-	coor.y = (int)decrypt(roomData + ADDR.x64("C_BOSS_ROOM_Y"));
-	return coor;
+	if (abs(item.coor.x - user.x) < 20 && abs(item.coor.y - user.y) < 20)
+	{
+		return;
+	}
+	writeFloat(readLong(item.p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user.x);
+	writeFloat(readLong(item.p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user.y);
+}
+
+void initDungeonInfo()
+{
+	// 更新时间指针和门型指针（每次进图会变化）
+	GLOBAL.dungeon_info.time_pointer = readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS"));
+	GLOBAL.dungeon_info.door_pointer = readLong(GLOBAL.dungeon_info.time_pointer + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+
+	// 获取起始房间位置
+	ROOMCOORDINATE start_coor;
+	start_coor.x = readInt(GLOBAL.dungeon_info.time_pointer + ADDR.x64("C_BEGIN_ROOM_X"));
+	start_coor.y = readInt(GLOBAL.dungeon_info.time_pointer + ADDR.x64("C_BEGIN_ROOM_Y"));
+	GLOBAL.dungeon_info.start_room = start_coor;
+
+	// 获取BOSS房间位置
+	ROOMCOORDINATE boss_coor;
+	boss_coor.x = (int)decrypt(GLOBAL.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
+	boss_coor.y = (int)decrypt(GLOBAL.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+	GLOBAL.dungeon_info.boos_room = boss_coor;
 }
 
 // 获取当前房间位置
-COORDINATE getCurrentRoom()
+void updateCurrentRoom()
 {
-	COORDINATE coor;
+	ROOMCOORDINATE coor;
 
 	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
 	coor.x = readInt(roomData + ADDR.x64("C_CURRENT_ROOM_X"));
 	coor.y = readInt(roomData + ADDR.x64("C_CURRENT_ROOM_Y"));
-	return coor;
+
+	GLOBAL.dungeon_info.current_room.coordinate = coor;
 }
 
 // 当前是否通关
 bool judgeClearance()
 {
-	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
-	__int64 result = readInt(roomData + ADDR.x64("C_BONFIRE_JUDGE"));
+	int result = readInt(GLOBAL.dungeon_info.door_pointer + ADDR.x64("C_BONFIRE_JUDGE"));
+
 	if (result == 2 || result == 0)
 	{
 		return true;
@@ -211,6 +232,7 @@ bool judgeClearance()
 // 当前是否开门
 bool judgeDoorOpen()
 {
+	// 每进入一个房间需要重新读取
 	if (decrypt2(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_DOOR_OFFSET")) == 0) {
 		return true;
 	}
@@ -222,77 +244,12 @@ bool judgeDoorOpen()
 // 当前是否是BOOS房间
 bool judgeIsBossRoom()
 {
-	COORDINATE cur, boss;
-	cur = getCurrentRoom();
-	boss = getBossRoom();
-	if (cur.x == boss.x && cur.y == boss.y)
+	updateCurrentRoom();
+	if (GLOBAL.dungeon_info.current_room.coordinate.x == GLOBAL.dungeon_info.boos_room.x && GLOBAL.dungeon_info.current_room.coordinate.y == GLOBAL.dungeon_info.boos_room.y)
 	{
 		return true;
 	}
 	else {
 		return false;
-	}
-}
-
-// 聚集物品和怪物
-void convergeMonsterAndItems()
-{
-	CURRENTROOM* p_current_room = &GLOBAL.dungeon_info.current_room;
-
-	COORDINATE monster_coordinate;
-	COORDINATE user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
-
-	if (!GLOBAL.function_switch.gather_monster)
-	{
-		goto item;
-	}
-	__int64 length = p_current_room->monster_list.size();
-
-	for (__int64 i = 0; i < length; i++)
-	{
-		monster_coordinate = readCoordinate(p_current_room->monster_list[i].p);
-		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
-		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
-		{
-			continue;
-		}
-
-		if (p_current_room->monster_list[i].code == 109013676)
-		{
-			// 恩山的机关枪不可移动，
-			continue;
-			//coorCall(monster_list[i].coor.x, monster_list[i].coor.y, 0);
-		}
-		else {
-			// 移动对象
-			writeFloat(readLong(p_current_room->monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
-			writeFloat(readLong(p_current_room->monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
-		}
-
-
-		handleEvents();
-	}
-
-item:
-	if (!GLOBAL.function_switch.gather_items)
-	{
-		return;
-	}
-	length = p_current_room->item_list.size();
-
-	for (__int64 i = 0; i < length; i++)
-	{
-		monster_coordinate = readCoordinate(p_current_room->item_list[i].p);
-		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
-		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
-		{
-			continue;
-		}
-
-		// 移动对象
-		writeFloat(readLong(p_current_room->item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
-		writeFloat(readLong(p_current_room->item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
-
-		handleEvents();
 	}
 }

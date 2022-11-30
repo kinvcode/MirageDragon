@@ -21,7 +21,7 @@ __int64 passRoomData(int direction)
 	return readLong(empty_address);
 }
 
-int judgeNextRoomDiretion(COORDINATE current, COORDINATE boss)
+int judgeNextRoomDiretion(ROOMCOORDINATE current, ROOMCOORDINATE boss)
 {
 	int x, y;
 

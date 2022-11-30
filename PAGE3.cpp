@@ -62,7 +62,7 @@ void PAGE3::OnBnClickedButton1()
 		return;
 	}
 
-	vector<DUNGEONOBJ> items = getDungeonAllObj();
+	vector<DUNGEONOBJ> items = GLOBAL.dungeon_info.current_room.dungeon_object_list;
 
 	int row = 0;
 	__int64 length = items.size();

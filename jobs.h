@@ -13,5 +13,20 @@ UINT updateDataThread(LPVOID pParam);
 // 刷图线程
 UINT playGameThead(LPVOID pParam);
 
+// 选择角色逻辑
+void selectRoleLogic();
+
+// 城镇逻辑
+void townLogic();
+
+// 选择副本逻辑
+void selectDungeonLogic();
+
+// 副本中逻辑
+void dungeonLogic();
+
+// 通关逻辑
+void clearanceLogic();
+
 // 获取当前房间重复次数
 int roomRepeats(vector<ROOMCOOR>, ROOMCOOR current_room);

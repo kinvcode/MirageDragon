@@ -219,8 +219,8 @@ void autoNextRoom()
 		return;
 	}
 
-	COORDINATE room_coor = getCurrentRoom();
-	COORDINATE boss_coor = getBossRoom();
+	ROOMCOORDINATE room_coor = GLOBAL.dungeon_info.current_room.coordinate;
+	ROOMCOORDINATE boss_coor = GLOBAL.dungeon_info.boos_room;
 
 	if (room_coor.x == boss_coor.x && room_coor.y == boss_coor.y) {
 		return;
@@ -329,7 +329,7 @@ void runToNextRoom(int direction)
 	if (GLOBAL.use_pass_room_call) {
 		if (GLOBAL.dungeon_info.current_room.room_has_urgent)
 		{
-			COORDINATE room = getCurrentRoom();
+			ROOMCOORDINATE room = GLOBAL.dungeon_info.current_room.coordinate;
 			passRoomByPacket(room.x, room.y);
 		}
 		else {
@@ -364,6 +364,11 @@ void runToNextRoom(int direction)
 void firstRoomFunctions()
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
+
+	{
+		InstanceLock lock(mainWindow);
+		mainWindow->Log(L"开启首图功能");
+	}
 
 	if (GLOBAL.is_auto_play)
 	{
@@ -410,6 +415,14 @@ void firstRoomFunctions()
 	if (GLOBAL.function_switch.hidden_user)
 	{
 		hiddenUser();
+	}
+
+	// 呼出面板，三速生效
+	if (GLOBAL.is_auto_play)
+	{
+		MSDK_keyPress(Keyboard_m, 1);
+		programDelay(400, 0);
+		MSDK_keyPress(Keyboard_m, 1);
 	}
 }
 
