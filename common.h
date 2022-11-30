@@ -15,6 +15,12 @@ struct COORDINATE {
 	int z;
 };
 
+struct ROOMCOORDINATE 
+{
+	int x;
+	int y;
+};
+
 // 地图结构
 struct DUNGEONMAP
 {
@@ -76,55 +82,22 @@ struct FUNCTIONSWITCH{
 	bool hidden_user;
 };
 
+// 当前房间结构
+struct CURRENTROOM {
+	vector<DUNGEONOBJ> dungeon_object_list;	// 图内对象列表
+	vector<DUNGEONOBJ> monster_list;		// 怪物列表
+	vector<DUNGEONOBJ> item_list;			// 图内物品列表
+	ROOMCOORDINATE coordinate;				// 房间位置
+	bool room_has_urgent = false;			// 是否存在时空旋涡
+};
 
-//////////////////////////////// [ 全 局 变 量 ] /////////////////////////////////////////
-
-// 进程ID
-extern DWORD PID;
-
-// 按键句柄
-extern HANDLE MSDK_HANDLE;
-
-// 游戏状态
-extern int game_status;
-
-// 窗口置顶状态
-extern bool window_top;
-
-// 游戏是否运行
-extern bool is_running;
-
-// 自动开关
-extern bool is_auto_play;
-
-// 自动类型
-extern int auto_play_type;
-
-// 人物穿透状态
-extern int penetrate_status;
-
-// 图内怪物列表
-extern vector<DUNGEONOBJ> monster_list;
-
-// 图内物品列表
-extern vector<DUNGEONOBJ> item_list;
-
-// 图内所有对象列表
-extern vector<DUNGEONOBJ> dungeon_object_list;
-
-// 功能开关
-extern FUNCTIONSWITCH function_switch;
-
-// 使用过图CALL开关
-extern bool use_pass_room_call;
-
-// 刷图角色索引
-extern int play_user_index;
-
-// 自动刷图编号
-extern int autoMapNumber;
-
-// 存在时空旋涡
-extern bool room_has_urgent;
+// 副本结构
+struct DUNGEONINFO
+{
+	int next_room = 0; // 下个房间的方向
+	ROOMCOORDINATE boos_room; // BOSS房间位置
+	CURRENTROOM current_room; // 当前房间
+	// 功能是否已开启
+};
 
 #endif

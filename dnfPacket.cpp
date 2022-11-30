@@ -5,6 +5,7 @@
 #include "dnfData.h"
 #include "constant.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 std::vector<byte> packetData;
 
@@ -133,7 +134,8 @@ void selectMap()
 // 组包过图
 void passRoomByPacket(int x, int y)
 {
-	if (monster_list.size() > 0)
+	// 修改为判断是否开门
+	if (GLOBAL.dungeon_info.current_room.monster_list.size() > 0)
 	{
 		return;
 	}

@@ -8,26 +8,7 @@
 #include "dnfUser.h"
 #include "dnfTask.h"
 #include "baseAddress.h"
-
-int game_status = 0;
-bool window_top = false;
-bool is_running = false;
-__int64 C_USER = 0;
-__int64 C_USER_POINTER = 0;
-bool use_pass_room_call = true;
-int play_user_index = 0;
-int autoMapNumber = 100002962;
-bool room_has_urgent = false;
-
-// 图内对象
-struct dungeonInfo
-{
-	// 下个房间的方向
-	// BOSS房间位置
-	// 当前房间结构体：是否是BOSS房间，是否已开门，是否存在怪物，是否存在物品
-	// 功能是否已开启
-	// 
-};
+#include "GameData.h"
 
 UINT updateDataThread(LPVOID pParam)
 {
@@ -43,17 +24,17 @@ UINT updateDataThread(LPVOID pParam)
 	while (true)
 	{
 		// 获取DNF窗口状态
-		window_top = windowIsTop();
+		GLOBAL.window_top = windowIsTop();
 
 		// 游戏运行状态
-		is_running = readInt(0x140000000) == 0x905A4D;
-		if (!is_running) {
+		GLOBAL.is_running = readInt(0x140000000) == 0x905A4D;
+		if (!GLOBAL.is_running) {
 			statusChange = false;
-			PID = getProcessPID(L"DNF.exe");
+			GLOBAL.PID = getProcessPID(L"DNF.exe");
 			{
 				InstanceLock lock(MainDlg);
 				MainDlg->Log(L"丢失读写权限！！！");
-				if (PID == 0)
+				if (GLOBAL.PID == 0)
 				{
 					MainDlg->Log(L"即将重启应用");
 					//reloadProcess();
@@ -64,7 +45,7 @@ UINT updateDataThread(LPVOID pParam)
 		}
 
 		// 读取游戏状态
-		game_status = readInt(ADDR.x64("C_GAME_STATUS"));
+		GLOBAL.game_status = readInt(ADDR.x64("C_GAME_STATUS"));
 
 		// 游戏不同状态的处理
 		//switch (game_status)
@@ -112,12 +93,12 @@ UINT playGameThead(LPVOID pParam)
 
 	while (true) {
 		// 判断运行状态
-		if (!is_running) {
+		if (!GLOBAL.is_running) {
 			goto threadEnd;
 		}
 
 		// 游戏不同状态的处理
-		switch (game_status)
+		switch (GLOBAL.game_status)
 		{
 		case 0:
 			// 选择角色界面
@@ -129,13 +110,13 @@ UINT playGameThead(LPVOID pParam)
 			allow_next_map = false;
 			first_room_functions = false;
 
-			if (is_auto_play)
+			if (GLOBAL.is_auto_play)
 			{
 				pass_room_numbers = 0;
 				room_history.clear();
 
 				// 剧情处理
-				if (auto_play_type == 2)
+				if (GLOBAL.auto_play_type == 2)
 				{
 					// 对话处理
 					dialogue();
@@ -179,7 +160,7 @@ UINT playGameThead(LPVOID pParam)
 				firstRoomFunctions();
 				first_room_functions = true;
 
-				if (is_auto_play)
+				if (GLOBAL.is_auto_play)
 				{
 					MSDK_keyPress(Keyboard_m, 1);
 					programDelay(400, 0);
@@ -194,9 +175,9 @@ UINT playGameThead(LPVOID pParam)
 			// 未开门时处理逻辑
 			if (is_open_door == false)
 			{
-				if (is_auto_play) {
+				if (GLOBAL.is_auto_play) {
 
-					if (monster_list.size() > 0)
+					if (GLOBAL.dungeon_info.current_room.monster_list.size() > 0)
 					{
 						// 判断技能冷却列表并释放随机技能
 						int key = getCoolDownKey();
@@ -210,8 +191,8 @@ UINT playGameThead(LPVOID pParam)
 				programDelay(1000, 0);
 				getMonsterAndItems();
 				convergeMonsterAndItems();
-				if (item_list.size() > 0 || monster_list.size() > 0) {
-					if (is_auto_play)
+				if (GLOBAL.dungeon_info.current_room.item_list.size() > 0 || GLOBAL.dungeon_info.current_room.monster_list.size() > 0) {
+					if (GLOBAL.is_auto_play)
 					{
 						{
 							InstanceLock lock(MainDlg);
@@ -225,7 +206,7 @@ UINT playGameThead(LPVOID pParam)
 					}
 				}
 				else {
-					if (is_auto_play)
+					if (GLOBAL.is_auto_play)
 					{
 						{
 							InstanceLock lock(MainDlg);
@@ -235,7 +216,7 @@ UINT playGameThead(LPVOID pParam)
 					}
 					// 普通房间进行跑图
 					if (!is_boss) {
-						if (is_auto_play) {
+						if (GLOBAL.is_auto_play) {
 							{
 								InstanceLock lock(MainDlg);
 								MainDlg->Log(L"进入下个房间");
@@ -267,14 +248,14 @@ UINT playGameThead(LPVOID pParam)
 							first_room_functions = false;
 						}
 
-						if (is_auto_play) {
+						if (GLOBAL.is_auto_play) {
 
 							// 关闭自动功能
-							use_pass_room_call = false;
+							GLOBAL.use_pass_room_call = false;
 							pass_room_numbers = 0;
 							room_history.clear();
 
-							if (item_list.size() < 1) {
+							if (GLOBAL.dungeon_info.current_room.item_list.size() < 1) {
 								// 翻牌
 								MSDK_keyPress(1, 1);
 								programDelay(1000, 0);
@@ -295,7 +276,7 @@ UINT playGameThead(LPVOID pParam)
 										MSDK_keyPress(Keyboard_F12, 1);
 									}
 
-									if (auto_play_type == 1) {
+									if (GLOBAL.auto_play_type == 1) {
 										// 再次挑战
 										MSDK_keyPress(Keyboard_F10, 1);
 									}
@@ -318,7 +299,7 @@ UINT playGameThead(LPVOID pParam)
 
 
 		// 自动开关
-		if (is_auto_play)
+		if (GLOBAL.is_auto_play)
 		{
 
 		}

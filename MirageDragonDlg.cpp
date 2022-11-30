@@ -11,6 +11,7 @@
 #include "common.h"
 #include "keyboardDriver.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 #include <gdiplus.h>
 #pragma comment(lib,"gdiplus.lib")
@@ -198,8 +199,8 @@ HCURSOR CMirageDragonDlg::OnQueryDragIcon()
 void CMirageDragonDlg::OnBnClickedButton1()
 {
 	// 获取DNF进程ID
-	PID = getProcessPID(L"DNF.exe");
-	if (PID == 0) {
+	GLOBAL.PID = getProcessPID(L"DNF.exe");
+	if (GLOBAL.PID == 0) {
 		AfxMessageBox(L"请先运行游戏");
 		return;
 	}
@@ -223,11 +224,13 @@ void CMirageDragonDlg::OnBnClickedButton1()
 
 	// 线程池管理
 	// 启动数据更新线程
-	theApp.thread_update = AfxBeginThread(updateDataThread, this);
+	//theApp.thread_update = AfxBeginThread(updateDataThread, this);
 	// 启动刷图线程
-	theApp.thread_play = AfxBeginThread(playGameThead, this);
-
-	Log(L"初始化完毕");
+	//theApp.thread_play = AfxBeginThread(playGameThead, this);
+	
+	//Log(L"初始化完毕");
+	// 初始化线程
+	initThreads();
 }
 
 void CMirageDragonDlg::initTabCtl()
@@ -329,4 +332,12 @@ void CMirageDragonDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 	}
 
 	__super::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
+
+void CMirageDragonDlg::initThreads()
+{
+	// 数据线程
+	thread_update = AfxBeginThread(updateDataThread, this);
+	// 刷图线程
+	thread_play = AfxBeginThread(playGameThead, this);
 }

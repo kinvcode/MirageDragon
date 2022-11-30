@@ -28,6 +28,9 @@
     <Filter Include="DNF\基址">
       <UniqueIdentifier>{552e3313-2ae3-4f9f-b283-cd42534fbce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DNF\游戏数据">
+      <UniqueIdentifier>{71d42bd5-208b-43a5-a7d4-42f1912e61ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MirageDragon.h">
@@ -117,6 +120,9 @@
     <ClInclude Include="baseAddress.h">
       <Filter>DNF\基址</Filter>
     </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>DNF\游戏数据</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -178,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="baseAddress.cpp">
       <Filter>DNF\基址</Filter>
+    </ClCompile>
+    <ClCompile Include="GameData.cpp">
+      <Filter>DNF\游戏数据</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

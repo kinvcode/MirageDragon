@@ -13,10 +13,7 @@
 #include "constant.h"
 #include "scripts.h"
 #include "baseAddress.h"
-
-int auto_play_type = 1;
-int penetrate_status = 0;
-FUNCTIONSWITCH function_switch = { true,true,true,true,true,true,true };
+#include "GameData.h"
 
 // PAGE1 对话框
 
@@ -121,11 +118,11 @@ void PAGE1::OnCbnSelchangeCombo2()
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
 	if (m_ctl_sel_autoplay.GetCurSel() == 1) {
-		auto_play_type = 2;
+		GLOBAL.auto_play_type = 2;
 		pParentDlg->Log(L"切换为自动剧情模式");
 	}
 	else {
-		auto_play_type = 1;
+		GLOBAL.auto_play_type = 1;
 		pParentDlg->Log(L"切换为自动刷图模式");
 	}
 }
@@ -135,7 +132,7 @@ void PAGE1::OnBnClickedButton1()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
-	if (game_status != 3) {
+	if (GLOBAL.game_status != 3) {
 		pParentDlg->Log(L"请在图内使用该功能");
 		return;
 	}
@@ -148,12 +145,12 @@ void PAGE1::OnBnClickedButton2()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
-	if (game_status != 3) {
+	if (GLOBAL.game_status != 3) {
 		pParentDlg->Log(L"请在图内使用该功能");
 		return;
 	}
 
-	if (penetrate_status) {
+	if (GLOBAL.penetrate_status) {
 		penetrate(false);
 	}
 	else {
@@ -166,7 +163,7 @@ void PAGE1::OnBnClickedButton3()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
-	if (game_status != 3) {
+	if (GLOBAL.game_status != 3) {
 		pParentDlg->Log(L"请在图内使用该功能");
 		return;
 	}
@@ -184,7 +181,7 @@ void PAGE1::OnBnClickedButton4()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
-	if (game_status != 1) {
+	if (GLOBAL.game_status != 1) {
 		pParentDlg->Log(L"请在城镇中使用该功能");
 		return;
 	}
@@ -205,7 +202,7 @@ void PAGE1::OnCbnSelchangeCombo3()
 {
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
-	if (game_status != 1) {
+	if (GLOBAL.game_status != 1) {
 		pParentDlg->Log(L"请在城镇中使用该功能");
 		return;
 	}
@@ -251,10 +248,10 @@ void PAGE1::OnBnClickedCheck1()
 	// 三速
 	if (_switch_three_speed.GetCheck() == BST_CHECKED)
 	{
-		function_switch.three_speed = true;
+		GLOBAL.function_switch.three_speed = true;
 	}
 	else {
-		function_switch.three_speed = false;
+		GLOBAL.function_switch.three_speed = false;
 	}
 }
 
@@ -264,10 +261,10 @@ void PAGE1::OnBnClickedCheck2()
 	// 评分
 	if (_switch_score.GetCheck() == BST_CHECKED)
 	{
-		function_switch.score = true;
+		GLOBAL.function_switch.score = true;
 	}
 	else {
-		function_switch.score = false;
+		GLOBAL.function_switch.score = false;
 	}
 }
 
@@ -277,10 +274,10 @@ void PAGE1::OnBnClickedCheck3()
 	// 透明
 	if (_switch_hidden_user.GetCheck() == BST_CHECKED)
 	{
-		function_switch.hidden_user = true;
+		GLOBAL.function_switch.hidden_user = true;
 	}
 	else {
-		function_switch.hidden_user = false;
+		GLOBAL.function_switch.hidden_user = false;
 	}
 }
 
@@ -290,10 +287,10 @@ void PAGE1::OnBnClickedCheck4()
 	// 聚怪
 	if (_switch_gather_monster.GetCheck() == BST_CHECKED)
 	{
-		function_switch.gather_monster = true;
+		GLOBAL.function_switch.gather_monster = true;
 	}
 	else {
-		function_switch.gather_monster = false;
+		GLOBAL.function_switch.gather_monster = false;
 	}
 }
 
@@ -303,10 +300,10 @@ void PAGE1::OnBnClickedCheck5()
 	// 聚集物品
 	if (_switch_gather_items.GetCheck() == BST_CHECKED)
 	{
-		function_switch.gather_items = true;
+		GLOBAL.function_switch.gather_items = true;
 	}
 	else {
-		function_switch.gather_items = false;
+		GLOBAL.function_switch.gather_items = false;
 	}
 }
 
@@ -316,10 +313,10 @@ void PAGE1::OnBnClickedCheck6()
 	// 技能冷却
 	if (_switch_cool_down.GetCheck() == BST_CHECKED)
 	{
-		function_switch.cool_down = true;
+		GLOBAL.function_switch.cool_down = true;
 	}
 	else {
-		function_switch.cool_down = false;
+		GLOBAL.function_switch.cool_down = false;
 	}
 }
 
@@ -329,10 +326,10 @@ void PAGE1::OnBnClickedCheck7()
 	// HOOK伤害
 	if (_switch_hook_damage.GetCheck() == BST_CHECKED)
 	{
-		function_switch.hook_damage = true;
+		GLOBAL.function_switch.hook_damage = true;
 	}
 	else {
-		function_switch.hook_damage = false;
+		GLOBAL.function_switch.hook_damage = false;
 	}
 }
 
@@ -346,5 +343,5 @@ void PAGE1::OnEnUpdateEdit2()
 	CString code;
 	m_ctl_mapNumber.GetWindowText(code);
 
-	autoMapNumber = _wtoi(code);
+	GLOBAL.autoMapNumber = _wtoi(code);
 }

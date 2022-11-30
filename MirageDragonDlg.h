@@ -63,4 +63,14 @@ public:
 	afx_msg void OnTcnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult); // 切换分页
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor); // 界面渲染
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2); // 热键事件
+
+
+public:
+	// 任务队列
+
+// 线程池
+// 线程
+	CWinThread* thread_update;
+	CWinThread* thread_play;
+	void initThreads();
 };

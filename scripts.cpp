@@ -10,6 +10,7 @@
 #include "dnfBase.h"
 #include "dnfPacket.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 // 跑到目标
 void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
@@ -93,7 +94,7 @@ void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			}
 		}
 
-		if (game_status != 3) {
+		if (GLOBAL.game_status != 3) {
 			//不在图内，停止跑图;
 			{
 				InstanceLock lock(mainWindow);
@@ -214,7 +215,7 @@ void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 
 void autoNextRoom()
 {
-	if (game_status != 3) {
+	if (GLOBAL.game_status != 3) {
 		return;
 	}
 
@@ -286,7 +287,7 @@ void runToNextRoom(int direction)
 	end_y = readInt(coor_struct + 12);
 
 	int far_door;
-	if (use_pass_room_call) {
+	if (GLOBAL.use_pass_room_call) {
 		far_door = 20;
 	}
 	else {
@@ -325,8 +326,8 @@ void runToNextRoom(int direction)
 		return;
 	}
 
-	if (use_pass_room_call) {
-		if (room_has_urgent)
+	if (GLOBAL.use_pass_room_call) {
+		if (GLOBAL.dungeon_info.current_room.room_has_urgent)
 		{
 			COORDINATE room = getCurrentRoom();
 			passRoomByPacket(room.x, room.y);
@@ -364,7 +365,7 @@ void firstRoomFunctions()
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 
-	if (is_auto_play)
+	if (GLOBAL.is_auto_play)
 	{
 		// 上上空格
 		MSDK_keyPress(Keyboard_UpArrow, 1);
@@ -379,12 +380,12 @@ void firstRoomFunctions()
 		programDelay(350, 0);
 	}
 
-	if (function_switch.score)
+	if (GLOBAL.function_switch.score)
 	{
 		superScore();
 	}
 
-	if (function_switch.cool_down)
+	if (GLOBAL.function_switch.cool_down)
 	{
 		CString num;
 		mainWindow->page2._cool_down.GetWindowText(num);
@@ -392,12 +393,12 @@ void firstRoomFunctions()
 		skillCoolDown(number);
 	}
 
-	if (function_switch.hook_damage)
+	if (GLOBAL.function_switch.hook_damage)
 	{
 		hookDamage(true);
 	}
 
-	if (function_switch.three_speed)
+	if (GLOBAL.function_switch.three_speed)
 	{
 		CString attack_speed, move_speed, casting_speed;
 		mainWindow->page2._attack_speed.GetWindowText(attack_speed);
@@ -406,7 +407,7 @@ void firstRoomFunctions()
 		threeSpeed(_ttoi(attack_speed), _ttoi(casting_speed), _ttoi(move_speed));
 	}
 
-	if (function_switch.hidden_user)
+	if (GLOBAL.function_switch.hidden_user)
 	{
 		hiddenUser();
 	}
@@ -417,17 +418,17 @@ void closeDungeonFunctions()
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 
 
-	if (function_switch.cool_down)
+	if (GLOBAL.function_switch.cool_down)
 	{
 		skillCoolDown(0);
 	}
 
-	if (function_switch.hook_damage)
+	if (GLOBAL.function_switch.hook_damage)
 	{
 		hookDamage(false);
 	}
 
-	if (function_switch.three_speed)
+	if (GLOBAL.function_switch.three_speed)
 	{
 		threeSpeed(0, 0, 0);
 	}

@@ -10,6 +10,7 @@
 #include "keyboardDriver.h"
 #include "constant.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 // 切换地图&建筑穿透
 void penetrate(bool on)
@@ -19,13 +20,13 @@ void penetrate(bool on)
 	if (on) {
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), -255);
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), -255);
-		penetrate_status = 1;
+		GLOBAL.penetrate_status = 1;
 		mainWindow->Log(L"已开启穿透");
 	}
 	else {
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), 10);
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), 40);
-		penetrate_status = 0;
+		GLOBAL.penetrate_status = 0;
 		mainWindow->Log(L"已关闭穿透");
 	}
 }
@@ -201,29 +202,29 @@ void autoEntryDungeon()
 // 切换角色
 void switchUser()
 {
-	play_user_index += 1;
+	GLOBAL.play_user_index += 1;	// 需要修改
 	programDelay(20, 0);
 	roleList();
 	programDelay(500, 0);
-	selectRole(play_user_index);
+	selectRole(GLOBAL.play_user_index);
 	programDelay(500, 0);
 }
 
 // 自动计算任务、自动进图
 void autoCalcTask()
 {
-	if (auto_play_type == 1)
+	if (GLOBAL.auto_play_type == 1)
 	{
-		areaCall(autoMapNumber);
+		areaCall(GLOBAL.autoMapNumber);
 		selectMap();
 		programDelay(200, 0);
 		while (true)
 		{
-			if (game_status != 2)
+			if (GLOBAL.game_status != 2)
 			{
 				return;
 			}
-			if (mapCodeOfSelected() == autoMapNumber)
+			if (mapCodeOfSelected() == GLOBAL.autoMapNumber)
 			{
 				break;
 			}
@@ -233,7 +234,7 @@ void autoCalcTask()
 
 		while (true)
 		{
-			if (game_status != 2)
+			if (GLOBAL.game_status != 2)
 			{
 				return;
 			}
@@ -281,9 +282,9 @@ void autoCalcTask()
 			}
 			for (int i = difficulty; i > 0; i--)
 			{
-				entryDungeon(autoMapNumber, i, 0, 0);
+				entryDungeon(GLOBAL.autoMapNumber, i, 0, 0);
 				programDelay(500, 0);
-				if (game_status == 3)
+				if (GLOBAL.game_status == 3)
 				{
 					goto end;
 				}

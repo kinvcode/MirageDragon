@@ -7,6 +7,7 @@
 #include "afxdialogex.h"
 #include "dnfData.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 // PAGE3 对话框
 
@@ -56,7 +57,7 @@ void PAGE3::OnBnClickedButton1()
 	_ctl_list.DeleteAllItems();
 
 	// 遍历怪物
-	if (game_status != 3)
+	if (GLOBAL.game_status != 3)
 	{
 		return;
 	}

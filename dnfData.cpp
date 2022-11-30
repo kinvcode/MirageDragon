@@ -7,6 +7,7 @@
 #include "common.h"
 #include "constant.h"
 #include "baseAddress.h"
+#include "GameData.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;
@@ -71,20 +72,21 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 {
 	vector<DUNGEONOBJ> object_list;
 
-	if (game_status != 3)
+	if (GLOBAL.game_status != 3)
 	{
 		return object_list;
 	}
 
-	__int64 head_address = readLong(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_MAP_HEAD"));
-	__int64 end_address = readLong(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_MAP_END"));
+	__int64 map_base = readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16);
+	__int64 head_address = readLong(map_base + ADDR.x64("C_MAP_HEAD"));
+	__int64 end_address = readLong(map_base + ADDR.x64("C_MAP_END"));
 
 	if (head_address == 0 || end_address == 0) {
 		return object_list;
 	}
 
 	int object_quantity = (int)(end_address - head_address) / 32;
-	if (object_quantity == 0) {
+	if (object_quantity == 0 || object_quantity > 1000) {
 		return object_list;
 	}
 
@@ -115,56 +117,61 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 // 更新怪物和物品列表
 void getMonsterAndItems()
 {
-	dungeon_object_list.clear();
-	item_list.clear();
-	monster_list.clear();
+	CURRENTROOM* p_current_room = &GLOBAL.dungeon_info.current_room;
 
-	dungeon_object_list = getDungeonAllObj();
+	p_current_room->dungeon_object_list.clear();
+	p_current_room->item_list.clear();
+	p_current_room->monster_list.clear();
 
-	__int64 object_number = dungeon_object_list.size();
+	p_current_room->dungeon_object_list = getDungeonAllObj();
+
+	__int64 object_number = p_current_room->dungeon_object_list.size();
 
 	int monster_max_blood = 0;
 
-	room_has_urgent = false;
+	p_current_room->room_has_urgent = false;
 	for (__int64 i = 0; i < object_number; i++)
 	{
-		// 物品
-		if (dungeon_object_list[i].type == 289 && dungeon_object_list[i].coor.z == 0)
-		{
-			item_list.push_back(dungeon_object_list[i]);
-		}
+		// 临时对象
+		DUNGEONOBJ tmp = p_current_room->dungeon_object_list[i];
 
-		// 怪物、建筑
-		if (dungeon_object_list[i].type == 273 || dungeon_object_list[i].type == 529)
+		if (tmp.type == 289 && tmp.coor.z == 0)
 		{
-			if (dungeon_object_list[i].camp != 0 && dungeon_object_list[i].blood != 0)
+			// 物品
+			item_list.push_back(tmp);
+		}
+		else if (tmp.type == 273 || tmp.type == 529)
+		{
+			// 敌对怪物和人偶类型怪物
+			if (tmp.camp == 100 && tmp.blood != 0)
 			{
-				monster_list.push_back(dungeon_object_list[i]);
-				if (dungeon_object_list[i].blood > monster_max_blood)
+				monster_list.push_back(tmp);
+				if (tmp.blood > monster_max_blood)
 				{
-					monster_max_blood = dungeon_object_list[i].blood;
+					monster_max_blood = tmp.blood;
 				}
 			}
 		}
 
-		// 时空旋涡
-		if (dungeon_object_list[i].camp == 200 && dungeon_object_list[i].type == 33 && dungeon_object_list[i].code == 490019076)
+		// 如果存在时空旋涡
+		if (tmp.camp == 200 && tmp.type == 33 && tmp.code == 490019076)
 		{
-			room_has_urgent = true;
+			GLOBAL.dungeon_info.current_room.room_has_urgent = true;
 		}
 	}
 
 
 	// 对怪物容器进行排序(冒泡)
+	// X坐标从小到大排序
 	int i, j, len;
 	DUNGEONOBJ temp;
-	len = (int)monster_list.size();
-	for (i = 0; i < len - 1; i++) {
-		for (j = 0; j < len - 1 - i; j++) {
+	len = (int)monster_list.size() - 1;
+	for (i = len; i > 0; i--) {
+		for (j = 0; j < i; j++) {
 			if (monster_list[j].coor.x > monster_list[j + 1].coor.x) {
-				temp = monster_list[j];
-				monster_list[j] = monster_list[j + 1];
-				monster_list[j + 1] = temp;
+				temp = monster_list[j + 1];
+				monster_list[j + 1] = monster_list[j];
+				monster_list[j] = temp;
 			}
 		}
 	}
@@ -237,7 +244,7 @@ void convergeMonsterAndItems()
 	COORDINATE monster_coordinate;
 	COORDINATE user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 
-	if (!function_switch.gather_monster)
+	if (!GLOBAL.function_switch.gather_monster)
 	{
 		goto item;
 	}
@@ -269,7 +276,7 @@ void convergeMonsterAndItems()
 	}
 
 item:
-	if (!function_switch.gather_items)
+	if (!GLOBAL.function_switch.gather_items)
 	{
 		return;
 	}
