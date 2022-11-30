@@ -10,6 +10,7 @@
 #include "jobs.h"
 #include "common.h"
 #include "keyboardDriver.h"
+#include "baseAddress.h"
 
 #include <gdiplus.h>
 #pragma comment(lib,"gdiplus.lib")

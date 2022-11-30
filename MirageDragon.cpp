@@ -6,6 +6,9 @@
 #include "framework.h"
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
+#include "json.h"
+#include "http.h"
+#include "baseAddress.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,45 +42,40 @@ CMirageDragonApp theApp;
 
 BOOL CMirageDragonApp::InitInstance()
 {
-	asSystemRunning();
-	//asDNFUserRunning();
+	// 提取启动方式
+	//asSystemRunning();
+	asDNFUserRunning();
 
-	// 容器加载组件
+	initBaseAddress();
 
-	// 如果一个运行在 Windows XP 上的应用程序清单指定要
-	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
-	//则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
+	// 如果一个运行在 Windows XP 上的应用程序清单指定要使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
 	INITCOMMONCONTROLSEX InitCtrls;
 	InitCtrls.dwSize = sizeof(InitCtrls);
-	// 将它设置为包括所有要在应用程序中使用的
-	// 公共控件类。
+	// 将它设置为包括所有要在应用程序中使用的公共控件类。
 	InitCtrls.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&InitCtrls);
 
+	// 基类初始化
 	CWinApp::InitInstance();
-
+	// OLE初始化
 	AfxEnableControlContainer();
 
-	// 创建 shell 管理器，以防对话框包含
-	// 任何 shell 树视图控件或 shell 列表视图控件。
+	// 创建 shell 管理器，以防对话框包含任何 shell 树视图控件或 shell 列表视图控件。
 	CShellManager *pShellManager = new CShellManager;
 
 	// 激活“Windows Native”视觉管理器，以便在 MFC 控件中启用主题
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
 
-	// 初始化
-
+	// 绑定主窗口
 	CMirageDragonDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
-		// TODO: 在此放置处理何时用
 		//  “确定”来关闭对话框的代码
 	}
 	else if (nResponse == IDCANCEL)
 	{
-		// TODO: 在此放置处理何时用
 		//  “取消”来关闭对话框的代码
 	}
 	else if (nResponse == -1)
@@ -96,8 +94,23 @@ BOOL CMirageDragonApp::InitInstance()
 	ControlBarCleanUp();
 #endif
 
-	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
-	//  而不是启动应用程序的消息泵。
+	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，而不是启动应用程序的消息泵。
 	return FALSE;
 }
 
+void CMirageDragonApp::initBaseAddress() 
+{
+	// 加载基址
+	HttpClient http_cli(API_BASE_ADDRESS);
+	json data = http_cli.response;
+
+	if (data.size() < 1) 
+	{
+		MessageBoxW(NULL, L"基址列表未更新！", L"幻镜龙", MB_OK);
+		ExitProcess(0);
+	}
+
+	for (json::iterator it = data.begin(); it != data.end(); ++it) {
+		ADDR.address_list.push_back(json::object_t::value_type(it.value().at("const_name"),it.value().at("address")));
+	}
+}

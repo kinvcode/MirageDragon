@@ -3,10 +3,11 @@
 #include "dnfBase.h"
 #include "dnfPacket.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, int skillSize)
 {
-	__int64 emptyAddress = C_EMPTY_ADDRESS + 1200;
+	__int64 emptyAddress = ADDR.x64("C_EMPTY_ADDRESS") + 1200;
 	std::vector<byte>asm_code;
 
 	float size = (float)skillSize;
@@ -23,7 +24,7 @@ void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, i
 
 	asm_code = asm_code + makeByteArray({ 72, 129, 236, 0, 2, 0, 0 });
 	asm_code = asm_code + makeByteArray({ 72, 185 }) + longToBytes(emptyAddress);
-	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(C_SKILL_CALL);
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(ADDR.x64("C_SKILL_CALL"));
 	asm_code = asm_code + makeByteArray({ 255, 208, 72, 129, 196, 0, 2, 0, 0 });
 
 	memoryAssambly(asm_code);
@@ -32,7 +33,7 @@ void skillCall(__int64 pointer, int code, __int64 damage, int x, int y, int z, i
 // 坐标CALL(时间久了会掉游戏)
 void coorCall(int x, int y, int z)
 {
-	__int64 target_p = readLong(C_USER);
+	__int64 target_p = readLong(ADDR.x64("C_USER_ADDRESS"));
 
 	if (target_p < 1) {
 		return;
@@ -44,7 +45,7 @@ void coorCall(int x, int y, int z)
 	asm_code = asm_code + makeByteArray({ 186 }) + intToBytes(x);
 	asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(target_p);
 	asm_code = asm_code + makeByteArray({ 72,139,1 });
-	asm_code = asm_code + makeByteArray({ 255,144 }) + longToBytes(C_COOR_CALL_OFFSET);
+	asm_code = asm_code + makeByteArray({ 255,144 }) + longToBytes(ADDR.x64("C_COOR_CALL_OFFSET"));
 	asm_code = asm_code + makeByteArray({ 72,129,196,0,1,0,0 });
 	memoryAssambly(asm_code);
 }
@@ -54,16 +55,16 @@ void summonFigureOrMonster(int code, int type = 1)
 {
 	if (type == 1) {
 		// 人偶
-		__int64 object_type = C_SUMMON_FIGURE;
+		__int64 object_type = ADDR.x64("C_SUMMON_FIGURE");
 	}
 	else {
 		// 怪物
-		__int64 object_type = C_SUMMON_MONSTER;
+		__int64 object_type = ADDR.x64("C_SUMMON_MONSTER");
 	}
 
 	std::vector<byte>asm_code;
 
-	__int64 emptyAddress = C_EMPTY_ADDRESS + 2900;
+	__int64 emptyAddress = ADDR.x64("C_EMPTY_ADDRESS") + 2900;
 
 	writeLong(emptyAddress, code);
 	writeLong(emptyAddress + 4, 135);
@@ -73,8 +74,8 @@ void summonFigureOrMonster(int code, int type = 1)
 
 	asm_code = asm_code + makeByteArray({ 72, 131, 236, 32 });
 	asm_code = asm_code + makeByteArray({ 73, 184 }) + longToBytes(emptyAddress);
-	asm_code = asm_code + makeByteArray({ 72, 186 }) + longToBytes(C_USER);
-	asm_code = asm_code + makeByteArray({ 72, 139, 18, 72, 185, 0, 0, 0, 0, 0, 0, 0, 0, 72, 184 }) + longToBytes(C_SUMMON_FIGURE);
+	asm_code = asm_code + makeByteArray({ 72, 186 }) + longToBytes(ADDR.x64("C_USER_ADDRESS"));
+	asm_code = asm_code + makeByteArray({ 72, 139, 18, 72, 185, 0, 0, 0, 0, 0, 0, 0, 0, 72, 184 }) + longToBytes(ADDR.x64("C_SUMMON_FIGURE"));
 	asm_code = asm_code + makeByteArray({ 255, 208, 72, 131, 196, 32 });
 
 	memoryAssambly(asm_code);
@@ -83,7 +84,7 @@ void summonFigureOrMonster(int code, int type = 1)
 // 透明CALL
 void hiddenUser()
 {
-	__int64 target = readLong(C_USER);
+	__int64 target = readLong(ADDR.x64("C_USER_ADDRESS"));
 
 	std::vector<byte>asm_code;
 	asm_code = makeByteArray({ 72, 129, 236, 0, 2, 0, 0 });
@@ -93,7 +94,7 @@ void hiddenUser()
 	asm_code = asm_code + makeByteArray({ 73, 184, 1, 0, 0, 0, 0, 0, 0, 0 });
 	asm_code = asm_code + makeByteArray({ 186, 1, 0, 0, 0 });
 	asm_code = asm_code + makeByteArray({ 72, 185 }) + longToBytes(target);
-	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(C_HIDDEN_CALL);
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(ADDR.x64("C_HIDDEN_CALL"));
 	asm_code = asm_code + makeByteArray({ 255, 208, 72, 129, 196, 0, 2, 0, 0 });
 
 	memoryAssambly(asm_code);
@@ -102,7 +103,7 @@ void hiddenUser()
 // 超级评分
 void superScore()
 {
-	writeLong(readLong(C_SCORE_ADDRESS) + C_CE_SCORE, 999999);
+	writeLong(readLong(ADDR.x64("C_SCORE_ADDRESS")) + ADDR.x16("C_CE_SCORE"), 999999);
 }
 
 // 区域CALL
@@ -113,15 +114,15 @@ void areaCall(int code)
 		code = 100000151;
 	}
 
-	__int64 area_address = readLong(C_AREA_PARAM);
-	__int64 area_call = C_AREA_CALL;
+	__int64 area_address = readLong(ADDR.x64("C_AREA_PARAM"));
+	__int64 area_call = ADDR.x64("C_AREA_CALL");
 
 	vector<byte> asm_data = makeByteArray({ 72,131,236,48 });
 
 	asm_data = asm_data + makeByteArray({ 65,184 }) + intToBytes(code);
 	asm_data = asm_data + makeByteArray({ 186,174,12,0,0 });
 	asm_data = asm_data + makeByteArray({ 72,184,255,255,255,255,0,0,0,0 });
-	asm_data = asm_data + makeByteArray({ 72,185 }) + longToBytes(C_AREA_PARAM);
+	asm_data = asm_data + makeByteArray({ 72,185 }) + longToBytes(ADDR.x64("C_AREA_PARAM"));
 	asm_data = asm_data + makeByteArray({ 72,139,9 });
 	asm_data = asm_data + makeByteArray({ 72,184 }) + longToBytes(area_call);
 	asm_data = asm_data + makeByteArray({ 255,208,72,131,196,48 });
@@ -129,10 +130,10 @@ void areaCall(int code)
 
 	programDelay(50, 0);
 
-	int world = readInt(area_address + C_AREA_OFFSET);
-	int town = readInt(area_address + C_AREA_OFFSET + 4);
-	int x = readInt(area_address + C_AREA_OFFSET + 8);
-	int y = readInt(area_address + C_AREA_OFFSET + 12);
+	int world = readInt(area_address + ADDR.x32("C_AREA_OFFSET"));
+	int town = readInt(area_address + ADDR.x32("C_AREA_OFFSET") + 4);
+	int x = readInt(area_address + ADDR.x32("C_AREA_OFFSET") + 8);
+	int y = readInt(area_address + ADDR.x32("C_AREA_OFFSET") + 12);
 
 	moveOfTown(world, town, x, y);
 }

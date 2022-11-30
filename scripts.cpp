@@ -9,6 +9,7 @@
 #include "dnfUser.h"
 #include "dnfBase.h"
 #include "dnfPacket.h"
+#include "baseAddress.h"
 
 // 跑到目标
 void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
@@ -31,7 +32,7 @@ void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		mainWindow->Log(coor);
 	}
 
-	COORDINATE user_coor = readCoordinate(readLong(C_USER));
+	COORDINATE user_coor = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 
 	bool x_arrived = false, y_arrived = false, isFirst = true, arrive_next = false;
 
@@ -66,7 +67,7 @@ void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 			return;
 		}
 
-		user_coor = readCoordinate(readLong(C_USER));
+		user_coor = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 
 		if (isFirst) {
 			{
@@ -104,7 +105,7 @@ void runToDestination(int x, int y, bool is_room = false, int target_range = 10)
 		}
 
 		// 判断人物动作
-		__int64 user_action = decrypt(readLong(C_USER) + C_MOVEMENT_ID);
+		__int64 user_action = decrypt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MOVEMENT_ID"));
 		if ((int)user_action != 14) {
 			{
 				InstanceLock lock(mainWindow);
@@ -272,8 +273,8 @@ void runToNextRoom(int direction)
 	__int64 target_room_x; // 目标的房间X
 	__int64 target_room_y; // 目标的房间Y
 
-	target_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-	target_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+	target_room_x = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_X"));
+	target_room_y = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_Y"));
 
 	__int64 pass_room_data = passRoomData(direction);
 	__int64 coor_struct = pass_room_data;
@@ -345,8 +346,8 @@ void runToNextRoom(int direction)
 
 		runToDestination(begin_x + end_x / 2, new_begin_y, true, 2);
 		__int64 current_room_x, current_room_y;
-		current_room_x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-		current_room_y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+		current_room_x = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_X"));
+		current_room_y = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_Y"));
 		if (target_room_x != current_room_x || target_room_y != current_room_y)
 		{
 			return;

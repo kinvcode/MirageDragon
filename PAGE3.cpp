@@ -6,7 +6,7 @@
 #include "PAGE3.h"
 #include "afxdialogex.h"
 #include "dnfData.h"
-
+#include "baseAddress.h"
 
 // PAGE3 对话框
 
@@ -67,7 +67,7 @@ void PAGE3::OnBnClickedButton1()
 	__int64 length = items.size();
 	for (__int64 i = 0; i < length; i++)
 	{
-		CString monster_name = bytesToWstring(readByteArray(readLong(items[i].p + C_NAME_OFFSET), 50)).c_str();
+		CString monster_name = bytesToWstring(readByteArray(readLong(items[i].p +  ADDR.x64("C_NAME_OFFSET")), 50)).c_str();
 
 		COORDINATE monster_coor = readCoordinate(items[i].p);
 

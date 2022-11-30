@@ -7,6 +7,7 @@
 #include "keyboardDriver.h"
 #include "dnfUser.h"
 #include "dnfTask.h"
+#include "baseAddress.h"
 
 int game_status = 0;
 bool window_top = false;
@@ -19,7 +20,7 @@ int autoMapNumber = 100002962;
 bool room_has_urgent = false;
 
 // 图内对象
-struct dungeonInfo 
+struct dungeonInfo
 {
 	// 下个房间的方向
 	// BOSS房间位置
@@ -32,7 +33,6 @@ UINT updateDataThread(LPVOID pParam)
 {
 	CMirageDragonDlg* MainDlg = (CMirageDragonDlg*)pParam;
 
-	__int64 emptyAddress;
 	bool statusChange = false; // 人物指针已改变
 
 	{
@@ -64,42 +64,28 @@ UINT updateDataThread(LPVOID pParam)
 		}
 
 		// 读取游戏状态
-		game_status = readInt(C_GAME_STATUS);
-
-		if (game_status >= 1 && statusChange == false) {
-			emptyAddress = C_EMPTY_ADDRESS + 4000;
-			C_USER_POINTER = getUserPointer(emptyAddress);
-			C_USER = emptyAddress;
-			if (C_USER_POINTER != 0)
-			{
-				statusChange = true;
-				{
-					InstanceLock lock(MainDlg);
-					MainDlg->Log(L"人物指针已改变");
-				}
-			}
-			// 重新读取人物指针
-		}
+		game_status = readInt(ADDR.x64("C_GAME_STATUS"));
 
 		// 游戏不同状态的处理
-		switch (game_status)
-		{
-		case 0:
-			// 选择角色界面
-			statusChange = false;
-			break;
-		case 1:
-			// 城镇中。关闭图内功能
-			break;
-		case 2:
-			// 选择副本界面
-			break;
-		case 3:
-			// 图内中
-			break;
-		default:
-			break;
-		}
+		//switch (game_status)
+		//{
+		//case 0:
+		//	// 选择角色界面
+		//	statusChange = false;
+		//	break;
+		//case 1:
+		//	// 城镇中。关闭图内功能
+		//	break;
+		//case 2:
+		//	// 选择副本界面
+		//	break;
+		//case 3:
+		//	// 图内中
+		//	break;
+		//default:
+		//	break;
+		//}
+
 		programDelay(1000, 0);
 	}
 	return 0;
@@ -143,13 +129,13 @@ UINT playGameThead(LPVOID pParam)
 			allow_next_map = false;
 			first_room_functions = false;
 
-			if (is_auto_play) 
+			if (is_auto_play)
 			{
 				pass_room_numbers = 0;
 				room_history.clear();
 
 				// 剧情处理
-				if (auto_play_type == 2) 
+				if (auto_play_type == 2)
 				{
 					// 对话处理
 					dialogue();
@@ -169,7 +155,7 @@ UINT playGameThead(LPVOID pParam)
 		case 3:
 			// 刷图线程开启，关闭选角线程、城镇线程、选图线程
 
-			roomBegin:
+		roomBegin:
 			// 遍历物品和怪物信息
 			getMonsterAndItems();
 
@@ -210,7 +196,7 @@ UINT playGameThead(LPVOID pParam)
 			{
 				if (is_auto_play) {
 
-					if (monster_list.size() > 0) 
+					if (monster_list.size() > 0)
 					{
 						// 判断技能冷却列表并释放随机技能
 						int key = getCoolDownKey();
@@ -257,8 +243,8 @@ UINT playGameThead(LPVOID pParam)
 							// 自动跑图
 							// 获取当前房间位置
 							ROOMCOOR current_room;
-							current_room.x = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_X);
-							current_room.y = readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_CURRENT_ROOM_Y);
+							current_room.x = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_X"));
+							current_room.y = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_Y"));
 							room_history.push_back(current_room);
 							autoNextRoom();
 							pass_room_numbers++;
@@ -295,7 +281,7 @@ UINT playGameThead(LPVOID pParam)
 								// 分解装备
 
 								allow_next_map = true;
-								
+
 								// ESC
 								MSDK_keyPress(Keyboard_ESCAPE, 1);
 								programDelay(600, 0);
@@ -303,7 +289,7 @@ UINT playGameThead(LPVOID pParam)
 								// 疲劳为空返回城镇
 
 								if (allow_next_map) {
-									if (getUserFatigue() < 1) 
+									if (getUserFatigue() < 1)
 									{
 										// 返回城镇
 										MSDK_keyPress(Keyboard_F12, 1);
@@ -338,7 +324,8 @@ UINT playGameThead(LPVOID pParam)
 		}
 
 	threadEnd:
-		programDelay(300, 0);
+		Sleep(50);
+		//programDelay(300, 0);
 	}
 
 	{

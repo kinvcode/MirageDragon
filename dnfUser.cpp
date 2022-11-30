@@ -9,6 +9,7 @@
 #include "dnfMap.h"
 #include "keyboardDriver.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 // 切换地图&建筑穿透
 void penetrate(bool on)
@@ -16,14 +17,14 @@ void penetrate(bool on)
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 	InstanceLock wind(mainWindow);
 	if (on) {
-		writeInt(readLong(C_USER) + C_PENETRATE_MAP, -255);
-		writeInt(readLong(C_USER) + C_PENETRATE_BUILDING, -255);
+		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), -255);
+		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), -255);
 		penetrate_status = 1;
 		mainWindow->Log(L"已开启穿透");
 	}
 	else {
-		writeInt(readLong(C_USER) + C_PENETRATE_MAP, 10);
-		writeInt(readLong(C_USER) + C_PENETRATE_BUILDING, 40);
+		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), 10);
+		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), 40);
 		penetrate_status = 0;
 		mainWindow->Log(L"已关闭穿透");
 	}
@@ -32,7 +33,7 @@ void penetrate(bool on)
 // 修改角色名称
 void changeUserName(wstring name)
 {
-	__int64 userNameAddress = readLong(readLong(C_USER) + C_NAME_OFFSET);
+	__int64 userNameAddress = readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_NAME_OFFSET"));
 	if (userNameAddress)
 	{
 		if (writeByteArray(userNameAddress, wstringToBytes(name))) {
@@ -46,17 +47,17 @@ void changeUserName(wstring name)
 // 三速
 void threeSpeed(int attack, int casting, int move)
 {
-	long long shoePointer = readLong(C_USER) + C_SHOE_OFFSET; // 鞋子指针
+	long long shoePointer = readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_SHOE_OFFSET"); // 鞋子指针
 
-	encrypt(readLong(shoePointer) + C_ATTACK_SPEED, attack);
-	encrypt(readLong(shoePointer) + C_MOVE_SPEED, move);
-	encrypt(readLong(shoePointer) + C_CASTING_SPEED, casting);
+	encrypt(readLong(shoePointer) + ADDR.x64("C_ATTACK_SPEED"), attack);
+	encrypt(readLong(shoePointer) + ADDR.x64("C_MOVE_SPEED"), move);
+	encrypt(readLong(shoePointer) + ADDR.x64("C_CASTING_SPEED"), casting);
 }
 
 // 技能冷却
 void skillCoolDown(float num)
 {
-	encrypt(readLong(C_USER) + C_FLOAT_COOL_DOWN2, (int)num);
+	encrypt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_FLOAT_COOL_DOWN2"), (int)num);
 }
 
 // HOOK伤害
@@ -70,7 +71,7 @@ void hookDamage(bool on)
 	mainWindow->page2._damage_value.GetWindowText(value);
 	damage_value = _ttoi(value);
 
-	__int64 damage_address = C_GLOBAL_ADDRESS;
+	__int64 damage_address = ADDR.x64("C_GLOBAL_ADDRESS");
 	vector<byte>damge_data;
 	if (on) {
 		damge_data = readByteArray(damage_address, 10);
@@ -84,11 +85,10 @@ void hookDamage(bool on)
 // 获取冷却技能键位
 int getCoolDownKey()
 {
-
 	__int64 address;
-	address = readLong(C_USER);
-	address = readLong(address + C_SKILL_LIST);
-	address = readLong(address + C_SKILL_LIST_OFFSET);
+	address = readLong(ADDR.x64("C_USER_ADDRESS"));
+	address = readLong(address + ADDR.x64("C_SKILL_LIST"));
+	address = readLong(address + ADDR.x64("C_SKILL_LIST_OFFSET"));
 
 	// 0 ~ 16
 	__int64 position;
@@ -107,14 +107,14 @@ int getCoolDownKey()
 			return 0;
 		}
 
-		__int64 emptyAddress = C_EMPTY_ADDRESS + 3000;
+		__int64 emptyAddress = ADDR.x64("C_EMPTY_ADDRESS") + 3000;
 		std::vector<byte>asm_code;
 
 		asm_code = makeByteArray({ 72,131,236,32 });
 		asm_code = asm_code + makeByteArray({ 49,210 });
 		asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(skill_p);
 		asm_code = asm_code + makeByteArray({ 255,21,2,0,0,0,235,8 });
-		asm_code = asm_code + longToBytes(C_COOL_DOWN_JUDGE_CALL);
+		asm_code = asm_code + longToBytes(ADDR.x64("C_COOL_DOWN_JUDGE_CALL"));
 		asm_code = asm_code + makeByteArray({ 72,162 }) + longToBytes(emptyAddress);
 		asm_code = asm_code + makeByteArray({ 72,131,196,32 });
 
@@ -182,7 +182,7 @@ int getCoolDownKey()
 // 获取当前疲劳
 __int64 getUserFatigue()
 {
-	return (decrypt(C_FATIGUE_MAX) - decrypt(C_FATIGUE_CURRENT));
+	return (decrypt(ADDR.x64("C_FATIGUE_MAX")) - decrypt(ADDR.x64("C_FATIGUE_CURRENT")));
 }
 
 // 自动进图
@@ -219,7 +219,7 @@ void autoCalcTask()
 		programDelay(200, 0);
 		while (true)
 		{
-			if (game_status != 2) 
+			if (game_status != 2)
 			{
 				return;
 			}
@@ -301,13 +301,13 @@ end:
 // 获取角色等级
 int getUserLevel()
 {
-	return (int)readLong(C_USER_LEVEL);
+	return (int)readLong(ADDR.x64("C_USER_LEVEL"));
 }
 
 // 获取角色名望值
 int getUserPrestige()
 {
-	return (int)decrypt(readLong(C_USER) + C_USER_PRESTIGE);
+	return (int)decrypt(readLong(ADDR.x64("C_USER")) + ADDR.x64("C_USER_PRESTIGE"));
 }
 
 void updateHookNumber(int number)

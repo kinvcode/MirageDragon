@@ -6,6 +6,7 @@
 #include "dnfUser.h"
 #include "common.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 vector<DUNGEONOBJ> monster_list;
 vector<DUNGEONOBJ> item_list;
@@ -17,7 +18,7 @@ __int64 getUserPointer(__int64 emptyAddress)
 	vector<byte>asm_code;
 
 	asm_code = makeByteArray({ 72, 131, 236,100 });
-	asm_code = asm_code + makeByteArray({ 72,184 }) + longToBytes(C_USER_CALL);
+	asm_code = asm_code + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_USER_CALL"));
 	asm_code = asm_code + makeByteArray({ 255,208 });
 	asm_code = asm_code + makeByteArray({ 72,163 }) + longToBytes(emptyAddress);
 	asm_code = asm_code + makeByteArray({ 72,131,196,100 });
@@ -29,14 +30,14 @@ __int64 getUserPointer(__int64 emptyAddress)
 // 获取地图名称
 wstring getMapName()
 {
-	vector<byte> data = readByteArray(readLong(readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET) + C_MAP_NAME) + 0, 100);
+	vector<byte> data = readByteArray(readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_MAP_NAME")) + 0, 100);
 	return bytesToWstring(data);
 }
 
 // 获取地图编号
 int getMapNumber()
 {
-	return readInt(C_MAP_NUMBER);
+	return readInt(ADDR.x64("C_MAP_NUMBER"));
 }
 
 // 读取对象坐标
@@ -45,11 +46,11 @@ COORDINATE readCoordinate(__int64 address)
 	__int64 pointer;
 	COORDINATE coor;
 
-	int type = readInt(address + C_TYPE_OFFSET);
+	int type = readInt(address + ADDR.x64("C_TYPE_OFFSET"));
 
 	if (type == 0x111)
 	{
-		pointer = readLong(address + C_READ_COORDINATE);
+		pointer = readLong(address + ADDR.x64("C_READ_COORDINATE"));
 		coor.x = (int)readFloat(pointer + 0);
 		coor.y = (int)readFloat(pointer + 4);
 		coor.z = (int)readFloat(pointer + 8);
@@ -57,7 +58,7 @@ COORDINATE readCoordinate(__int64 address)
 	}
 	else
 	{
-		pointer = readLong(address + C_OBJECT_COORDINATE);
+		pointer = readLong(address + ADDR.x64("C_OBJECT_COORDINATE"));
 		coor.x = (int)readFloat(pointer + 32);
 		coor.y = (int)readFloat(pointer + 36);
 		coor.z = (int)readFloat(pointer + 40);
@@ -75,8 +76,8 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 		return object_list;
 	}
 
-	__int64 head_address = readLong(readLong(readLong(readLong(C_USER) + C_MAP_OFFSET) + 16) + C_MAP_HEAD);
-	__int64 end_address = readLong(readLong(readLong(readLong(C_USER) + C_MAP_OFFSET) + 16) + C_MAP_END);
+	__int64 head_address = readLong(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_MAP_HEAD"));
+	__int64 end_address = readLong(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_MAP_END"));
 
 	if (head_address == 0 || end_address == 0) {
 		return object_list;
@@ -90,10 +91,10 @@ vector<DUNGEONOBJ> getDungeonAllObj()
 	for (__int64 i = 1; i <= object_quantity; i++)
 	{
 		__int64 monster_address = readLong(readLong(head_address + i * 32) + 16) - 32;
-		int monster_camp = readInt(monster_address + C_CAMP_OFFSET);
-		int monster_type = readInt(monster_address + C_TYPE_OFFSET);
-		int monster_code = readInt(monster_address + C_CODE_OFFSET);
-		int monster_blood = readInt(monster_address + C_MONSTER_BLOOD);
+		int monster_camp = readInt(monster_address + ADDR.x64("C_CAMP_OFFSET"));
+		int monster_type = readInt(monster_address + ADDR.x64("C_TYPE_OFFSET"));
+		int monster_code = readInt(monster_address + ADDR.x64("C_CODE_OFFSET"));
+		int monster_blood = readInt(monster_address + ADDR.x64("C_MONSTER_BLOOD"));
 		COORDINATE monster_coor = readCoordinate(monster_address);
 
 		// 对象
@@ -147,7 +148,7 @@ void getMonsterAndItems()
 		}
 
 		// 时空旋涡
-		if (dungeon_object_list[i].camp == 200 && dungeon_object_list[i].type == 33 && dungeon_object_list[i].code == 490019076) 
+		if (dungeon_object_list[i].camp == 200 && dungeon_object_list[i].type == 33 && dungeon_object_list[i].code == 490019076)
 		{
 			room_has_urgent = true;
 		}
@@ -173,9 +174,9 @@ void getMonsterAndItems()
 COORDINATE getBossRoom()
 {
 	COORDINATE coor;
-	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
-	coor.x = (int)decrypt(roomData + C_BOSS_ROOM_X);
-	coor.y = (int)decrypt(roomData + C_BOSS_ROOM_Y);
+	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	coor.x = (int)decrypt(roomData + ADDR.x64("C_BOSS_ROOM_X"));
+	coor.y = (int)decrypt(roomData + ADDR.x64("C_BOSS_ROOM_Y"));
 	return coor;
 }
 
@@ -184,17 +185,17 @@ COORDINATE getCurrentRoom()
 {
 	COORDINATE coor;
 
-	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
-	coor.x = readInt(roomData + C_CURRENT_ROOM_X);
-	coor.y = readInt(roomData + C_CURRENT_ROOM_Y);
+	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	coor.x = readInt(roomData + ADDR.x64("C_CURRENT_ROOM_X"));
+	coor.y = readInt(roomData + ADDR.x64("C_CURRENT_ROOM_Y"));
 	return coor;
 }
 
 // 当前是否通关
 bool judgeClearance()
 {
-	__int64 roomData = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
-	__int64 result = readInt(roomData + C_BONFIRE_JUDGE);
+	__int64 roomData = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	__int64 result = readInt(roomData + ADDR.x64("C_BONFIRE_JUDGE"));
 	if (result == 2 || result == 0)
 	{
 		return true;
@@ -207,7 +208,7 @@ bool judgeClearance()
 // 当前是否开门
 bool judgeDoorOpen()
 {
-	if (decrypt2(readLong(readLong(readLong(C_USER) + C_MAP_OFFSET) + 16) + C_DOOR_OFFSET) == 0) {
+	if (decrypt2(readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16) + ADDR.x64("C_DOOR_OFFSET")) == 0) {
 		return true;
 	}
 	else {
@@ -234,7 +235,7 @@ bool judgeIsBossRoom()
 void convergeMonsterAndItems()
 {
 	COORDINATE monster_coordinate;
-	COORDINATE user_coordinate = readCoordinate(readLong(C_USER));
+	COORDINATE user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 
 	if (!function_switch.gather_monster)
 	{
@@ -245,7 +246,7 @@ void convergeMonsterAndItems()
 	for (__int64 i = 0; i < length; i++)
 	{
 		monster_coordinate = readCoordinate(monster_list[i].p);
-		user_coordinate = readCoordinate(readLong(C_USER));
+		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
 		{
 			continue;
@@ -259,8 +260,8 @@ void convergeMonsterAndItems()
 		}
 		else {
 			// 移动对象
-			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
-			writeFloat(readLong(monster_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+			writeFloat(readLong(monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
+			writeFloat(readLong(monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
 		}
 
 
@@ -277,15 +278,15 @@ item:
 	for (__int64 i = 0; i < length; i++)
 	{
 		monster_coordinate = readCoordinate(item_list[i].p);
-		user_coordinate = readCoordinate(readLong(C_USER));
+		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
 		{
 			continue;
 		}
 
 		// 移动对象
-		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 32, (float)user_coordinate.x);
-		writeFloat(readLong(item_list[i].p + C_OBJECT_COORDINATE) + 36, (float)user_coordinate.y);
+		writeFloat(readLong(item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
+		writeFloat(readLong(item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
 
 		handleEvents();
 	}

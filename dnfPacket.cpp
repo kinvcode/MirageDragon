@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "dnfData.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 std::vector<byte> packetData;
 
@@ -11,28 +12,28 @@ std::vector<byte> packetData;
 void bufferCall(int param)
 {
 	packetData = packetData + makeByteArray({ 72,131,236,96 });
-	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(C_PACKET_SEND);
+	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(ADDR.x64("C_PACKET_SEND"));
 	packetData = packetData + makeByteArray({ 186 }) + intToBytes(param);
-	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_BUFFER_CALL);
+	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_BUFFER_CALL"));
 	packetData = packetData + makeByteArray({ 255,208 });
 }
 
 // º”√‹CALL
 void encryptCall(__int64 param, int length)
 {
-	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(C_PACKET_SEND);
+	packetData = packetData + makeByteArray({ 72,185 }) + longToBytes(ADDR.x64("C_PACKET_SEND"));
 	packetData = packetData + makeByteArray({ 72,186 }) + longToBytes(param);
 	if (length == 1) {
-		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL);
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_ENCRYPT_PACKET_CALL"));
 	}
 	else if (length == 2) {
-		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL2);
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_ENCRYPT_PACKET_CALL2"));
 	}
 	else if (length == 4) {
-		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL4);
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_ENCRYPT_PACKET_CALL4"));
 	}
 	else if (length == 8) {
-		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_ENCRYPT_PACKET_CALL8);
+		packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_ENCRYPT_PACKET_CALL8"));
 	}
 	packetData = packetData + makeByteArray({ 255,208 });
 }
@@ -40,7 +41,7 @@ void encryptCall(__int64 param, int length)
 // ∑¢∞¸CALL
 void sendPacketCall()
 {
-	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(C_PACKET_SEND_CALL);
+	packetData = packetData + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_PACKET_SEND_CALL"));
 	packetData = packetData + makeByteArray({ 255,208 });
 	packetData = packetData + makeByteArray({ 72,131,196,96 });
 	memoryAssambly(packetData);

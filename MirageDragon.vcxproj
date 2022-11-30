@@ -80,6 +80,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -87,6 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
+    <IncludePath>$(ProjectDir)include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -189,6 +192,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="baseAddress.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="constant.h" />
     <ClInclude Include="dnfBase.h" />
@@ -199,7 +203,9 @@
     <ClInclude Include="dnfTask.h" />
     <ClInclude Include="dnfUser.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="http.h" />
     <ClInclude Include="jobs.h" />
+    <ClInclude Include="json.h" />
     <ClInclude Include="keyboardDriver.h" />
     <ClInclude Include="Lock.h" />
     <ClInclude Include="memory.h" />
@@ -217,6 +223,7 @@
     <ClInclude Include="usbhidkeycode.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="baseAddress.cpp" />
     <ClCompile Include="dnfBase.cpp" />
     <ClCompile Include="dnfCALL.cpp" />
     <ClCompile Include="dnfData.cpp" />
@@ -224,6 +231,7 @@
     <ClCompile Include="dnfPacket.cpp" />
     <ClCompile Include="dnfTask.cpp" />
     <ClCompile Include="dnfUser.cpp" />
+    <ClCompile Include="http.cpp" />
     <ClCompile Include="jobs.cpp" />
     <ClCompile Include="keyboardDriver.cpp" />
     <ClCompile Include="memory.cpp" />

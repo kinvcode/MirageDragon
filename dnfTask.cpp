@@ -3,11 +3,12 @@
 #include "keyboardDriver.h"
 #include "usbhidkeycode.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 
 void dialogue()
 {
-	if (readLong(C_DIALOGUE) == 1 || readLong(C_DIALOGUE_B) == 1 || readLong(C_DIALOGUE_ESC) == 1)
+	if (readLong(ADDR.x64("C_DIALOGUE")) == 1 || readLong(ADDR.x64("C_DIALOGUE_B")) == 1 || readLong(ADDR.x64("C_DIALOGUE_ESC")) == 1)
 	{
 		MSDK_keyPress(Keyboard_KongGe, 1);
 	}

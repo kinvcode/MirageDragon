@@ -11,8 +11,8 @@
 #include "dnfPacket.h"
 #include "dnfData.h"
 #include "constant.h"
-
 #include "scripts.h"
+#include "baseAddress.h"
 
 int auto_play_type = 1;
 int penetrate_status = 0;
@@ -140,7 +140,7 @@ void PAGE1::OnBnClickedButton1()
 		return;
 	}
 
-	skillCall(readLong(C_USER), 51200, 999999, 500, 500, 0, 0);
+	skillCall(readLong( ADDR.x64("C_USER_ADDRESS")), 51200, 999999, 500, 500, 0, 0);
 }
 
 
@@ -171,7 +171,7 @@ void PAGE1::OnBnClickedButton3()
 		return;
 	}
 	// 读取人物坐标
-	COORDINATE user = readCoordinate(readLong(C_USER));
+	COORDINATE user = readCoordinate(readLong( ADDR.x64("C_USER_ADDRESS")));
 	wstring map_name = getMapName();
 	int map_number = getMapNumber();
 	CString msg;
@@ -190,10 +190,10 @@ void PAGE1::OnBnClickedButton4()
 	}
 
 	int word, area, X, Y;
-	word = readInt(C_TOWN_WORLD);
-	area = readInt(C_TOWN_AREA);
-	X = (int)readFloat(C_TOWN_X);
-	Y = (int)readFloat(C_TOWN_Y);
+	word = readInt( ADDR.x64("C_TOWN_WORLD"));
+	area = readInt( ADDR.x64("C_TOWN_AREA"));
+	X = (int)readFloat( ADDR.x64("C_TOWN_X"));
+	Y = (int)readFloat( ADDR.x64("C_TOWN_Y"));
 
 	CString msg;
 	msg.Format(L"大区域：%d，小区域：%d，坐标X：%d，坐标Y：%d", word, area, X, Y);

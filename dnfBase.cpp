@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "dnfBase.h"
+#include "baseAddress.h"
 
 void memoryAssambly(vector<byte>asm_code)
 {
@@ -11,15 +12,15 @@ void memoryAssambly(vector<byte>asm_code)
 	
 	//»ã±àÖÐ×ª,¿Õ°×µØÖ·,ÅÐ¶ÏµØÖ·
 	__int64 asmTransfer, emptyAddress, logicAddress, HOOKasm, HOOKret;
-	asmTransfer = C_EMPTY_ADDRESS + 300;
-	emptyAddress = C_EMPTY_ADDRESS + 500;
+	asmTransfer = ADDR.x64("C_EMPTY_ADDRESS") + 300;
+	emptyAddress = ADDR.x64("C_EMPTY_ADDRESS") + 500;
 	logicAddress = emptyAddress - 100;
 	if (asyncExecute) {
 		return;
 	}
 	
 	asyncExecute = true;
-	HOOKasm = C_ASM_CALL;
+	HOOKasm = ADDR.x64("C_ASM_CALL");
 	HOOKasm += 144;
 	HOOKret = HOOKasm + 19;
 	HOOKdata = readByteArray(HOOKasm, 19);

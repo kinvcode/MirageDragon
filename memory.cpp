@@ -8,26 +8,26 @@ DWORD PID;
 int readInt(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
-		return -1;
+		return 0;
 	}
 
-	int value;
+	int value = 0;
 	if (ReadProcessMemory(handle, (void*)address, &value, 4, NULL))
 	{
 		return value;
 	}
 
 	CloseHandle(handle);
-	return -1;
+	return 0;
 }
 
 // 写入int数据
 bool writeInt(__int64 address, __int64 value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return false;
 	}
@@ -43,7 +43,7 @@ bool writeInt(__int64 address, __int64 value)
 __int64 readLong(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return -1;
 	}
@@ -55,14 +55,14 @@ __int64 readLong(__int64 address)
 	}
 
 	CloseHandle(handle);
-	return -1;
+	return 0;
 }
 
 // 写入long数据
 bool writeLong(__int64 address, __int64 value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return false;
 	}
@@ -76,9 +76,9 @@ bool writeLong(__int64 address, __int64 value)
 float readFloat(__int64 address)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
-		return -1;
+		return 0;
 	}
 
 	float value;
@@ -87,14 +87,14 @@ float readFloat(__int64 address)
 		return value;
 	}
 	CloseHandle(handle);
-	return -1;
+	return 0;
 }
 
 // 写入浮点数据
 bool writeFloat(__int64 address, float value)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return false;
 	}
@@ -109,7 +109,7 @@ vector<byte> readByteArray(__int64 address, int length)
 	vector<byte> result;
 
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return result;
 	}
@@ -132,7 +132,7 @@ vector<byte> readByteArray(__int64 address, int length)
 bool writeByteArray(__int64 address, vector<byte> Data)
 {
 	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
-	if (handle == NULL)
+	if (address == 0 || handle == NULL)
 	{
 		return false;
 	}

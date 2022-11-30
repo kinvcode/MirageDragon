@@ -16,6 +16,18 @@
     <Filter Include="静态库">
       <UniqueIdentifier>{45396492-d188-44ce-8e6b-cd492ad1a0ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="组件">
+      <UniqueIdentifier>{1298ed56-4348-40aa-abe0-fbef802608f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="组件\网络库">
+      <UniqueIdentifier>{33cbf62e-bbf1-42ee-82ee-d52d300162ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF">
+      <UniqueIdentifier>{507cdd5a-eee1-42ea-a20b-3a04cf72f5d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\基址">
+      <UniqueIdentifier>{552e3313-2ae3-4f9f-b283-cd42534fbce8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MirageDragon.h">
@@ -96,6 +108,15 @@
     <ClInclude Include="dnfTask.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="http.h">
+      <Filter>组件\网络库</Filter>
+    </ClInclude>
+    <ClInclude Include="baseAddress.h">
+      <Filter>DNF\基址</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -151,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="dnfTask.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="http.cpp">
+      <Filter>组件\网络库</Filter>
+    </ClCompile>
+    <ClCompile Include="baseAddress.cpp">
+      <Filter>DNF\基址</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

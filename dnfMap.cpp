@@ -2,17 +2,18 @@
 #include "dnfMap.h"
 #include "dnfBase.h"
 #include "constant.h"
+#include "baseAddress.h"
 
 __int64 passRoomData(int direction)
 {
-	__int64 empty_address = C_EMPTY_ADDRESS + 1450;
-	__int64 room_data = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_PASS_ROOM_OFFSET);
+	__int64 empty_address = ADDR.x64("C_EMPTY_ADDRESS") + 1450;
+	__int64 room_data = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_PASS_ROOM_OFFSET"));
 
 	vector<byte>asm_code;
 	asm_code = makeByteArray({ 72,129,236,0,1,0,0 });
 	asm_code = asm_code + makeByteArray({ 72,185 }) + longToBytes(room_data);
 	asm_code = asm_code + makeByteArray({ 186 }) + intToBytes(direction);
-	asm_code = asm_code + makeByteArray({ 72,184 }) + longToBytes(C_COORDINATE_PASS_ROOM);
+	asm_code = asm_code + makeByteArray({ 72,184 }) + longToBytes(ADDR.x64("C_COORDINATE_PASS_ROOM"));
 	asm_code = asm_code + makeByteArray({ 255,208 });
 	asm_code = asm_code + makeByteArray({ 72,163 }) + longToBytes(empty_address);
 	asm_code = asm_code + makeByteArray({ 72,129,196,0,1,0,0 });
@@ -62,12 +63,12 @@ DUNGEONMAP mapData()
 {
 	DUNGEONMAP map_data;
 
-	__int64 room_data = readLong(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_DOOR_TYPE_OFFSET);
-	__int64 room_index = decrypt2(room_data + C_MAP_CODE);
+	__int64 room_data = readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	__int64 room_index = decrypt2(room_data + ADDR.x64("C_MAP_CODE"));
 
-	map_data.width = readInt(readLong(room_data + C_WH_OFFSET) + room_index * 8 + 0);
-	map_data.height = readInt(readLong(room_data + C_WH_OFFSET) + room_index * 8 + 4);
-	map_data.tmp = readLong(readLong(room_data + C_AISLE_OFFSET) + 32 * room_index + 8);
+	map_data.width = readInt(readLong(room_data + ADDR.x64("C_WH_OFFSET")) + room_index * 8 + 0);
+	map_data.height = readInt(readLong(room_data + ADDR.x64("C_WH_OFFSET")) + room_index * 8 + 4);
+	map_data.tmp = readLong(readLong(room_data + ADDR.x64("C_AISLE_OFFSET")) + 32 * room_index + 8);
 
 	map_data.aisle_num = map_data.width * map_data.height;
 
@@ -76,10 +77,10 @@ DUNGEONMAP mapData()
 		map_data.aisle.insert(map_data.aisle.begin() + i, readInt(map_data.tmp + i * 4));
 	}
 
-	map_data.begin.x = readInt(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_BEGIN_ROOM_X) + 1;
-	map_data.begin.y = readInt(readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS) + C_BEGIN_ROOM_Y) + 1;
-	map_data.end.x = (int)decrypt2(room_data + C_BOSS_ROOM_X) + 1;
-	map_data.end.y = (int)decrypt2(room_data + C_BOSS_ROOM_Y) + 1;
+	map_data.begin.x = readInt(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_BEGIN_ROOM_X")) + 1;
+	map_data.begin.y = readInt(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_BEGIN_ROOM_Y")) + 1;
+	map_data.end.x = (int)decrypt2(room_data + ADDR.x64("C_BOSS_ROOM_X")) + 1;
+	map_data.end.y = (int)decrypt2(room_data + ADDR.x64("C_BOSS_ROOM_Y")) + 1;
 
 	if (map_data.begin.x == map_data.end.x && map_data.begin.y == map_data.end.y) {
 		return map_data;
@@ -405,11 +406,11 @@ int arrangeCoor(vector<COORDINATE>imitation, vector<COORDINATE>& real_cross)
 // 选中地图编号
 int mapCodeOfSelected()
 {
-	return readInt(readLong(readLong(C_MAP_SELECTED)) + C_MAP_CODE_SELECTED);
+	return readInt(readLong(readLong(ADDR.x64("C_MAP_SELECTED"))) + ADDR.x64("C_MAP_CODE_SELECTED"));
 }
 
 // 选中地图难度
 int mapDifficultyOfSelected()
 {
-	return readLong(readLong(C_MAP2_SELECTED) + C_MAP_DIFFICULTY_SELECTED);
+	return readInt(readLong(ADDR.x64("C_MAP2_SELECTED")) + ADDR.x64("C_MAP_DIFFICULTY_SELECTED"));
 }
