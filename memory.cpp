@@ -1,13 +1,12 @@
 #include "pch.h"
 #include "common.h"
 #include "memory.h"
-
-DWORD PID;
+#include "GameData.h"
 
 // 读int类型
 int readInt(__int64 address)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return 0;
@@ -26,7 +25,7 @@ int readInt(__int64 address)
 // 写入int数据
 bool writeInt(__int64 address, __int64 value)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return false;
@@ -42,7 +41,7 @@ bool writeInt(__int64 address, __int64 value)
 // 读取long类型
 __int64 readLong(__int64 address)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return -1;
@@ -61,7 +60,7 @@ __int64 readLong(__int64 address)
 // 写入long数据
 bool writeLong(__int64 address, __int64 value)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return false;
@@ -75,7 +74,7 @@ bool writeLong(__int64 address, __int64 value)
 // 读取浮点数
 float readFloat(__int64 address)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return 0;
@@ -93,7 +92,7 @@ float readFloat(__int64 address)
 // 写入浮点数据
 bool writeFloat(__int64 address, float value)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return false;
@@ -108,7 +107,7 @@ vector<byte> readByteArray(__int64 address, int length)
 {
 	vector<byte> result;
 
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return result;
@@ -131,7 +130,7 @@ vector<byte> readByteArray(__int64 address, int length)
 // 写入字节数组
 bool writeByteArray(__int64 address, vector<byte> Data)
 {
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID);
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
 	if (address == 0 || handle == NULL)
 	{
 		return false;

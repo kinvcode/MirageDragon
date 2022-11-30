@@ -9,10 +9,6 @@
 #include "baseAddress.h"
 #include "GameData.h"
 
-vector<DUNGEONOBJ> monster_list;
-vector<DUNGEONOBJ> item_list;
-vector<DUNGEONOBJ> dungeon_object_list;
-
 // 获取角色指针
 __int64 getUserPointer(__int64 emptyAddress)
 {
@@ -138,14 +134,14 @@ void getMonsterAndItems()
 		if (tmp.type == 289 && tmp.coor.z == 0)
 		{
 			// 物品
-			item_list.push_back(tmp);
+			p_current_room->item_list.push_back(tmp);
 		}
 		else if (tmp.type == 273 || tmp.type == 529)
 		{
 			// 敌对怪物和人偶类型怪物
 			if (tmp.camp == 100 && tmp.blood != 0)
 			{
-				monster_list.push_back(tmp);
+				p_current_room->monster_list.push_back(tmp);
 				if (tmp.blood > monster_max_blood)
 				{
 					monster_max_blood = tmp.blood;
@@ -165,13 +161,13 @@ void getMonsterAndItems()
 	// X坐标从小到大排序
 	int i, j, len;
 	DUNGEONOBJ temp;
-	len = (int)monster_list.size() - 1;
+	len = (int)p_current_room->monster_list.size() - 1;
 	for (i = len; i > 0; i--) {
 		for (j = 0; j < i; j++) {
-			if (monster_list[j].coor.x > monster_list[j + 1].coor.x) {
-				temp = monster_list[j + 1];
-				monster_list[j + 1] = monster_list[j];
-				monster_list[j] = temp;
+			if (p_current_room->monster_list[j].coor.x > p_current_room->monster_list[j + 1].coor.x) {
+				temp = p_current_room->monster_list[j + 1];
+				p_current_room->monster_list[j + 1] = p_current_room->monster_list[j];
+				p_current_room->monster_list[j] = temp;
 			}
 		}
 	}
@@ -241,6 +237,8 @@ bool judgeIsBossRoom()
 // 聚集物品和怪物
 void convergeMonsterAndItems()
 {
+	CURRENTROOM* p_current_room = &GLOBAL.dungeon_info.current_room;
+
 	COORDINATE monster_coordinate;
 	COORDINATE user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 
@@ -248,18 +246,18 @@ void convergeMonsterAndItems()
 	{
 		goto item;
 	}
-	__int64 length = monster_list.size();
+	__int64 length = p_current_room->monster_list.size();
 
 	for (__int64 i = 0; i < length; i++)
 	{
-		monster_coordinate = readCoordinate(monster_list[i].p);
+		monster_coordinate = readCoordinate(p_current_room->monster_list[i].p);
 		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
 		{
 			continue;
 		}
 
-		if (monster_list[i].code == 109013676)
+		if (p_current_room->monster_list[i].code == 109013676)
 		{
 			// 恩山的机关枪不可移动，
 			continue;
@@ -267,8 +265,8 @@ void convergeMonsterAndItems()
 		}
 		else {
 			// 移动对象
-			writeFloat(readLong(monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
-			writeFloat(readLong(monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
+			writeFloat(readLong(p_current_room->monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
+			writeFloat(readLong(p_current_room->monster_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
 		}
 
 
@@ -280,11 +278,11 @@ item:
 	{
 		return;
 	}
-	length = item_list.size();
+	length = p_current_room->item_list.size();
 
 	for (__int64 i = 0; i < length; i++)
 	{
-		monster_coordinate = readCoordinate(item_list[i].p);
+		monster_coordinate = readCoordinate(p_current_room->item_list[i].p);
 		user_coordinate = readCoordinate(readLong(ADDR.x64("C_USER_ADDRESS")));
 		if (abs(monster_coordinate.x - user_coordinate.x) < 20 && abs(monster_coordinate.y - user_coordinate.y) < 20)
 		{
@@ -292,8 +290,8 @@ item:
 		}
 
 		// 移动对象
-		writeFloat(readLong(item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
-		writeFloat(readLong(item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
+		writeFloat(readLong(p_current_room->item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 32, (float)user_coordinate.x);
+		writeFloat(readLong(p_current_room->item_list[i].p + ADDR.x64("C_OBJECT_COORDINATE")) + 36, (float)user_coordinate.y);
 
 		handleEvents();
 	}
