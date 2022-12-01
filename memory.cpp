@@ -148,6 +148,23 @@ bool writeByteArray(__int64 address, vector<byte> Data)
 	return res;
 }
 
+// 写入字符串
+bool writeString(__int64 address, CString text)
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
+	if (address == 0 || handle == NULL)
+	{
+		return false;
+	}
+
+	char* p_str = (char*)text.GetBuffer();
+	int length = text.GetLength() * 2 + 2;
+	bool res = WriteProcessMemory(handle, (LPVOID)address, (LPCVOID)p_str, length, NULL);
+
+	CloseHandle(handle);
+	return res;
+}
+
 // wstring转字节数组
 vector<byte> wstringToBytes(wstring w_string)
 {

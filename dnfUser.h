@@ -2,7 +2,7 @@
 
 void penetrate(bool on);
 
-void changeUserName(wstring name);
+void changeUserName(CString name);
 
 void threeSpeed(int attack, int casting, int move);
 
@@ -25,3 +25,7 @@ int getUserLevel();
 int getUserPrestige();
 
 void updateHookNumber(int number);
+
+void setFullHMP();
+
+__int64 getUserPointer();

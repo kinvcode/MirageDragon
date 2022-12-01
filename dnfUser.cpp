@@ -32,12 +32,12 @@ void penetrate(bool on)
 }
 
 // 修改角色名称
-void changeUserName(wstring name)
+void changeUserName(CString name)
 {
 	__int64 userNameAddress = readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_NAME_OFFSET"));
 	if (userNameAddress)
 	{
-		if (writeByteArray(userNameAddress, wstringToBytes(name))) {
+		if (writeString(userNameAddress, name)) {
 			CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 			InstanceLock wind(mainWindow);
 			mainWindow->Log(L"修改名字成功");
@@ -314,4 +314,34 @@ int getUserPrestige()
 void updateHookNumber(int number)
 {
 	hookDamage(true);
+}
+
+void setFullHMP()
+{
+	__int64 user_pointer = getUserPointer();
+	int max_hp = readInt(user_pointer + ADDR.x64("C_XX"));// 满血偏移
+	int max_mp = readInt(user_pointer + ADDR.x64("C_XX"));// 满蓝偏移
+	int cur_hp = readInt(user_pointer + ADDR.x64("C_XX"));// 怪物血量
+	int cur_mp = readInt(user_pointer + ADDR.x64("C_XX"));// 当前蓝量
+
+	if (cur_hp / max_hp * 100 <= 80) {
+		writeInt(user_pointer + ADDR.x64("C_XX"), 100);//满血偏移
+	}
+	if (cur_mp / max_mp * 100 <= 80) {
+		writeInt(user_pointer + ADDR.x64("C_XX"), 100);//满蓝偏移
+	}
+}
+
+__int64 getUserPointer()
+{
+	__int64 emptyAddress = ADDR.x64("C_EMPTY_ADDRESS") + 4000;
+	std::vector<byte>asm_code;
+
+	asm_code = makeByteArray({ 72, 131, 236, 100 });
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(ADDR.x64("C_xx"));//人物call
+	asm_code = asm_code + makeByteArray({ 255,208 });
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(emptyAddress);
+	asm_code = asm_code + makeByteArray({ 72, 131, 196, 100 });
+	memoryAssambly(asm_code);
+	return readLong(emptyAddress);
 }
