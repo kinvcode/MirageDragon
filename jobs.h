@@ -25,6 +25,15 @@ void selectDungeonLogic();
 // 副本中逻辑
 void dungeonLogic();
 
+// 清理怪物逻辑
+void attackMonsterLogic();
+
+// 捡物兜底
+void finalGatherItems();
+
+// 过图逻辑
+void passRoomLogic();
+
 // 通关逻辑
 void clearanceLogic();
 

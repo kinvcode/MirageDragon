@@ -62,6 +62,7 @@ UINT playGameThead(LPVOID pParam)
 	while (true) {
 		// 判断运行状态
 		if (!GLOBAL.is_running) {
+			// 应该停止线程
 			goto threadEnd;
 		}
 
@@ -178,32 +179,13 @@ void dungeonLogic()
 	// 未开门时处理逻辑
 	if (is_open_door == false)
 	{
-		// 打怪逻辑 attackMonsterLogic
-		//if (GLOBAL.is_auto_play) {
-		//	if (GLOBAL.dungeon_info.current_room.monster_list.size() > 0)
-		//	{
-		//		// 判断技能冷却列表并释放随机技能
-		//		int key = getCoolDownKey();
-		//		MSDK_keyPress(key, 1);
-		//	}
-		//}
-
+		// 打怪逻辑 
+		attackMonsterLogic();
 	}
+	// 开门后的逻辑处理
 	else {
-		// 开门后的逻辑处理
-
-		// 如果存在物品
-		if (GLOBAL.dungeon_info.current_room.item_list.size() > 0) {
-			// 开门捡物逻辑 gatherAfterDoor
-			//if (GLOBAL.is_auto_play)
-			//{
-			//	{
-			//		InstanceLock lock(MainDlg);
-			//		MainDlg->Log(L"存在物品，关闭穿透");
-			//	}
-			//	penetrate(false);
-			//}
-		}
+		// 捡物兜底
+		finalGatherItems();
 
 		if (is_boss)
 		{
@@ -216,35 +198,68 @@ void dungeonLogic()
 			}
 		}
 		else {
-
-			//if (GLOBAL.is_auto_play)
-			//{
-			// // 如果当前没有开启穿透，则启用穿透
-			//	{
-			//		InstanceLock lock(MainDlg);
-			//		MainDlg->Log(L"没有物品，开启穿透");
-			//	}
-			//	penetrate(true);
-			//}
-			
-			// 进入下个房间逻辑
-			//if (GLOBAL.is_auto_play) {
-			//	{
-			//		InstanceLock lock(MainDlg);
-			//		MainDlg->Log(L"进入下个房间");
-			//	}
-			//	// 自动跑图
-			//	// 获取当前房间位置
-			//	ROOMCOOR current_room;
-			//	current_room.x = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_X"));
-			//	current_room.y = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_Y"));
-			//	room_history.push_back(current_room);
-			//	autoNextRoom();
-			//	pass_room_numbers++;
-			//}
-		
+			passRoomLogic();
 		}
 	}
+}
+
+void attackMonsterLogic() 
+{
+	//if (GLOBAL.is_auto_play) {
+	//	if (GLOBAL.dungeon_info.current_room.monster_list.size() > 0)
+	//	{
+	//		// 判断技能冷却列表并释放随机技能
+	//		int key = getCoolDownKey();
+	//		MSDK_keyPress(key, 1);
+	//	}
+	//}
+}
+
+void finalGatherItems() 
+{
+	// 循环策略
+
+	// 如果存在物品
+	if (GLOBAL.dungeon_info.current_room.item_list.size() > 0) {
+		// 开门捡物逻辑 gatherAfterDoor
+		//if (GLOBAL.is_auto_play)
+		//{
+		//	{
+		//		InstanceLock lock(MainDlg);
+		//		MainDlg->Log(L"存在物品，关闭穿透");
+		//	}
+		//	penetrate(false);
+		//}
+	}
+}
+
+void passRoomLogic() 
+{
+	//if (GLOBAL.is_auto_play)
+	//{
+	// // 如果当前没有开启穿透，则启用穿透
+	//	{
+	//		InstanceLock lock(MainDlg);
+	//		MainDlg->Log(L"没有物品，开启穿透");
+	//	}
+	//	penetrate(true);
+	//}
+
+	// 进入下个房间逻辑
+	//if (GLOBAL.is_auto_play) {
+	//	{
+	//		InstanceLock lock(MainDlg);
+	//		MainDlg->Log(L"进入下个房间");
+	//	}
+	//	// 自动跑图
+	//	// 获取当前房间位置
+	//	ROOMCOOR current_room;
+	//	current_room.x = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_X"));
+	//	current_room.y = readLong(readLong(readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS")) + ADDR.x64("C_DOOR_TYPE_OFFSET")) + ADDR.x64("C_CURRENT_ROOM_Y"));
+	//	room_history.push_back(current_room);
+	//	autoNextRoom();
+	//	pass_room_numbers++;
+	//}
 }
 
 // 通关逻辑

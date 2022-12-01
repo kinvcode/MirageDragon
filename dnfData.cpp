@@ -120,7 +120,7 @@ void getDungeonAllObj()
 		{
 			p_current_room->item_list.push_back(d_object);
 
-			// 聚物处理
+			// 聚物处理（应该放到开门后处理）
 			if (GLOBAL.function_switch.gather_monster)
 			{
 				gatherAtUser(GLOBAL.dungeon_info.user_coordinate, d_object);
