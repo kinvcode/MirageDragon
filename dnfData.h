@@ -34,3 +34,9 @@ bool judgeDoorOpen();
 
 // 判断是否是boss房间
 bool judgeIsBossRoom();
+
+// 判断账号是否制裁
+bool judgeIsSanction();
+
+// 读账号基址
+__int64 getQQAccount();

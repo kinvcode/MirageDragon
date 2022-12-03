@@ -64,6 +64,7 @@ BEGIN_MESSAGE_MAP(PAGE1, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK6, &PAGE1::OnBnClickedCheck6)
 	ON_BN_CLICKED(IDC_CHECK7, &PAGE1::OnBnClickedCheck7)
 	ON_EN_UPDATE(IDC_EDIT2, &PAGE1::OnEnUpdateEdit2)
+	ON_BN_CLICKED(IDC_BUTTON6, &PAGE1::OnBnClickedButton6)
 END_MESSAGE_MAP()
 
 
@@ -344,4 +345,31 @@ void PAGE1::OnEnUpdateEdit2()
 	m_ctl_mapNumber.GetWindowText(code);
 
 	GLOBAL.autoMapNumber = _wtoi(code);
+}
+
+
+void PAGE1::OnBnClickedButton6()
+{
+	// TODO: 在此添加控件通知处理程序代码
+
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
+	if ( handle == NULL)
+	{
+		return;
+	}
+	int length = 200 * 1024 * 1024;
+	byte* tempResult;
+	tempResult = new byte[length];
+	memset(tempResult, 0, length);
+	ReadProcessMemory(handle, (LPCVOID)0x140000000, tempResult, length, NULL);
+
+	CFile dump;
+	if (!dump.Open(L"dump.exe", CFile::modeWrite | CFile::modeNoTruncate | CFile::modeCreate))
+	{
+		return;
+	}
+
+	dump.Write(tempResult, length);
+	dump.Close();
+	delete tempResult;
 }

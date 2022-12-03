@@ -47,4 +47,5 @@ public:
 	afx_msg void OnBnClickedCheck7();
 	CEdit m_ctl_mapNumber;
 	afx_msg void OnEnUpdateEdit2();
+	afx_msg void OnBnClickedButton6();
 };

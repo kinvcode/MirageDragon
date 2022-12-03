@@ -253,3 +253,15 @@ bool judgeIsBossRoom()
 		return false;
 	}
 }
+
+bool judgeIsSanction() 
+{
+	// int ¶ÁÖÆ²Ã»ùÖ·
+	return false;
+}
+
+__int64 getQQAccount() 
+{
+	// ¶ÁÕËºÅ»ùÖ·
+	return 0;
+}
