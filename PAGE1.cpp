@@ -238,9 +238,7 @@ void PAGE1::OnBnClickedButton5()
 	CMirageDragonDlg* pParentDlg = (CMirageDragonDlg*)GetParent()->GetParent();
 
 	// 获取角色名称
-	//CString name = bytesToWstring(readByteArray(readLong(readLong(0x149CCF220)+0x850), 12)).c_str();
-	//pParentDlg->Log(name);
-
+	//CString name = readString(readLong(readLong(0x149CCF220)+0x850), 12);
 	getRoleList();
 }
 

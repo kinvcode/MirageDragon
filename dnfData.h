@@ -39,4 +39,4 @@ bool judgeIsBossRoom();
 bool judgeIsSanction();
 
 // ¶ÁÕËºÅ»ùÖ·
-__int64 getQQAccount();
+int getQQAccount();

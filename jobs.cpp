@@ -9,6 +9,7 @@
 #include "dnfTask.h"
 #include "baseAddress.h"
 #include "GameData.h"
+#include "http.h"
 
 UINT updateDataThread(LPVOID pParam)
 {

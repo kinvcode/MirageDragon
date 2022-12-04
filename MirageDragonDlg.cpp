@@ -221,14 +221,7 @@ void CMirageDragonDlg::OnBnClickedButton1()
 	// 热键管理
 	// 初始化热键
 	RegisterHotKey(GetSafeHwnd(), 1, NULL, VK_END); // 自动开关
-
-	// 线程池管理
-	// 启动数据更新线程
-	//theApp.thread_update = AfxBeginThread(updateDataThread, this);
-	// 启动刷图线程
-	//theApp.thread_play = AfxBeginThread(playGameThead, this);
 	
-	//Log(L"初始化完毕");
 	// 初始化线程
 	initThreads();
 }

@@ -160,8 +160,8 @@ CString readString(__int64 address, int length)
 		return false;
 	}
 
-	byte* tempResult;
-	tempResult = new byte[length];
+	WCHAR* tempResult;
+	tempResult = new WCHAR[length/2];
 	ReadProcessMemory(handle, (LPCVOID)address, tempResult, length, NULL);
 	CString text(tempResult);
 

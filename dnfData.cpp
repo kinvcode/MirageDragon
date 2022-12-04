@@ -259,8 +259,8 @@ bool judgeIsSanction()
 	return false;
 }
 
-__int64 getQQAccount() 
+int getQQAccount() 
 {
 	// ∂¡’À∫≈ª˘÷∑
-	return readLong(ADDR.x64("C_ACCOUNT"));
+	return readInt(ADDR.x64("C_ACCOUNT"));
 }

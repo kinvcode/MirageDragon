@@ -11,6 +11,7 @@
 #include "baseAddress.h"
 #include "GameData.h"
 #include "dnfData.h"
+#include "http.h"
 
 // 切换地图&建筑穿透
 void penetrate(bool on)
@@ -365,7 +366,7 @@ void getRoleList()
 
 	// 角色数量
 	int numbers = (int)((end - head) / 0x5D0); // 一个数组元素大小为5D0
-	__int64 qq = getQQAccount();
+	int qq = getQQAccount();
 	// 遍历列表
 	for (int i = 0; i < numbers; i++)
 	{
@@ -376,13 +377,13 @@ void getRoleList()
 		int advancement = readInt(p_item + 0xC);      // 角色转职
 		int awakening = readInt(p_item + 0x10);	      // 觉醒次数
 		int level = (int)decrypt(p_item + 0x18);	  // 角色等级
-		int prestige = (int)decrypt(p_item + 0x5C4);  // 角色名望
+		int prestige = (int)readInt(p_item + 0x5C4);  // 角色名望
 		int position = i;							  // 角色位置
-		const char* name_str = (LPCSTR)(LPCTSTR)name;
+		string string_name = CW2A(name.GetString());
 
 		role_list[i] = {
 			{"account",qq},
-			{"name",name_str},
+			{"name",string_name},
 			{"character",character},
 			{"advancement",advancement},
 			{"awakening",awakening},
@@ -390,6 +391,11 @@ void getRoleList()
 			{"prestige",prestige},
 			{"position",position}
 		};
+	}
+
+	if (role_list.size() > 0) {
+		// 更新
+		http.updateRoles(role_list);
 	}
 
 }
@@ -409,7 +415,7 @@ void getFavoriteRoleList()
 	int numbers = readInt(role_pointer + 0x2C8);
 	// 角色数组头指针
 	__int64 head = readLong(role_pointer + 0x2C0);// 角色数组头偏移
-	__int64 qq = getQQAccount();
+	int qq = getQQAccount();
 
 	for (int i = 0; i < numbers; i++)
 	{
@@ -420,13 +426,13 @@ void getFavoriteRoleList()
 		int advancement = readInt(p_item + 0xC);      // 角色转职
 		int awakening = readInt(p_item + 0x10);	      // 觉醒次数
 		int level = (int)decrypt(p_item + 0x18);	  // 角色等级
-		int prestige = (int)decrypt(p_item + 0x5C4);  // 角色名望
+		int prestige = (int)readInt(p_item + 0x5C4);  // 角色名望
 		int position = i;							  // 角色位置
-		const char* name_str = (LPCSTR)(LPCTSTR)name;
+		string string_name = CW2A(name.GetString());
 
 		role_list[i] = {
 			{"account",qq},
-			{"name",name_str},
+			{"name",string_name},
 			{"character",character},
 			{"advancement",advancement},
 			{"awakening",awakening},
@@ -434,5 +440,9 @@ void getFavoriteRoleList()
 			{"prestige",prestige},
 			{"position",position}
 		};
+	}
+
+	if (role_list.size() > 0) {
+		// 更新
 	}
 }

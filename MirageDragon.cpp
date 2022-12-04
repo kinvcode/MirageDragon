@@ -10,6 +10,7 @@
 #include "http.h"
 #include "baseAddress.h"
 #include "jobs.h"
+#include "log.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -43,6 +44,23 @@ CMirageDragonApp theApp;
 
 BOOL CMirageDragonApp::InitInstance()
 {
+	CString name = L"山东大卵男";
+	//string string_tmp = CW2A(name.GetString());
+	//string string_name = StringUtils::LocalCpToUtf8(CW2A(name.GetString()));
+	json data = {
+		{"account", 396981577},
+		//{ "name",string_name },
+		{ "character",0 },
+		{ "advancement",1 },
+		{ "awakening",0 },
+		{ "level",10 },
+		{ "prestige",6 },
+		{ "position",0 }
+	};
+
+	string json_str = data.dump();
+	Log.info(CString(json_str.c_str()));
+	
 	// 提取启动方式
 	//asSystemRunning();
 	asDNFUserRunning();
@@ -75,7 +93,7 @@ BOOL CMirageDragonApp::InitInstance()
 	if (nResponse == IDOK)
 	{
 		//  “确定”来关闭对话框的代码
-	}
+}
 	else if (nResponse == IDCANCEL)
 	{
 		//  “取消”来关闭对话框的代码
@@ -103,8 +121,7 @@ BOOL CMirageDragonApp::InitInstance()
 void CMirageDragonApp::initBaseAddress()
 {
 	// 加载基址
-	HttpClient http_cli(API_BASE_ADDRESS);
-	json data = http_cli.response;
+	json data = http.getBaseAddress();
 
 	if (data.size() < 1)
 	{
