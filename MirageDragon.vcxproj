@@ -220,6 +220,7 @@
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="scripts.h" />
+    <ClInclude Include="stringutils.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="usbhidkeycode.h" />
     <ClInclude Include="convertData.h" />
@@ -252,6 +253,7 @@
     </ClCompile>
     <ClCompile Include="process.cpp" />
     <ClCompile Include="scripts.cpp" />
+    <ClCompile Include="stringutils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MirageDragon.rc" />

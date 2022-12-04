@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "dnfUser.h"
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
@@ -12,8 +12,10 @@
 #include "GameData.h"
 #include "dnfData.h"
 #include "http.h"
+#include "stringutils.h"
+#include "log.h"
 
-// ÇĞ»»µØÍ¼&½¨Öş´©Í¸
+// åˆ‡æ¢åœ°å›¾&å»ºç­‘ç©¿é€
 void penetrate(bool on)
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
@@ -22,17 +24,17 @@ void penetrate(bool on)
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), -255);
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), -255);
 		GLOBAL.penetrate_status = 1;
-		mainWindow->Log(L"ÒÑ¿ªÆô´©Í¸");
+		mainWindow->Log(L"å·²å¼€å¯ç©¿é€");
 	}
 	else {
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_MAP"), 10);
 		writeInt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_PENETRATE_BUILDING"), 40);
 		GLOBAL.penetrate_status = 0;
-		mainWindow->Log(L"ÒÑ¹Ø±Õ´©Í¸");
+		mainWindow->Log(L"å·²å…³é—­ç©¿é€");
 	}
 }
 
-// ĞŞ¸Ä½ÇÉ«Ãû³Æ
+// ä¿®æ”¹è§’è‰²åç§°
 void changeUserName(CString name)
 {
 	__int64 userNameAddress = readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_NAME_OFFSET"));
@@ -41,28 +43,28 @@ void changeUserName(CString name)
 		if (writeString(userNameAddress, name)) {
 			CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 			InstanceLock wind(mainWindow);
-			mainWindow->Log(L"ĞŞ¸ÄÃû×Ö³É¹¦");
+			mainWindow->Log(L"ä¿®æ”¹åå­—æˆåŠŸ");
 		}
 	}
 }
 
-// ÈıËÙ
+// ä¸‰é€Ÿ
 void threeSpeed(int attack, int casting, int move)
 {
-	long long shoePointer = readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_SHOE_OFFSET"); // Ğ¬×ÓÖ¸Õë
+	long long shoePointer = readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_SHOE_OFFSET"); // é‹å­æŒ‡é’ˆ
 
 	encrypt(readLong(shoePointer) + ADDR.x64("C_ATTACK_SPEED"), attack);
 	encrypt(readLong(shoePointer) + ADDR.x64("C_MOVE_SPEED"), move);
 	encrypt(readLong(shoePointer) + ADDR.x64("C_CASTING_SPEED"), casting);
 }
 
-// ¼¼ÄÜÀäÈ´
+// æŠ€èƒ½å†·å´
 void skillCoolDown(float num)
 {
 	encrypt(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_FLOAT_COOL_DOWN2"), (int)num);
 }
 
-// HOOKÉËº¦
+// HOOKä¼¤å®³
 void hookDamage(bool on)
 {
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
@@ -84,7 +86,7 @@ void hookDamage(bool on)
 	}
 }
 
-// »ñÈ¡ÀäÈ´¼¼ÄÜ¼üÎ»
+// è·å–å†·å´æŠ€èƒ½é”®ä½
 int getCoolDownKey()
 {
 	__int64 address;
@@ -167,7 +169,7 @@ int getCoolDownKey()
 			case 15:
 				return Keyboard_LeftControl;
 				break;
-			case 6: // ÒòÎªÆÕÍ¨¹¥»÷ÎŞÀäÈ´£¬ËùÓĞ»á¿¨¼¼ÄÜ
+			case 6: // å› ä¸ºæ™®é€šæ”»å‡»æ— å†·å´ï¼Œæ‰€æœ‰ä¼šå¡æŠ€èƒ½
 			case 13:
 			case 16:
 			default:
@@ -177,17 +179,17 @@ int getCoolDownKey()
 		}
 		handleEvents();
 	}
-	// Èç¹ûÈ«²¿ÀäÈ´ÖĞ£¬Ôò·µ»ØX¼üÎ»
+	// å¦‚æœå…¨éƒ¨å†·å´ä¸­ï¼Œåˆ™è¿”å›Xé”®ä½
 	return Keyboard_x;
 }
 
-// »ñÈ¡µ±Ç°Æ£ÀÍ
+// è·å–å½“å‰ç–²åŠ³
 __int64 getUserFatigue()
 {
 	return (decrypt(ADDR.x64("C_FATIGUE_MAX")) - decrypt(ADDR.x64("C_FATIGUE_CURRENT")));
 }
 
-// ×Ô¶¯½øÍ¼
+// è‡ªåŠ¨è¿›å›¾
 void autoEntryDungeon()
 {
 	programDelay(100, 0);
@@ -200,10 +202,10 @@ void autoEntryDungeon()
 	programDelay(2000, 0);
 }
 
-// ÇĞ»»½ÇÉ«
+// åˆ‡æ¢è§’è‰²
 void switchUser()
 {
-	GLOBAL.play_user_index += 1;	// ĞèÒªĞŞ¸Ä
+	GLOBAL.play_user_index += 1;	// éœ€è¦ä¿®æ”¹
 	programDelay(20, 0);
 	roleList();
 	programDelay(500, 0);
@@ -211,7 +213,7 @@ void switchUser()
 	programDelay(500, 0);
 }
 
-// ×Ô¶¯¼ÆËãÈÎÎñ¡¢×Ô¶¯½øÍ¼
+// è‡ªåŠ¨è®¡ç®—ä»»åŠ¡ã€è‡ªåŠ¨è¿›å›¾
 void autoCalcTask()
 {
 	if (GLOBAL.auto_play_type == 1)
@@ -300,13 +302,13 @@ end:
 	return;
 }
 
-// »ñÈ¡½ÇÉ«µÈ¼¶
+// è·å–è§’è‰²ç­‰çº§
 int getUserLevel()
 {
 	return (int)readLong(ADDR.x64("C_USER_LEVEL"));
 }
 
-// »ñÈ¡½ÇÉ«ÃûÍûÖµ
+// è·å–è§’è‰²åæœ›å€¼
 int getUserPrestige()
 {
 	return (int)decrypt(readLong(ADDR.x64("C_USER")) + ADDR.x64("C_USER_PRESTIGE"));
@@ -354,36 +356,36 @@ void getRoleList()
 		return;
 	}
 
-	// ¹¹½¨JSONÊı¾İ
+	// æ„å»ºJSONæ•°æ®
 	json role_list;
 
-	// ¶ÁÈ¡½ÇÉ«Ö¸Õë
+	// è¯»å–è§’è‰²æŒ‡é’ˆ
 	__int64 role_pointer = readLong(ADDR.x64("C_ROLE_POINTER"));
-	// ½ÇÉ«Êı×éÍ·Ö¸Õë
-	__int64 head = readLong(role_pointer + 0x288);// ½ÇÉ«Êı×éÍ·Æ«ÒÆ
-	// ½ÇÉ«Êı×éÎ²Ö¸Õë
-	__int64 end = readLong(role_pointer + 0x290);// ½ÇÉ«Êı×éÎ²Æ«ÒÆ
+	// è§’è‰²æ•°ç»„å¤´æŒ‡é’ˆ
+	__int64 head = readLong(role_pointer + 0x288);// è§’è‰²æ•°ç»„å¤´åç§»
+	// è§’è‰²æ•°ç»„å°¾æŒ‡é’ˆ
+	__int64 end = readLong(role_pointer + 0x290);// è§’è‰²æ•°ç»„å°¾åç§»
 
-	// ½ÇÉ«ÊıÁ¿
-	int numbers = (int)((end - head) / 0x5D0); // Ò»¸öÊı×éÔªËØ´óĞ¡Îª5D0
+	// è§’è‰²æ•°é‡
+	int numbers = (int)((end - head) / 0x5D0); // ä¸€ä¸ªæ•°ç»„å…ƒç´ å¤§å°ä¸º5D0
 	int qq = getQQAccount();
-	// ±éÀúÁĞ±í
+	// éå†åˆ—è¡¨
 	for (int i = 0; i < numbers; i++)
 	{
-		__int64 p_item = head + i * 0x5D0; // ÔªËØÖ¸Õë
+		__int64 p_item = head + i * 0x5D0; // å…ƒç´ æŒ‡é’ˆ
 		if (p_item == 0) continue;
 		CString name = readString(readLong(p_item), 12);
-		int character = readInt(p_item + 0x8);        // ½ÇÉ«Ö°Òµ
-		int advancement = readInt(p_item + 0xC);      // ½ÇÉ«×ªÖ°
-		int awakening = readInt(p_item + 0x10);	      // ¾õĞÑ´ÎÊı
-		int level = (int)decrypt(p_item + 0x18);	  // ½ÇÉ«µÈ¼¶
-		int prestige = (int)readInt(p_item + 0x5C4);  // ½ÇÉ«ÃûÍû
-		int position = i;							  // ½ÇÉ«Î»ÖÃ
-		string string_name = CW2A(name.GetString());
+		int character = readInt(p_item + 0x8);        // è§’è‰²èŒä¸š
+		int advancement = readInt(p_item + 0xC);      // è§’è‰²è½¬èŒ
+		int awakening = readInt(p_item + 0x10);	      // è§‰é†’æ¬¡æ•°
+		int level = (int)decrypt(p_item + 0x18);	  // è§’è‰²ç­‰çº§
+		int prestige = (int)readInt(p_item + 0x5C4);  // è§’è‰²åæœ›
+		int position = i;							  // è§’è‰²ä½ç½®
+		string name_string = StringUtils::LocalCpToUtf8(name);
 
 		role_list[i] = {
 			{"account",qq},
-			{"name",string_name},
+			{"name",name_string},
 			{"character",character},
 			{"advancement",advancement},
 			{"awakening",awakening},
@@ -394,7 +396,8 @@ void getRoleList()
 	}
 
 	if (role_list.size() > 0) {
-		// ¸üĞÂ
+		// æ›´æ–°
+		//Log.info(role_list.dump());
 		http.updateRoles(role_list);
 	}
 
@@ -409,30 +412,30 @@ void getFavoriteRoleList()
 
 	json role_list;
 
-	// ¶ÁÈ¡½ÇÉ«Ö¸Õë
+	// è¯»å–è§’è‰²æŒ‡é’ˆ
 	__int64 role_pointer = readLong(ADDR.x64("C_ROLE_POINTER"));
-	// ½ÇÉ«ÊıÁ¿
+	// è§’è‰²æ•°é‡
 	int numbers = readInt(role_pointer + 0x2C8);
-	// ½ÇÉ«Êı×éÍ·Ö¸Õë
-	__int64 head = readLong(role_pointer + 0x2C0);// ½ÇÉ«Êı×éÍ·Æ«ÒÆ
+	// è§’è‰²æ•°ç»„å¤´æŒ‡é’ˆ
+	__int64 head = readLong(role_pointer + 0x2C0);// è§’è‰²æ•°ç»„å¤´åç§»
 	int qq = getQQAccount();
 
 	for (int i = 0; i < numbers; i++)
 	{
-		__int64 p_item = readLong(head + i * 8) + 0x28; // ÔªËØÖ¸Õë
+		__int64 p_item = readLong(head + i * 8) + 0x28; // å…ƒç´ æŒ‡é’ˆ
 		if (p_item == 0) continue;
 		CString name = readString(readLong(p_item), 12);
-		int character = readInt(p_item + 0x8);        // ½ÇÉ«Ö°Òµ
-		int advancement = readInt(p_item + 0xC);      // ½ÇÉ«×ªÖ°
-		int awakening = readInt(p_item + 0x10);	      // ¾õĞÑ´ÎÊı
-		int level = (int)decrypt(p_item + 0x18);	  // ½ÇÉ«µÈ¼¶
-		int prestige = (int)readInt(p_item + 0x5C4);  // ½ÇÉ«ÃûÍû
-		int position = i;							  // ½ÇÉ«Î»ÖÃ
-		string string_name = CW2A(name.GetString());
+		int character = readInt(p_item + 0x8);        // è§’è‰²èŒä¸š
+		int advancement = readInt(p_item + 0xC);      // è§’è‰²è½¬èŒ
+		int awakening = readInt(p_item + 0x10);	      // è§‰é†’æ¬¡æ•°
+		int level = (int)decrypt(p_item + 0x18);	  // è§’è‰²ç­‰çº§
+		int prestige = (int)readInt(p_item + 0x5C4);  // è§’è‰²åæœ›
+		int position = i;							  // è§’è‰²ä½ç½®
+		string name_string = StringUtils::LocalCpToUtf8(name);
 
 		role_list[i] = {
 			{"account",qq},
-			{"name",string_name},
+			{"name",name_string},
 			{"character",character},
 			{"advancement",advancement},
 			{"awakening",awakening},
@@ -443,6 +446,6 @@ void getFavoriteRoleList()
 	}
 
 	if (role_list.size() > 0) {
-		// ¸üĞÂ
+		// æ›´æ–°
 	}
 }

@@ -11,6 +11,7 @@
 #include "baseAddress.h"
 #include "jobs.h"
 #include "log.h"
+#include "stringutils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -44,23 +45,7 @@ CMirageDragonApp theApp;
 
 BOOL CMirageDragonApp::InitInstance()
 {
-	CString name = L"山东大卵男";
-	//string string_tmp = CW2A(name.GetString());
-	//string string_name = StringUtils::LocalCpToUtf8(CW2A(name.GetString()));
-	json data = {
-		{"account", 396981577},
-		//{ "name",string_name },
-		{ "character",0 },
-		{ "advancement",1 },
-		{ "awakening",0 },
-		{ "level",10 },
-		{ "prestige",6 },
-		{ "position",0 }
-	};
 
-	string json_str = data.dump();
-	Log.info(CString(json_str.c_str()));
-	
 	// 提取启动方式
 	//asSystemRunning();
 	asDNFUserRunning();
