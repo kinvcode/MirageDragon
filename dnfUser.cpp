@@ -8,9 +8,9 @@
 #include "dnfCALL.h"
 #include "dnfMap.h"
 #include "keyboardDriver.h"
-#include "constant.h"
 #include "baseAddress.h"
 #include "GameData.h"
+#include "dnfData.h"
 
 // 切换地图&建筑穿透
 void penetrate(bool on)
@@ -319,16 +319,16 @@ void updateHookNumber(int number)
 void setFullHMP()
 {
 	__int64 user_pointer = getUserPointer();
-	int max_hp = readInt(user_pointer + ADDR.x64("C_XX"));// 满血偏移
-	int max_mp = readInt(user_pointer + ADDR.x64("C_XX"));// 满蓝偏移
-	int cur_hp = readInt(user_pointer + ADDR.x64("C_XX"));// 怪物血量
-	int cur_mp = readInt(user_pointer + ADDR.x64("C_XX"));// 当前蓝量
+	int max_hp = readInt(user_pointer + ADDR.x64("C_FULL_HP_OFFSET"));
+	int max_mp = readInt(user_pointer + ADDR.x64("C_FULL_MP_OFFSET"));
+	int cur_hp = readInt(user_pointer + ADDR.x64("C_MONSTER_BLOOD"));
+	int cur_mp = readInt(user_pointer + ADDR.x64("C_CUR_MP"));
 
 	if (cur_hp / max_hp * 100 <= 80) {
-		writeInt(user_pointer + ADDR.x64("C_XX"), 100);//满血偏移
+		writeInt(user_pointer + ADDR.x64("C_FULL_HP_OFFSET"), 100);
 	}
 	if (cur_mp / max_mp * 100 <= 80) {
-		writeInt(user_pointer + ADDR.x64("C_XX"), 100);//满蓝偏移
+		writeInt(user_pointer + ADDR.x64("C_FULL_MP_OFFSET"), 100);
 	}
 }
 
@@ -338,10 +338,101 @@ __int64 getUserPointer()
 	std::vector<byte>asm_code;
 
 	asm_code = makeByteArray({ 72, 131, 236, 100 });
-	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(ADDR.x64("C_xx"));//人物call
+	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(ADDR.x64("C_USER_CALL"));
 	asm_code = asm_code + makeByteArray({ 255,208 });
 	asm_code = asm_code + makeByteArray({ 72, 184 }) + longToBytes(emptyAddress);
 	asm_code = asm_code + makeByteArray({ 72, 131, 196, 100 });
 	memoryAssambly(asm_code);
 	return readLong(emptyAddress);
+}
+
+void getRoleList()
+{
+	if (GLOBAL.game_status != 0)
+	{
+		return;
+	}
+
+	// 构建JSON数据
+	json role_list;
+
+	// 读取角色指针
+	__int64 role_pointer = readLong(ADDR.x64("C_ROLE_POINTER"));
+	// 角色数组头指针
+	__int64 head = readLong(role_pointer + 0x288);// 角色数组头偏移
+	// 角色数组尾指针
+	__int64 end = readLong(role_pointer + 0x290);// 角色数组尾偏移
+
+	// 角色数量
+	int numbers = (int)((end - head) / 0x5D0); // 一个数组元素大小为5D0
+	__int64 qq = getQQAccount();
+	// 遍历列表
+	for (int i = 0; i < numbers; i++)
+	{
+		__int64 p_item = head + i * 0x5D0; // 元素指针
+		if (p_item == 0) continue;
+		CString name = readString(readLong(p_item), 12);
+		int character = readInt(p_item + 0x8);        // 角色职业
+		int advancement = readInt(p_item + 0xC);      // 角色转职
+		int awakening = readInt(p_item + 0x10);	      // 觉醒次数
+		int level = (int)decrypt(p_item + 0x18);	  // 角色等级
+		int prestige = (int)decrypt(p_item + 0x5C4);  // 角色名望
+		int position = i;							  // 角色位置
+		const char* name_str = (LPCSTR)(LPCTSTR)name;
+
+		role_list[i] = {
+			{"account",qq},
+			{"name",name_str},
+			{"character",character},
+			{"advancement",advancement},
+			{"awakening",awakening},
+			{"level",level},
+			{"prestige",prestige},
+			{"position",position}
+		};
+	}
+
+}
+
+void getFavoriteRoleList()
+{
+	if (GLOBAL.game_status != 0)
+	{
+		return;
+	}
+
+	json role_list;
+
+	// 读取角色指针
+	__int64 role_pointer = readLong(ADDR.x64("C_ROLE_POINTER"));
+	// 角色数量
+	int numbers = readInt(role_pointer + 0x2C8);
+	// 角色数组头指针
+	__int64 head = readLong(role_pointer + 0x2C0);// 角色数组头偏移
+	__int64 qq = getQQAccount();
+
+	for (int i = 0; i < numbers; i++)
+	{
+		__int64 p_item = readLong(head + i * 8) + 0x28; // 元素指针
+		if (p_item == 0) continue;
+		CString name = readString(readLong(p_item), 12);
+		int character = readInt(p_item + 0x8);        // 角色职业
+		int advancement = readInt(p_item + 0xC);      // 角色转职
+		int awakening = readInt(p_item + 0x10);	      // 觉醒次数
+		int level = (int)decrypt(p_item + 0x18);	  // 角色等级
+		int prestige = (int)decrypt(p_item + 0x5C4);  // 角色名望
+		int position = i;							  // 角色位置
+		const char* name_str = (LPCSTR)(LPCTSTR)name;
+
+		role_list[i] = {
+			{"account",qq},
+			{"name",name_str},
+			{"character",character},
+			{"advancement",advancement},
+			{"awakening",awakening},
+			{"level",level},
+			{"prestige",prestige},
+			{"position",position}
+		};
+	}
 }

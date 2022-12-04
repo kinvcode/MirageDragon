@@ -5,16 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="静态库">
-      <UniqueIdentifier>{45396492-d188-44ce-8e6b-cd492ad1a0ef}</UniqueIdentifier>
     </Filter>
     <Filter Include="组件">
       <UniqueIdentifier>{1298ed56-4348-40aa-abe0-fbef802608f9}</UniqueIdentifier>
@@ -28,14 +21,60 @@
     <Filter Include="DNF\基址">
       <UniqueIdentifier>{552e3313-2ae3-4f9f-b283-cd42534fbce8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DNF\游戏数据">
-      <UniqueIdentifier>{71d42bd5-208b-43a5-a7d4-42f1912e61ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="组件\日志">
       <UniqueIdentifier>{3bae72e1-b26a-4bd2-afca-f2b2ce1beb55}</UniqueIdentifier>
     </Filter>
     <Filter Include="组件\数据类型转换">
       <UniqueIdentifier>{a50f6e59-bacf-4e31-b154-0f069efeccc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\内存读写">
+      <UniqueIdentifier>{e9dbd8eb-9d0e-4a1c-aa44-c1c4c968eb82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\角色功能">
+      <UniqueIdentifier>{d5ffe05c-931a-4ef4-bc89-8b388da26658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\游戏数据">
+      <UniqueIdentifier>{71d42bd5-208b-43a5-a7d4-42f1912e61ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="组件\进程管理">
+      <UniqueIdentifier>{d97c5827-df61-4c21-8e77-c3a0be0e5d96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\组包">
+      <UniqueIdentifier>{2d7ed49d-1931-423e-a9d8-547f4641a5e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\线程逻辑">
+      <UniqueIdentifier>{88ea4258-ae38-474b-bd2b-5870df80c212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="组件\模拟键鼠">
+      <UniqueIdentifier>{d78cf4ed-2760-4648-b679-303dbdd56cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\功能CALL">
+      <UniqueIdentifier>{e408b5bc-4953-4ce8-a397-efef445c70f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\代码中转">
+      <UniqueIdentifier>{9956b1f4-f393-4b07-9850-875ecd41c29c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\常用功能">
+      <UniqueIdentifier>{7df1c30f-3998-492a-97ea-cf2796c5fec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\地图功能">
+      <UniqueIdentifier>{4a22b9ff-d8e9-4e53-9667-e69c0b592adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DNF\脚本">
+      <UniqueIdentifier>{a0a74bab-4f5b-4a8c-bf41-08464decb504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="任务">
+      <UniqueIdentifier>{9f9cf498-0794-4df4-85b0-e60fc794bdcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="组件\JSON">
+      <UniqueIdentifier>{1a144b7c-4678-4a60-a6bd-6d0b94e8d792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="组件\锁">
+      <UniqueIdentifier>{1d0c4687-8f5f-446e-8fca-75ae15d450cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,28 +90,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="process.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="memory.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="constant.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="usbhidkeycode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="msdk.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="PAGE2.h">
@@ -82,42 +100,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="PAGE1.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="jobs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfBase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfData.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Lock.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfCALL.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfUser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfPacket.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfMap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="scripts.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboardDriver.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="dnfTask.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="json.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="http.h">
@@ -135,6 +117,60 @@
     <ClInclude Include="convertData.h">
       <Filter>组件\数据类型转换</Filter>
     </ClInclude>
+    <ClInclude Include="memory.h">
+      <Filter>DNF\内存读写</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfUser.h">
+      <Filter>DNF\角色功能</Filter>
+    </ClInclude>
+    <ClInclude Include="jobs.h">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClInclude>
+    <ClInclude Include="process.h">
+      <Filter>组件\进程管理</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfPacket.h">
+      <Filter>DNF\组包</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>组件</Filter>
+    </ClInclude>
+    <ClInclude Include="msdk.h">
+      <Filter>组件\模拟键鼠</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboardDriver.h">
+      <Filter>组件\模拟键鼠</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfCALL.h">
+      <Filter>DNF\功能CALL</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfBase.h">
+      <Filter>DNF\代码中转</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfData.h">
+      <Filter>DNF\常用功能</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfMap.h">
+      <Filter>DNF\地图功能</Filter>
+    </ClInclude>
+    <ClInclude Include="scripts.h">
+      <Filter>DNF\脚本</Filter>
+    </ClInclude>
+    <ClInclude Include="usbhidkeycode.h">
+      <Filter>组件\模拟键鼠</Filter>
+    </ClInclude>
+    <ClInclude Include="dnfTask.h">
+      <Filter>任务</Filter>
+    </ClInclude>
+    <ClInclude Include="Lock.h">
+      <Filter>组件\锁</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>组件\JSON</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -146,12 +182,6 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="process.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="memory.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="PAGE2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -159,36 +189,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PAGE1.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="jobs.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfBase.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfData.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfCALL.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfUser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfPacket.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfMap.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="scripts.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboardDriver.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="dnfTask.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="http.cpp">
@@ -202,6 +202,42 @@
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>组件\日志</Filter>
+    </ClCompile>
+    <ClCompile Include="memory.cpp">
+      <Filter>DNF\内存读写</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfUser.cpp">
+      <Filter>DNF\角色功能</Filter>
+    </ClCompile>
+    <ClCompile Include="jobs.cpp">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClCompile>
+    <ClCompile Include="process.cpp">
+      <Filter>组件\进程管理</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfPacket.cpp">
+      <Filter>DNF\组包</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboardDriver.cpp">
+      <Filter>组件\模拟键鼠</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfCALL.cpp">
+      <Filter>DNF\功能CALL</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfBase.cpp">
+      <Filter>DNF\代码中转</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfData.cpp">
+      <Filter>DNF\常用功能</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfMap.cpp">
+      <Filter>DNF\地图功能</Filter>
+    </ClCompile>
+    <ClCompile Include="scripts.cpp">
+      <Filter>DNF\脚本</Filter>
+    </ClCompile>
+    <ClCompile Include="dnfTask.cpp">
+      <Filter>任务</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="msdk.lib">
-      <Filter>静态库</Filter>
+      <Filter>组件\模拟键鼠</Filter>
     </Library>
   </ItemGroup>
 </Project>

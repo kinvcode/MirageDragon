@@ -123,6 +123,7 @@ vector<byte> readByteArray(__int64 address, int length)
 		result[i] = tempResult[i];
 	}
 
+	delete[] tempResult;
 	CloseHandle(handle);
 	return result;
 }
@@ -144,8 +145,29 @@ bool writeByteArray(__int64 address, vector<byte> Data)
 		val[i] = Data[i];
 	}
 	bool res = WriteProcessMemory(handle, (LPVOID)address, (LPCVOID)val, length, NULL);
+
+	delete[] val;
 	CloseHandle(handle);
 	return res;
+}
+
+// ¶ÁÈ¡×Ö·û´®
+CString readString(__int64 address, int length) 
+{
+	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GLOBAL.PID);
+	if (address == 0 || handle == NULL)
+	{
+		return false;
+	}
+
+	byte* tempResult;
+	tempResult = new byte[length];
+	ReadProcessMemory(handle, (LPCVOID)address, tempResult, length, NULL);
+	CString text(tempResult);
+
+	delete[] tempResult;
+	CloseHandle(handle);
+	return text;
 }
 
 // Ð´Èë×Ö·û´®

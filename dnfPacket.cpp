@@ -3,7 +3,6 @@
 #include "dnfBase.h"
 #include "memory.h"
 #include "dnfData.h"
-#include "constant.h"
 #include "baseAddress.h"
 #include "GameData.h"
 

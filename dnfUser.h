@@ -29,3 +29,7 @@ void updateHookNumber(int number);
 void setFullHMP();
 
 __int64 getUserPointer();
+
+void getRoleList();
+
+void getFavoriteRoleList();

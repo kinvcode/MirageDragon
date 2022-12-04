@@ -17,3 +17,4 @@ using namespace std;
 //2. CString = CString(string.c_str());
 
 // CString ת const char*
+//const char* str = (LPCSTR)(LPCTSTR)cstring;

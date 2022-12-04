@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "dnfMap.h"
 #include "dnfBase.h"
-#include "constant.h"
 #include "baseAddress.h"
 
 __int64 passRoomData(int direction)

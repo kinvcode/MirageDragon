@@ -74,7 +74,7 @@ int asSystem(int Pid, char FileName[])
 	}
 	CloseHandle(ProcessHandle);
 	DeleteProcThreadAttributeList(AttributeList);
-	delete temp;
+	delete[] temp;
 	return pi.dwProcessId;
 }
 
@@ -96,6 +96,8 @@ void asSystemRunning()
 		TerminateProcess(OpenProcess(PROCESS_ALL_ACCESS, FALSE, getProcessPID(L"cmd.exe")), 0);
 		ExitProcess(0);
 	}
+
+	delete[] pszName;
 }
 
 void asDNFUserRunning()

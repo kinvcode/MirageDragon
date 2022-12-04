@@ -13,7 +13,6 @@
 // 全局头
 #include "common.h"
 #include "process.h"
-#include "constant.h"
 #include "memory.h"
 
 #endif //PCH_H

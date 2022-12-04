@@ -5,7 +5,6 @@
 #include "dnfCALL.h"
 #include "dnfUser.h"
 #include "common.h"
-#include "constant.h"
 #include "baseAddress.h"
 #include "GameData.h"
 
@@ -263,5 +262,5 @@ bool judgeIsSanction()
 __int64 getQQAccount() 
 {
 	// ∂¡’À∫≈ª˘÷∑
-	return 0;
+	return readLong(ADDR.x64("C_ACCOUNT"));
 }

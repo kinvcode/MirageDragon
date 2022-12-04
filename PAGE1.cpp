@@ -10,7 +10,6 @@
 #include "dnfUser.h"
 #include "dnfPacket.h"
 #include "dnfData.h"
-#include "constant.h"
 #include "scripts.h"
 #include "baseAddress.h"
 #include "GameData.h"
@@ -241,6 +240,8 @@ void PAGE1::OnBnClickedButton5()
 	// 获取角色名称
 	//CString name = bytesToWstring(readByteArray(readLong(readLong(0x149CCF220)+0x850), 12)).c_str();
 	//pParentDlg->Log(name);
+
+	getRoleList();
 }
 
 
@@ -371,5 +372,5 @@ void PAGE1::OnBnClickedButton6()
 
 	dump.Write(tempResult, length);
 	dump.Close();
-	delete tempResult;
+	delete[] tempResult;
 }
