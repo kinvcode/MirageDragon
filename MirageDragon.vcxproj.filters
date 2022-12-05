@@ -76,6 +76,9 @@
     <Filter Include="组件\锁">
       <UniqueIdentifier>{1d0c4687-8f5f-446e-8fca-75ae15d450cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="数据结构">
+      <UniqueIdentifier>{6bcddb72-1d0f-442c-8d42-81d308cc6001}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MirageDragon.h">
@@ -114,9 +117,6 @@
     <ClInclude Include="log.h">
       <Filter>组件\日志</Filter>
     </ClInclude>
-    <ClInclude Include="convertData.h">
-      <Filter>组件\数据类型转换</Filter>
-    </ClInclude>
     <ClInclude Include="memory.h">
       <Filter>DNF\内存读写</Filter>
     </ClInclude>
@@ -131,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="dnfPacket.h">
       <Filter>DNF\组包</Filter>
-    </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>组件</Filter>
     </ClInclude>
     <ClInclude Include="msdk.h">
       <Filter>组件\模拟键鼠</Filter>
@@ -170,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="json.h">
       <Filter>组件\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="dataConvert.h">
+      <Filter>组件\数据类型转换</Filter>
+    </ClInclude>
+    <ClInclude Include="dataStruct.h">
+      <Filter>数据结构</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +241,15 @@
     </ClCompile>
     <ClCompile Include="dnfTask.cpp">
       <Filter>任务</Filter>
+    </ClCompile>
+    <ClCompile Include="json.cpp">
+      <Filter>组件\JSON</Filter>
+    </ClCompile>
+    <ClCompile Include="dataConvert.cpp">
+      <Filter>组件\数据类型转换</Filter>
+    </ClCompile>
+    <ClCompile Include="dataStruct.cpp">
+      <Filter>数据结构</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

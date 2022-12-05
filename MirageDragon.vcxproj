@@ -193,7 +193,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="baseAddress.h" />
-    <ClInclude Include="common.h" />
+    <ClInclude Include="dataStruct.h" />
     <ClInclude Include="dnfBase.h" />
     <ClInclude Include="dnfCALL.h" />
     <ClInclude Include="dnfData.h" />
@@ -220,13 +220,14 @@
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="scripts.h" />
-    <ClInclude Include="stringutils.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="usbhidkeycode.h" />
-    <ClInclude Include="convertData.h" />
+    <ClInclude Include="dataConvert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="baseAddress.cpp" />
+    <ClCompile Include="dataConvert.cpp" />
+    <ClCompile Include="dataStruct.cpp" />
     <ClCompile Include="dnfBase.cpp" />
     <ClCompile Include="dnfCALL.cpp" />
     <ClCompile Include="dnfData.cpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="http.cpp" />
     <ClCompile Include="jobs.cpp" />
+    <ClCompile Include="json.cpp" />
     <ClCompile Include="keyboardDriver.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="memory.cpp" />
@@ -253,7 +255,6 @@
     </ClCompile>
     <ClCompile Include="process.cpp" />
     <ClCompile Include="scripts.cpp" />
-    <ClCompile Include="stringutils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MirageDragon.rc" />
