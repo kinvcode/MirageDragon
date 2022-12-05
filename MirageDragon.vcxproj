@@ -207,7 +207,6 @@
     <ClInclude Include="jobs.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="keyboardDriver.h" />
-    <ClInclude Include="Lock.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="MirageDragon.h" />

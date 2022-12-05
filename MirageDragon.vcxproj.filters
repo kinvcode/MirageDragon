@@ -162,9 +162,6 @@
     <ClInclude Include="dnfTask.h">
       <Filter>任务</Filter>
     </ClInclude>
-    <ClInclude Include="Lock.h">
-      <Filter>组件\锁</Filter>
-    </ClInclude>
     <ClInclude Include="json.h">
       <Filter>组件\JSON</Filter>
     </ClInclude>
