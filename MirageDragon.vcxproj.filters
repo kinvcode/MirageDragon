@@ -132,9 +132,6 @@
     <ClInclude Include="dnfPacket.h">
       <Filter>DNF\组包</Filter>
     </ClInclude>
-    <ClInclude Include="msdk.h">
-      <Filter>组件\模拟键鼠</Filter>
-    </ClInclude>
     <ClInclude Include="keyboardDriver.h">
       <Filter>组件\模拟键鼠</Filter>
     </ClInclude>
@@ -170,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="dataStruct.h">
       <Filter>数据结构</Filter>
+    </ClInclude>
+    <ClInclude Include="msdk.h">
+      <Filter>组件\模拟键鼠</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -269,10 +269,5 @@
     <Image Include="images\background.bmp">
       <Filter>资源文件</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="msdk.lib">
-      <Filter>组件\模拟键鼠</Filter>
-    </Library>
   </ItemGroup>
 </Project>
