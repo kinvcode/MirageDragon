@@ -73,11 +73,11 @@
     <Filter Include="组件\JSON">
       <UniqueIdentifier>{1a144b7c-4678-4a60-a6bd-6d0b94e8d792}</UniqueIdentifier>
     </Filter>
-    <Filter Include="组件\锁">
-      <UniqueIdentifier>{1d0c4687-8f5f-446e-8fca-75ae15d450cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="数据结构">
       <UniqueIdentifier>{6bcddb72-1d0f-442c-8d42-81d308cc6001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="组件\图形处理">
+      <UniqueIdentifier>{be3c00e1-c784-4426-b3a4-189e587c2b1a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +171,12 @@
     <ClInclude Include="msdk.h">
       <Filter>组件\模拟键鼠</Filter>
     </ClInclude>
+    <ClInclude Include="screenshot.h">
+      <Filter>组件\图形处理</Filter>
+    </ClInclude>
+    <ClInclude Include="opencv.h">
+      <Filter>组件\图形处理</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -247,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="dataStruct.cpp">
       <Filter>数据结构</Filter>
+    </ClCompile>
+    <ClCompile Include="screenshot.cpp">
+      <Filter>组件\图形处理</Filter>
+    </ClCompile>
+    <ClCompile Include="opencv.cpp">
+      <Filter>组件\图形处理</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

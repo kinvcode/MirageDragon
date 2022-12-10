@@ -69,9 +69,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\propertiRepos\opencvT.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\propertiRepos\opencvT.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -219,12 +221,14 @@
     <ClInclude Include="MirageDragon.h" />
     <ClInclude Include="MirageDragonDlg.h" />
     <ClInclude Include="msdk.h" />
+    <ClInclude Include="opencv.h" />
     <ClInclude Include="PAGE1.h" />
     <ClInclude Include="PAGE2.h" />
     <ClInclude Include="PAGE3.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="screenshot.h" />
     <ClInclude Include="scripts.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="usbhidkeycode.h" />
@@ -250,6 +254,7 @@
     <ClCompile Include="memory.cpp" />
     <ClCompile Include="MirageDragon.cpp" />
     <ClCompile Include="MirageDragonDlg.cpp" />
+    <ClCompile Include="opencv.cpp" />
     <ClCompile Include="PAGE1.cpp" />
     <ClCompile Include="PAGE2.cpp" />
     <ClCompile Include="PAGE3.cpp" />
@@ -260,6 +265,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="process.cpp" />
+    <ClCompile Include="screenshot.cpp" />
     <ClCompile Include="scripts.cpp" />
   </ItemGroup>
   <ItemGroup>
