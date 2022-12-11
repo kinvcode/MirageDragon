@@ -177,6 +177,9 @@
     <ClInclude Include="opencv.h">
       <Filter>组件\图形处理</Filter>
     </ClInclude>
+    <ClInclude Include="manual.h">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -259,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="opencv.cpp">
       <Filter>组件\图形处理</Filter>
+    </ClCompile>
+    <ClCompile Include="manual.cpp">
+      <Filter>DNF\线程逻辑</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
