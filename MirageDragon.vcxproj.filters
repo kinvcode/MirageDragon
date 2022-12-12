@@ -183,6 +183,9 @@
     <ClInclude Include="procData.h">
       <Filter>DNF\游戏数据</Filter>
     </ClInclude>
+    <ClInclude Include="dungeon.h">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -271,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="procData.cpp">
       <Filter>DNF\游戏数据</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon.cpp">
+      <Filter>DNF\线程逻辑</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -210,6 +210,7 @@
     <ClInclude Include="dnfPacket.h" />
     <ClInclude Include="dnfTask.h" />
     <ClInclude Include="dnfUser.h" />
+    <ClInclude Include="dungeon.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="http.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="dnfPacket.cpp" />
     <ClCompile Include="dnfTask.cpp" />
     <ClCompile Include="dnfUser.cpp" />
+    <ClCompile Include="dungeon.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="http.cpp" />
     <ClCompile Include="jobs.cpp" />

@@ -30,7 +30,7 @@ void ManualLogic::inTown()
 		GAME.dungeonInfoClean();
 
 		// 关闭图内的功能
-		closeDungeonFunctions();
+		closeFunctions();
 
 		// 初始化后更改进入状态
 		GAME.town_info.entered = true;
@@ -82,7 +82,7 @@ void ManualLogic::inDungeon()
 		if (is_clearance)
 		{
 			// 关闭图内功能
-			closeDungeonFunctions();
+			closeFunctions();
 			GAME.dungeonInfoClean();
 			while (judgeIsBossRoom() && GAME.game_status == 3)
 			{
