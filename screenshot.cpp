@@ -4,13 +4,14 @@
 #include <atlimage.h>
 #include "keyboardDriver.h"
 #include "log.h"
+#include "procData.h"
 
 void ScreenShot::savePic()
 {
 	//img_lock.lock();
 
 	HDC hDc = NULL;
-	HWND hWnd = GLOBAL.dnf_window;
+	HWND hWnd = PDATA.dnf.dnf_window;
 
 	hDc = GetDC(hWnd); //获取DC
 	if (hDc == NULL) return;
@@ -30,7 +31,7 @@ void ScreenShot::savePic()
 	image.Create(width, hight, bitOfPix); //为图像类创建与窗口DC相同大小的DC
 	BitBlt(image.GetDC(), 0, 0, width, hight, hDc, 0, 0, SRCCOPY); //将窗口DC图像复制到image
 
-	image.Save(GLOBAL.screenshot_file_c, Gdiplus::ImageFormatPNG); //保存为png格式图片文件
+	image.Save(PDATA.screenshot_file_c, Gdiplus::ImageFormatPNG); //保存为png格式图片文件
 	image.ReleaseDC(); //释放DC
 	ReleaseDC(hWnd, hDc); //释放DC资源
 

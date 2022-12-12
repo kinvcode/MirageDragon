@@ -227,6 +227,7 @@
     <ClInclude Include="PAGE2.h" />
     <ClInclude Include="PAGE3.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="procData.h" />
     <ClInclude Include="process.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="screenshot.h" />
@@ -266,6 +267,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="procData.cpp" />
     <ClCompile Include="process.cpp" />
     <ClCompile Include="screenshot.cpp" />
     <ClCompile Include="scripts.cpp" />

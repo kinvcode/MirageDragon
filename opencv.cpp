@@ -4,6 +4,7 @@
 #include "screenshot.h"
 #include "GameData.h"
 #include "keyboardDriver.h"
+#include "procData.h"
 
 
 void OpenCV::read()
@@ -16,9 +17,9 @@ void OpenCV::read()
 
 	ScreenShot::savePic();
 
-	img = imread(GLOBAL.screenshot_file_s, IMREAD_COLOR); // 读取图片
+	img = imread(PDATA.screenshot_file_s, IMREAD_COLOR); // 读取图片
 
-	CString tmp1 = GLOBAL.cur_dir;
+	CString tmp1 = PDATA.cur_dir;
 	tmp1.Append(L"template\\2.png");
 	string template_file = CW2A(tmp1.GetString());
 	tmp = imread(template_file, IMREAD_COLOR); // 读取模板
@@ -58,8 +59,8 @@ void OpenCV::read()
 	int cent_y = (int)ceil(tmp.rows / 2) + matchLoc.y;
 
 	// 计算窗口左上角位置
-	int window_left = GLOBAL.dnf_rect.left;
-	int window_top = GLOBAL.dnf_rect.top;
+	int window_left = PDATA.dnf.dnf_rect.left;
+	int window_top = PDATA.dnf.dnf_rect.top;
 
 	cent_x += window_left;
 	cent_y += window_top;

@@ -7,12 +7,13 @@
 #include "MirageDragon.h"
 #include "MirageDragonDlg.h"
 #include "dnfCALL.h"
+#include "procData.h"
 
 // 选择角色
 void ManualLogic::selectRole()
 {
 	time_t now_time = time(nullptr);
-	if (now_time - GLOBAL.last_update_roles > 60)
+	if (now_time - PDATA.last_update_roles > 60)
 	{
 		// 更新角色列表
 		getRoleList();
@@ -23,16 +24,16 @@ void ManualLogic::selectRole()
 void ManualLogic::inTown()
 {
 	// 如果刚进入城镇
-	if (!GLOBAL.town_info.entered) {
+	if (!GAME.town_info.entered) {
 
 		// 关闭其他状态的信息
-		GLOBAL.dungeonInfoClean();
+		GAME.dungeonInfoClean();
 
 		// 关闭图内的功能
 		closeDungeonFunctions();
 
 		// 初始化后更改进入状态
-		GLOBAL.town_info.entered = true;
+		GAME.town_info.entered = true;
 	}
 }
 
@@ -48,18 +49,18 @@ void ManualLogic::inDungeon()
 	// 刷图线程开启，关闭选角线程、城镇线程、选图线程
 
 	// 如果刚进入地图
-	if (!GLOBAL.dungeon_info.entered) {
+	if (!GAME.dungeon_info.entered) {
 		// 初始化副本信息
 		initDungeonInfo();
 
 		// 关闭其他状态的信息
-		GLOBAL.townInfoClean();
+		GAME.townInfoClean();
 
 		// 开启副本功能
 		firstRoom();
 
 		// 初始化后更改进入状态
-		GLOBAL.dungeon_info.entered = true;
+		GAME.dungeon_info.entered = true;
 	}
 
 	// 更新人物坐标
@@ -82,8 +83,8 @@ void ManualLogic::inDungeon()
 		{
 			// 关闭图内功能
 			closeDungeonFunctions();
-			GLOBAL.dungeonInfoClean();
-			while (judgeIsBossRoom() && GLOBAL.game_status == 3)
+			GAME.dungeonInfoClean();
+			while (judgeIsBossRoom() && GAME.game_status == 3)
 			{
 				// 等待离开BOSS房间
 				programDelay(1000, 1);
@@ -97,12 +98,12 @@ void ManualLogic::firstRoom()
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 	mainWindow->Log(L"开启首图功能");
 
-	if (GLOBAL.function_switch.score)
+	if (GAME.function_switch.score)
 	{
 		superScore();
 	}
 
-	if (GLOBAL.function_switch.cool_down)
+	if (GAME.function_switch.cool_down)
 	{
 		CString num;
 		mainWindow->page2._cool_down.GetWindowText(num);
@@ -110,12 +111,12 @@ void ManualLogic::firstRoom()
 		skillCoolDown(number);
 	}
 
-	if (GLOBAL.function_switch.hook_damage)
+	if (GAME.function_switch.hook_damage)
 	{
 		//hookDamage(true);
 	}
 
-	if (GLOBAL.function_switch.three_speed)
+	if (GAME.function_switch.three_speed)
 	{
 		CString attack_speed, move_speed, casting_speed;
 		mainWindow->page2._attack_speed.GetWindowText(attack_speed);
@@ -124,7 +125,7 @@ void ManualLogic::firstRoom()
 		threeSpeed(_ttoi(attack_speed), _ttoi(casting_speed), _ttoi(move_speed));
 	}
 
-	if (GLOBAL.function_switch.hidden_user)
+	if (GAME.function_switch.hidden_user)
 	{
 		hiddenUser();
 	}
@@ -132,17 +133,17 @@ void ManualLogic::firstRoom()
 
 void ManualLogic::closeFunctions()
 {
-	if (GLOBAL.function_switch.cool_down)
+	if (GAME.function_switch.cool_down)
 	{
 		skillCoolDown(0);
 	}
 
-	if (GLOBAL.function_switch.hook_damage)
+	if (GAME.function_switch.hook_damage)
 	{
 		//hookDamage(false);
 	}
 
-	if (GLOBAL.function_switch.three_speed)
+	if (GAME.function_switch.three_speed)
 	{
 		threeSpeed(0, 0, 0);
 	}
