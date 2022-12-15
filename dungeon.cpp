@@ -40,6 +40,11 @@ void DungeonLogic::inTown()
 
 		// 初始化后更改进入状态
 		GAME.town_info.entered = true;
+
+		// 检查疲劳状态
+		if (getUserFatigue() == 0) {
+			return;
+		}
 	}
 
 	// 没有任务则不处理
@@ -50,7 +55,7 @@ void DungeonLogic::inTown()
 	// 读取当前要处理的副本ID
 	int code = dg_list.front().dungeon_code;
 
-	// 进入区域
+	//// 进入区域
 	areaCall(code);
 	// 组包选图
 	selectMap();
@@ -237,11 +242,16 @@ void DungeonLogic::clearanceLogic()
 	// 关闭图内功能
 	closeFunctions();
 
+	DUNGEONJOB* job = &dg_list.front();
+
 	// 副本次数更新
-	dg_list.front().times--;
+	if (job->times != -1 && job->times != 0) {
+		job->times--;
+	}
+
 	bool dungeon_finished = false;
 
-	if (dg_list.front().times <= 0)
+	if (job->times == 0)
 	{
 		dg_list.pop();
 		dungeon_finished = true;
@@ -270,27 +280,39 @@ void DungeonLogic::clearanceLogic()
 		}
 
 		// 分解装备
+		__int64 fatigue = getUserFatigue();
+
+		if (fatigue == 0 && job->times == -1)
+		{
+			dungeon_finished = true;
+		}
 
 		// 判断任务是否完成
 		if (dungeon_finished)
 		{
 			Log.info(L"当前副本任务已完成", true);
+			// 返回城镇
 			while (GAME.game_status == 3)
 			{
-				// 返回城镇
 				MSDK_keyPress(Keyboard_F12, 1);
 			}
 		}
 		else {
 			// 疲劳为空返回城镇
-			if (getUserFatigue() < 1)
+			if (fatigue < 1)
 			{
 				Log.info(L"当前副本任务失败：疲劳不足", true);
 				// 任务失败，返回城镇
-				MSDK_keyPress(Keyboard_F12, 1);
+				while (GAME.game_status == 3)
+				{
+					MSDK_keyPress(Keyboard_F12, 1);
+				};
 			}
 			// 再次挑战
-			MSDK_keyPress(Keyboard_F10, 1);
+			while (GAME.game_status == 3)
+			{
+				MSDK_keyPress(Keyboard_F10, 1);
+			}
 		}
 	}
 
@@ -332,7 +354,7 @@ void DungeonLogic::finalGatherItems()
 
 void DungeonLogic::initDG()
 {
-	DUNGEONLIST dungeon_array = PDATA.job_list.front();
+	JOB dungeon_array = PDATA.jobs_list.front().job.front();
 	json json_data = dungeon_array.data;
 
 	for (json::iterator it = json_data.begin(); it != json_data.end(); ++it) {

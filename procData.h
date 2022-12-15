@@ -22,15 +22,19 @@ public:
 
 	bool manual_thread_run = false; // 手动线程是否在运行中
 
-	queue<int> job_queue; // 任务队列
+	//queue<int> job_queue; // 任务队列
 
 	CWinThread* cur_job_thread = NULL; // 当前执行的任务线程
 
 	bool cur_job_run = false; // 当前任务正在执行
 	
-	queue<DUNGEONLIST> job_list; // 当前任务列表
+	//queue<ROLEJOB> job_list; // 当前角色任务列表
+
+	queue<ROLEJOB> jobs_list; // 角色任务列表集合
 
 	time_t last_update_roles = 0; // 上次更新角色列表时间
+	
+	time_t last_update_roleid = 0; // 上次更新角色ID时间
 };
 
 extern ProcessData PDATA;
