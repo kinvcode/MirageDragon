@@ -63,9 +63,6 @@
     <Filter Include="DNF\脚本">
       <UniqueIdentifier>{a0a74bab-4f5b-4a8c-bf41-08464decb504}</UniqueIdentifier>
     </Filter>
-    <Filter Include="任务">
-      <UniqueIdentifier>{9f9cf498-0794-4df4-85b0-e60fc794bdcf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -156,9 +153,6 @@
     <ClInclude Include="usbhidkeycode.h">
       <Filter>组件\模拟键鼠</Filter>
     </ClInclude>
-    <ClInclude Include="dnfTask.h">
-      <Filter>任务</Filter>
-    </ClInclude>
     <ClInclude Include="json.h">
       <Filter>组件\JSON</Filter>
     </ClInclude>
@@ -184,6 +178,9 @@
       <Filter>DNF\游戏数据</Filter>
     </ClInclude>
     <ClInclude Include="dungeon.h">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClInclude>
+    <ClInclude Include="mainline.h">
       <Filter>DNF\线程逻辑</Filter>
     </ClInclude>
   </ItemGroup>
@@ -251,9 +248,6 @@
     <ClCompile Include="scripts.cpp">
       <Filter>DNF\脚本</Filter>
     </ClCompile>
-    <ClCompile Include="dnfTask.cpp">
-      <Filter>任务</Filter>
-    </ClCompile>
     <ClCompile Include="json.cpp">
       <Filter>组件\JSON</Filter>
     </ClCompile>
@@ -276,6 +270,9 @@
       <Filter>DNF\游戏数据</Filter>
     </ClCompile>
     <ClCompile Include="dungeon.cpp">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClCompile>
+    <ClCompile Include="mainline.cpp">
       <Filter>DNF\线程逻辑</Filter>
     </ClCompile>
   </ItemGroup>
