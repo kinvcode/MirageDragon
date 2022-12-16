@@ -13,6 +13,7 @@
 #include "MirageDragon.h"
 #include "dnfPacket.h"
 #include "dataStruct.h"
+#include "http.h"
 
 queue<DUNGEONJOB> DungeonLogic::dg_list = {};
 
@@ -264,6 +265,9 @@ void DungeonLogic::clearanceLogic()
 		dungeon_finished = true;
 	}
 
+	// 更新任务信息
+	updateData();
+
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
 
 		Log.info(L"BOSS房间捡物");
@@ -366,4 +370,10 @@ void DungeonLogic::initDG()
 	for (json::iterator it = json_data.begin(); it != json_data.end(); ++it) {
 		dg_list.push(it->get<DUNGEONJOB>());
 	}
+}
+
+void DungeonLogic::updateData() 
+{
+	// 提交任务完成类型
+	http.updateJob(0);
 }

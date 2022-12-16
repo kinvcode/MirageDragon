@@ -35,4 +35,7 @@ public:
 
 	// 初始化副本列表
 	static void initDG();
+
+	// 更新副本列表
+	static void updateData();
 };
