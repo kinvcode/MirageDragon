@@ -18,12 +18,18 @@ queue<DUNGEONJOB> DungeonLogic::dg_list = {};
 
 void DungeonLogic::selectRole()
 {
-	time_t now_time = time(nullptr);
-	if (now_time - PDATA.last_update_roles > 60)
-	{
+	if (!GAME.role_panel.entered) {
+		//time_t now_time = time(nullptr);
+		//if (now_time - PDATA.last_update_roles > 60)
+		//{
+		//}
+
+		GAME.role_panel.entered = true;
+
 		// 更新角色列表
 		getRoleList();
 	}
+
 }
 
 void DungeonLogic::inTown()
@@ -33,6 +39,7 @@ void DungeonLogic::inTown()
 		// 初始化城镇信息
 
 		// 关闭其他状态的信息
+		GAME.rolePanelClean();
 		GAME.dungeonInfoClean();
 
 		// 关闭图内的功能(防止直接出图)
@@ -287,6 +294,7 @@ void DungeonLogic::clearanceLogic()
 			dungeon_finished = true;
 		}
 
+		GAME.dungeonInfoClean();
 		// 判断任务是否完成
 		if (dungeon_finished)
 		{
@@ -315,8 +323,6 @@ void DungeonLogic::clearanceLogic()
 			}
 		}
 	}
-
-	GAME.dungeonInfoClean();
 }
 
 void DungeonLogic::finalGatherItems()

@@ -12,9 +12,14 @@
 // 选择角色
 void ManualLogic::selectRole()
 {
-	time_t now_time = time(nullptr);
-	if (now_time - PDATA.last_update_roles > 60)
-	{
+	if (!GAME.role_panel.entered) {
+		//time_t now_time = time(nullptr);
+		//if (now_time - PDATA.last_update_roles > 60)
+		//{
+		//}
+
+		GAME.role_panel.entered = true;
+
 		// 更新角色列表
 		getRoleList();
 	}
@@ -27,6 +32,7 @@ void ManualLogic::inTown()
 	if (!GAME.town_info.entered) {
 
 		// 关闭其他状态的信息
+		GAME.rolePanelClean();
 		GAME.dungeonInfoClean();
 
 		// 关闭图内的功能
