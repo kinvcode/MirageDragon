@@ -17,7 +17,7 @@
 #include "baseAddress.h"
 #include "dnfBase.h"
 
-vector<int> MainLineLogic::learn_skill_lv = { 5,8,15,20,25,30,35,40,45,65,70,76,80,85 };
+vector<int> MainLineLogic::learn_skill_lv = {5,8,15,20,25,30,35,40,45,65,70,76,80,85 };
 
 DNFJOB MainLineLogic::job_info = { -1,NULL,NULL };
 
@@ -31,11 +31,8 @@ void MainLineLogic::selectRole()
 		GAME.role_panel.entered = true;
 		// 更新角色列表
 		getRoleList();
-	}
-
-	while (GAME.game_status == 2)
-	{
-		int map = 0;
+		GAME.dungeonInfoClean();
+		GAME.townInfoClean();
 	}
 }
 
@@ -57,6 +54,7 @@ void MainLineLogic::inTown()
 
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
+			exitMainline();
 			return;
 		}
 
@@ -311,9 +309,6 @@ void MainLineLogic::clearanceLogic()
 	// 关闭图内功能
 	closeFunctions();
 
-	// 
-	bool dungeon_finished = false;
-
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
 
 		Log.info(L"BOSS房间捡物");
@@ -337,41 +332,15 @@ void MainLineLogic::clearanceLogic()
 		}
 
 		// 分解装备
-		__int64 fatigue = getUserFatigue();
-
-		if (fatigue == 0)
-		{
-			dungeon_finished = true;
-		}
 
 		GAME.dungeonInfoClean();
-		// 判断任务是否完成
-		if (dungeon_finished)
+		
+		// 返回城镇进行下一轮逻辑处理
+		while (GAME.game_status == 3)
 		{
-			Log.info(L"当前副本任务已完成", true);
-			// 返回城镇
-			while (GAME.game_status == 3)
-			{
-				MSDK_keyPress(Keyboard_F12, 1);
-			}
+			MSDK_keyPress(Keyboard_F12, 1);
 		}
-		else {
-			// 疲劳为空返回城镇
-			if (fatigue < 1)
-			{
-				Log.info(L"当前副本任务失败：疲劳不足", true);
-				// 任务失败，返回城镇
-				while (GAME.game_status == 3)
-				{
-					MSDK_keyPress(Keyboard_F12, 1);
-				};
-			}
-			// 再次挑战
-			while (GAME.game_status == 3)
-			{
-				MSDK_keyPress(Keyboard_F10, 1);
-			}
-		}
+
 	}
 }
 
