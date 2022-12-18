@@ -237,11 +237,11 @@ void DungeonLogic::attackMonsterLogic()
 		// ¸úËæ¹ÖÎï
 		DUNGEONOBJ cur = GAME.dungeon_info.current_room.monster_list.front();
 		bool res = runToMonter(cur.coor.x, cur.coor.y);
-		//if (res) {
+		if (res) {
 			// ¹¥»÷¹ÖÎï
-			int key = getCoolDownKey();
+			//int key = getCoolDownKey();
 			MSDK_keyPress(Keyboard_x, 1);
-		//}
+		}
 	}
 }
 
