@@ -152,13 +152,13 @@ void DungeonLogic::firstRoom()
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350, 0);
+		programDelay(350);
 
 		// 右右空格
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350, 0);
+		programDelay(350);
 	}
 
 	if (GAME.function_switch.score)
@@ -278,7 +278,7 @@ void DungeonLogic::clearanceLogic()
 		{
 			// 进行ESC翻牌
 			MSDK_keyPress(Keyboard_ESCAPE, 1);
-			programDelay(500, 1);
+			programDelay(500);
 		}
 
 		// 获取商店类型
@@ -287,7 +287,7 @@ void DungeonLogic::clearanceLogic()
 		{
 			// 关闭加百利商店
 			MSDK_keyPress(Keyboard_ESCAPE, 1);
-			programDelay(1000, 1);
+			programDelay(1000);
 		}
 
 		// 分解装备

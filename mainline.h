@@ -2,9 +2,17 @@
 
 class MainLineLogic {
 public:
+	// 任务信息
+	static DNFJOB job_info;
 
 	// 学习技能的等级
-	static vector<int> learn_skill_lv; 
+	static vector<int> learn_skill_lv;
+
+	// 刷图任务容器
+	static vector<CString> dungeon_jobs;
+
+	// 城镇任务容器
+	static vector<CString> town_jobs;
 
 	// 选择角色
 	static void selectRole();
@@ -32,4 +40,36 @@ public:
 
 	// 捡物兜底
 	static void finalGatherItems();
+
+	// 处理对话
+	static void handleDialogue();
+
+	// 处理技能
+	static void handleSkill();
+
+	// 是否存在主线任务
+	static bool hasMainJob();
+
+	// 获取任务状态
+	static int getJobStatus(int code);
+
+	// 处理任务
+	static int handleJob();
+
+	// 任务材料处理 -1重新剧情 0材料充足 1材料不足 3剧情材料 5未找到 10其他任务
+	static int handleJobMaterial(int code);
+
+	// 退出剧情任务线程
+	static void exitMainline();
+
+	// 剧情要求0未知要求 1对话 2刷图
+	static int handleJobRequire();
+
+	// 获取剧情地图
+	static int getJobMap(int code);
+
+	// 剧情特殊地图
+	static int getJobSpecialMap(int code);
+
+	static void test();
 };
