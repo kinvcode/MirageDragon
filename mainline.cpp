@@ -17,7 +17,7 @@
 #include "baseAddress.h"
 #include "dnfBase.h"
 
-vector<int> MainLineLogic::learn_skill_lv = {5,8,15,20,25,30,35,40,45,65,70,76,80,85 };
+vector<int> MainLineLogic::learn_skill_lv = { 5,8,15,20,25,30,35,40,45,65,70,76,80,85 };
 
 DNFJOB MainLineLogic::job_info = { -1,NULL,NULL };
 
@@ -122,8 +122,18 @@ handleJobBegin:
 	else {
 		// 不存在任务，刷新角色尝试
 		flushRole();
+
 		// 不存在主线任务，且人物没有满级，则刷最高等级副本
-		exitMainline();
+		int lv = getUserLevel();
+		if (!hasMainJob() && lv < 110)
+		{
+			int map = getMaxLvMap();
+			areaCall(map);
+			programDelay(300);
+			selectMap();
+			entryDungeon(map, 0, 0, 0);
+			//exitMainline();
+		}
 	}
 	// 城镇逻辑结束
 }
@@ -166,6 +176,9 @@ void MainLineLogic::inDungeon()
 	// 遍历地图（人物、物品、怪物...）
 	Log.info(L"遍历怪物与物品");
 	getDungeonAllObj();
+
+	// 处理对话
+	handleDialogue();
 
 	// 未开门时处理逻辑
 	if (is_open_door == false)
@@ -322,22 +335,42 @@ void MainLineLogic::clearanceLogic()
 			programDelay(500);
 		}
 
-		// 获取商店类型
-		int shop_type = getClearanceShop();
-		if (shop_type == 1003)
-		{
-			// 关闭加百利商店
-			MSDK_keyPress(Keyboard_ESCAPE, 1);
-			programDelay(1000);
-		}
+		// 处理对话
+		handleDialogue();
 
 		// 分解装备
 
 		GAME.dungeonInfoClean();
-		
+
+		// 如果没有剧情，则继续挑战
+		if (!hasMainJob()) {
+			while (GAME.game_status == 3)
+			{
+				// 获取商店类型
+				int shop_type = getClearanceShop();
+				if (shop_type == 1003)
+				{
+					// 关闭加百利商店
+					MSDK_keyPress(Keyboard_ESCAPE, 1);
+					programDelay(200);
+				}
+
+				MSDK_keyPress(Keyboard_F10, 1);
+			}
+		}
+
 		// 返回城镇进行下一轮逻辑处理
 		while (GAME.game_status == 3)
 		{
+			// 获取商店类型
+			int shop_type = getClearanceShop();
+			if (shop_type == 1003)
+			{
+				// 关闭加百利商店
+				MSDK_keyPress(Keyboard_ESCAPE, 1);
+				programDelay(200);
+			}
+
 			MSDK_keyPress(Keyboard_F12, 1);
 		}
 
@@ -795,6 +828,28 @@ int MainLineLogic::getJobSpecialMap(int code)
 	}
 
 	return -1;
+}
+
+int MainLineLogic::getMaxLvMap()
+{
+	int level = getUserLevel();
+	int lv_map[110] = {5,//0级用于填充数组头
+		3,5,5,5,5,6,6,6,9,9,//1~10
+		9,7,7,8,8,1000,1000,1000,12,13,//11~20
+		14,17,15,15,22,23,24,25,26,26,//21~30
+		32,150,151,35,34,34,153,154,154,154,//31~40
+		41,42,43,141,141,141,50,51,53,53,//41~50
+		145,146,148,148,157,158,159,160,160,163,//51~60
+		164,164,164,81,82,88,88,83,84,85,//61~70
+		85,87,92,93,93,71,72,74,75,76,//71~80
+		76,103,104,104,104,192,310,312,314,314,//81~90
+		291100293,291100293,291100293,291100293,291100293,291100293,291100293,291100293,291100293,291100293,//91~100
+		291100293,291100293,291100293,291100293,291100293,291100293,291100293,291100293,291100293 //101~109
+	};
+	if (level < 110) {
+		return lv_map[level];
+	}
+	return 5;
 }
 
 void MainLineLogic::test()

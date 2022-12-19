@@ -71,5 +71,8 @@ public:
 	// 剧情特殊地图
 	static int getJobSpecialMap(int code);
 
+	// 获取等级最高地图
+	static int getMaxLvMap();
+
 	static void test();
 };

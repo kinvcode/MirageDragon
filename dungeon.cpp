@@ -239,8 +239,8 @@ void DungeonLogic::attackMonsterLogic()
 		bool res = runToMonter(cur.coor.x, cur.coor.y);
 		if (res) {
 			// ¹¥»÷¹ÖÎï
-			//int key = getCoolDownKey();
-			MSDK_keyPress(Keyboard_x, 1);
+			int key = getCoolDownKey();
+			MSDK_keyPress(key, 1);
 		}
 	}
 }
