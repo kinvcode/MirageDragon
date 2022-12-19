@@ -52,6 +52,9 @@ void MainLineLogic::inTown()
 		// 初始化后更改进入状态
 		GAME.town_info.entered = true;
 
+		// 获取角色ID
+		getRoleID();
+
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
 			exitMainline();
@@ -146,6 +149,14 @@ void MainLineLogic::selectDungeon()
 
 void MainLineLogic::inDungeon()
 {
+	if (hasPanel())
+	{
+		//while (!hasPanel()) {
+		//	MSDK_keyPress(Keyboard_ESCAPE, 1);
+		//	Sleep(200);
+		//}
+	}
+
 	// 刷图线程开启，关闭选角线程、城镇线程、选图线程
 
 	// 如果刚进入地图
@@ -263,11 +274,6 @@ void MainLineLogic::firstRoom()
 	// 呼出面板，三速生效
 
 	while (!hasPanel())
-	{
-		MSDK_keyPress(Keyboard_m, 1);
-		Sleep(500);
-	}
-	while (hasPanel())
 	{
 		MSDK_keyPress(Keyboard_m, 1);
 		Sleep(500);
@@ -765,7 +771,7 @@ void MainLineLogic::exitMainline()
 	// 主动退出线程
 	PDATA.cur_job_run = false;
 	PDATA.jobs_list.front().job.pop();
-	ExitThread(0);
+	//ExitThread(0);
 }
 
 int MainLineLogic::handleJobRequire()

@@ -18,7 +18,9 @@ void ManualLogic::selectRole()
 		//{
 		//}
 
-		GAME.role_panel.entered = true;
+		// 关闭其他状态的信息
+		GAME.dungeonInfoClean();
+		GAME.townInfoClean();
 
 		// 更新角色列表
 		getRoleList();
@@ -40,6 +42,9 @@ void ManualLogic::inTown()
 
 		// 初始化后更改进入状态
 		GAME.town_info.entered = true;
+
+		// 获取角色ID
+		getRoleID();
 	}
 }
 
