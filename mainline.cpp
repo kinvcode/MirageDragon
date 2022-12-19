@@ -59,7 +59,7 @@ void MainLineLogic::inTown()
 		}
 
 		// 处理技能
-		handleSkill();
+		//handleSkill();
 	}
 
 	// 处理对话
@@ -75,13 +75,13 @@ handleJobBegin:
 		case -1:
 			// 未接：接受任务
 			acceptJobCall(job_info.code);
-			programDelay(300);
+			Sleep(300);
 			goto handleJobBegin;
 			break;
 		case 0:
 			// 完成：完成任务
 			submitJobCall(job_info.code);
-			programDelay(300);
+			Sleep(300);
 			goto handleJobBegin;
 			break;
 		default:
@@ -104,7 +104,7 @@ handleJobBegin:
 		}
 		if (job_type == 1) {
 			finishJobCall(job_info.code);
-			programDelay(300);
+			Sleep(300);
 			goto handleJobBegin;
 		}
 		if (job_type == 2) {
@@ -113,7 +113,7 @@ handleJobBegin:
 			// 开始刷图
 
 			areaCall(map);
-			programDelay(300);
+			Sleep(300);
 			selectMap();
 			entryDungeon(map, 0, 0, 0);
 		}
@@ -129,7 +129,7 @@ handleJobBegin:
 		{
 			int map = getMaxLvMap();
 			areaCall(map);
-			programDelay(300);
+			Sleep(300);
 			selectMap();
 			entryDungeon(map, 0, 0, 0);
 			//exitMainline();
@@ -199,7 +199,13 @@ void MainLineLogic::inDungeon()
 		}
 		else {
 			// 捡物兜底
-			//finalGatherItems();
+			finalGatherItems();
+
+			if (GAME.dungeon_info.map_code == 15) {
+				if (GAME.dungeon_info.current_room.coordinate.y == 1) {
+					passRoomByPacket(0, 0);
+				}
+			}
 
 			// 过图逻辑（自动进入下个房间）
 			autoNextRoom();
@@ -218,13 +224,13 @@ void MainLineLogic::firstRoom()
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_UpArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350);
+		Sleep(350);
 
 		// 右右空格
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_RightArrow, 1);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		programDelay(350);
+		Sleep(350);
 	}
 
 	if (GAME.function_switch.score)
@@ -318,20 +324,25 @@ void MainLineLogic::clearanceLogic()
 
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
 
-		//finalGatherItems();
+		finalGatherItems();
 
 		// 如果没翻牌
 		while (!judgeAwarded())
 		{
 			// 进行ESC翻牌
 			MSDK_keyPress(Keyboard_ESCAPE, 1);
-			programDelay(500);
+			Sleep(500);
 		}
 
 		// 处理对话
 		handleDialogue();
 
 		// 分解装备
+		if (getBackpackLoad() > 50) {
+			getPackageOfEq();
+		}
+
+		finalGatherItems();
 
 		GAME.dungeonInfoClean();
 
@@ -345,7 +356,7 @@ void MainLineLogic::clearanceLogic()
 				{
 					// 关闭加百利商店
 					MSDK_keyPress(Keyboard_ESCAPE, 1);
-					programDelay(200);
+					Sleep(200);
 				}
 
 				MSDK_keyPress(Keyboard_F10, 1);
@@ -361,7 +372,7 @@ void MainLineLogic::clearanceLogic()
 			{
 				// 关闭加百利商店
 				MSDK_keyPress(Keyboard_ESCAPE, 1);
-				programDelay(200);
+				Sleep(200);
 			}
 
 			MSDK_keyPress(Keyboard_F12, 1);
@@ -376,7 +387,7 @@ void MainLineLogic::finalGatherItems()
 	// 循环策略
 	bool has_item = true;
 	// 关闭穿透
-	penetrateMap(false);
+	penetrate(false);
 	while (has_item)
 	{
 		getDungeonAllObj();
@@ -396,7 +407,7 @@ void MainLineLogic::finalGatherItems()
 			}
 		}
 	}
-	penetrateMap(true);
+	penetrate(true);
 }
 
 void MainLineLogic::handleDialogue()
@@ -406,7 +417,7 @@ void MainLineLogic::handleDialogue()
 	{
 		MSDK_keyPress(Keyboard_KongGe, 1); // 空格
 		MSDK_keyPress(Keyboard_ESCAPE, 1); // ESC
-		programDelay(200);
+		Sleep(200);
 	}
 }
 
@@ -417,11 +428,11 @@ void MainLineLogic::handleSkill()
 	if (find(learn_skill_lv.begin(), learn_skill_lv.end(), cur_lv) != learn_skill_lv.end()) {
 		// 技能学习（智能学习等待完善）
 		cleanSkill();
-		programDelay(800);
+		Sleep(800);
 		panelCall(3);
-		programDelay(800);
+		Sleep(800);
 		learSkillCall();
-		programDelay(800);
+		Sleep(800);
 		// 去除后跳、受身蹲伏、属性变换
 		removeSkill();
 	}
@@ -543,13 +554,13 @@ int MainLineLogic::handleJob()
 	case -1:
 		// 未接：接受任务
 		acceptJobCall(job_info.code);
-		programDelay(300);
+		Sleep(300);
 		status = 1;
 		break;
 	case 0:
 		// 完成：完成任务
 		submitJobCall(job_info.code);
-		programDelay(300);
+		Sleep(300);
 		break;
 	default:
 		// 已接：下个逻辑
@@ -627,7 +638,7 @@ int MainLineLogic::handleJobMaterial(int code)
 		{
 			// 完成CALL
 			finishJobCall(job_info.code);
-			programDelay(1000);
+			Sleep(1000);
 			return 0;
 		}
 		else {
@@ -657,7 +668,7 @@ int MainLineLogic::handleJobMaterial(int code)
 		if (job_item >= 500)
 		{
 			finishJobCall(job_info.code);
-			programDelay(1000);
+			Sleep(1000);
 			return 0;
 		}
 		else {
@@ -693,7 +704,7 @@ int MainLineLogic::handleJobMaterial(int code)
 		if (job_item > 0)
 		{
 			finishJobCall(job_info.code);
-			programDelay(1000);
+			Sleep(1000);
 			return 0;
 		}
 		else {
@@ -713,9 +724,9 @@ int MainLineLogic::handleJobMaterial(int code)
 		if (job_item > 0)
 		{
 			finishJobCall(job_info.code);
-			programDelay(1000);
+			Sleep(1000);
 			// 跳过CALL
-			programDelay(1000);
+			Sleep(1000);
 			return 0;
 		}
 		else {
@@ -825,7 +836,7 @@ int MainLineLogic::getJobSpecialMap(int code)
 int MainLineLogic::getMaxLvMap()
 {
 	int level = getUserLevel();
-	int lv_map[110] = {5,//0级用于填充数组头
+	int lv_map[110] = { 5,//0级用于填充数组头
 		3,5,5,5,5,6,6,6,9,9,//1~10
 		9,7,7,8,8,1000,1000,1000,12,13,//11~20
 		14,17,15,15,22,23,24,25,26,26,//21~30

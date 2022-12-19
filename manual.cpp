@@ -93,7 +93,7 @@ void ManualLogic::inDungeon()
 			while (judgeIsBossRoom() && GAME.game_status == 3)
 			{
 				// 等待离开BOSS房间
-				programDelay(1000);
+				Sleep(1000);
 			}
 		}
 	}
