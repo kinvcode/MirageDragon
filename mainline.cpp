@@ -174,7 +174,6 @@ void MainLineLogic::inDungeon()
 	bool is_open_door = judgeDoorOpen();
 
 	// 遍历地图（人物、物品、怪物...）
-	Log.info(L"遍历怪物与物品");
 	getDungeonAllObj();
 
 	// 处理对话
@@ -183,7 +182,6 @@ void MainLineLogic::inDungeon()
 	// 未开门时处理逻辑
 	if (is_open_door == false)
 	{
-		Log.info(L"当前未开门，开始清怪");
 		// 打怪逻辑 
 		attackMonsterLogic();
 	}
@@ -191,21 +189,17 @@ void MainLineLogic::inDungeon()
 	else {
 		if (is_boss)
 		{
-			Log.info(L"BOSS房间怪物清理完毕");
 			// 判断是否通关（篝火判断）
 			bool is_clearance = judgeClearance();
 			if (is_clearance)
 			{
-				Log.info(L"开始通关处理");
 				// 通关处理
 				clearanceLogic();
 			}
 		}
 		else {
 			// 捡物兜底
-			Log.info(L"已开门，准备捡物");
 			//finalGatherItems();
-			Log.info(L"准备过图");
 
 			// 过图逻辑（自动进入下个房间）
 			autoNextRoom();
@@ -324,7 +318,6 @@ void MainLineLogic::clearanceLogic()
 
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
 
-		Log.info(L"BOSS房间捡物");
 		//finalGatherItems();
 
 		// 如果没翻牌
@@ -403,7 +396,6 @@ void MainLineLogic::finalGatherItems()
 			}
 		}
 	}
-	Log.info(L"捡物完毕");
 	penetrateMap(true);
 }
 
