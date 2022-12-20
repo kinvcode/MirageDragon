@@ -29,6 +29,8 @@ void DungeonLogic::selectRole()
 		GAME.dungeonInfoClean();
 		GAME.townInfoClean();
 
+		GAME.role_panel.entered = true;
+
 		// 更新角色列表
 		getRoleList();
 	}

@@ -28,11 +28,12 @@ vector<CString> MainLineLogic::town_jobs = { L"[meet npc]" , L"[seek n meet npc]
 void MainLineLogic::selectRole()
 {
 	if (!GAME.role_panel.entered) {
-		GAME.role_panel.entered = true;
 		// 更新角色列表
 		getRoleList();
 		GAME.dungeonInfoClean();
 		GAME.townInfoClean();
+
+		GAME.role_panel.entered = true;
 	}
 }
 
@@ -45,6 +46,7 @@ void MainLineLogic::inTown()
 		// 关闭其他状态的信息
 		GAME.rolePanelClean();
 		GAME.dungeonInfoClean();
+		GAME.seldungeonClean();
 
 		// 关闭图内的功能(防止直接出图)
 		closeFunctions();
@@ -144,6 +146,19 @@ handleJobBegin:
 
 void MainLineLogic::selectDungeon()
 {
+	int begin_time = 0;
+	if (!GAME.sel_dungeon.entered) {
+		GAME.townInfoClean();
+		GAME.sel_dungeon.entered = true;
+
+		begin_time = (int)time(NULL);
+	}
+	else {
+		if (time(NULL) - begin_time > 2) {
+			MSDK_keyPress(Keyboard_ESCAPE, 1);
+		}
+	}
+
 	// 如果选图时间过长，则退出城镇
 }
 
@@ -291,6 +306,9 @@ void MainLineLogic::attackMonsterLogic()
 {
 	while (true)
 	{
+		// 对话处理
+		handleDialogue();
+
 		// 刷新怪物
 		getDungeonAllObj();
 
