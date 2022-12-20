@@ -183,6 +183,9 @@
     <ClInclude Include="mainline.h">
       <Filter>DNF\线程逻辑</Filter>
     </ClInclude>
+    <ClInclude Include="dailyJob.h">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MirageDragon.cpp">
@@ -273,6 +276,9 @@
       <Filter>DNF\线程逻辑</Filter>
     </ClCompile>
     <ClCompile Include="mainline.cpp">
+      <Filter>DNF\线程逻辑</Filter>
+    </ClCompile>
+    <ClCompile Include="dailyJob.cpp">
       <Filter>DNF\线程逻辑</Filter>
     </ClCompile>
   </ItemGroup>

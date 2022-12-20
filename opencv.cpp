@@ -7,7 +7,7 @@
 #include "procData.h"
 
 
-void OpenCV::read()
+ROOMCOOR OpenCV::read(CString tmp_png)
 {
 	//OpenCV::read_lock.lock();
 
@@ -20,7 +20,7 @@ void OpenCV::read()
 	img = imread(PDATA.screenshot_file_s, IMREAD_COLOR); // 读取图片
 
 	CString tmp1 = PDATA.cur_dir;
-	tmp1.Append(L"template\\2.png");
+	tmp1.Append(tmp_png);
 	string template_file = CW2A(tmp1.GetString());
 	tmp = imread(template_file, IMREAD_COLOR); // 读取模板
 
@@ -32,15 +32,16 @@ void OpenCV::read()
 
 	// 获取匹配的坐标点
 	minMaxLoc(result, &minVal, NULL, &matchLoc);
-	CString msg;
-	msg.Format(L"当前匹配度:%f", minVal);
-	Log.info(msg, true);
-	
+
+	//CString msg;
+	//msg.Format(L"当前匹配度:%f", minVal);
+	//Log.info(msg, true);
+
 	if (minVal < 10)
 	{
 		Log.info(L"匹配成功，准备移动鼠标", true);
 	}
-	
+
 	int coor[1] = { 0 };
 	//double maxVal;
 	//minMaxIdx(result, &minVal, &maxVal);
@@ -58,28 +59,181 @@ void OpenCV::read()
 	int cent_x = (int)ceil(tmp.cols / 2) + matchLoc.x;
 	int cent_y = (int)ceil(tmp.rows / 2) + matchLoc.y;
 
+	ROOMCOOR cent = { cent_x,cent_y };
+
+	return cent;
+}
+
+// 每日图标768,532
+ROOMCOOR OpenCV::getDailyIcon1()
+{
+	CString tmp_png = L"template\\daily_icon1.png";
+	ROOMCOOR cent = read(tmp_png);
+
+	// 判定是否在有效范围
+	int diff_x, diff_y;
+	diff_x = abs(cent.x - 768);
+	diff_y = abs(cent.y - 532);
+	if (diff_x > 20 || diff_y > 20)
+	{
+		cent.x = 0;
+		cent.y = 0;
+		return cent;
+	}
+
+	//CString cent_msg;
+	//cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+	//Log.info(cent_msg, true);
+
 	// 计算窗口左上角位置
 	int window_left = PDATA.dnf.dnf_rect.left;
 	int window_top = PDATA.dnf.dnf_rect.top;
 
-	cent_x += window_left;
-	cent_y += window_top;
+	cent.x += window_left;
+	cent.y += window_top;
+
+	//CString coor_msg;
+	//coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
+	//Log.info(coor_msg, true);
+
+	return cent;
+}
+
+ROOMCOOR OpenCV::getDailyIcon2()
+{
+	CString tmp_png = L"template\\daily_icon2.png";
+	ROOMCOOR cent = read(tmp_png);
+
+	// 判定是否在有效范围
+	int diff_x, diff_y;
+	diff_x = abs(cent.x - 768);
+	diff_y = abs(cent.y - 532);
+	if (diff_x > 20 || diff_y > 20)
+	{
+		cent.x = 0;
+		cent.y = 0;
+		return cent;
+	}
+
+	//CString cent_msg;
+	//cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+	//Log.info(cent_msg, true);
+
+	// 计算窗口左上角位置
+	int window_left = PDATA.dnf.dnf_rect.left;
+	int window_top = PDATA.dnf.dnf_rect.top;
+
+	cent.x += window_left;
+	cent.y += window_top;
+
+	//CString coor_msg;
+	//coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
+	//Log.info(coor_msg, true);
+
+	return cent;
+}
+
+// 每日-传送按钮494,445
+ROOMCOOR OpenCV::getDelivery() 
+{
+	CString tmp_png = L"template\\daily_delievry.png";
+	ROOMCOOR cent = read(tmp_png);
+
+	CString cent_msg;
+	cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+	Log.info(cent_msg, true);
+
+	// 判定是否在有效范围
+	int diff_x, diff_y;
+	diff_x = abs(cent.x - 494);
+	diff_y = abs(cent.y - 445);
+	if (diff_x > 20 || diff_y > 20)
+	{
+		cent.x = 0;
+		cent.y = 0;
+		return cent;
+	}
+
+	// 计算窗口左上角位置
+	int window_left = PDATA.dnf.dnf_rect.left;
+	int window_top = PDATA.dnf.dnf_rect.top;
+
+	cent.x += window_left;
+	cent.y += window_top;
 
 	CString coor_msg;
-	coor_msg.Format(L"鼠标移动到X:%d Y:%d", cent_x,cent_y);
+	coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
 	Log.info(coor_msg, true);
 
-	MSDK_MoveTo(cent_x, cent_y);
+	return cent;
+}
 
-	// 保存图片部分
-	//rectangle(result, matchLoc, Point(matchLoc.x + tmp.cols, matchLoc.y + tmp.rows), Scalar::all(0), 2, LINE_8);
-	//circle(result, Point(cent_x, cent_y), 2, Scalar::all(0), 2, LINE_8);
-	//imwrite("x64/debug/res.png", result);
+// 每日确定图标495,342
+ROOMCOOR OpenCV::getDailySpace()
+{
+	CString tmp_png = L"template\\dailay_space.png";
+	ROOMCOOR cent = read(tmp_png);
 
-	//rectangle(img_display, matchLoc, Point(matchLoc.x + tmp.cols, matchLoc.y + tmp.rows), Scalar::all(0xADFF2F), 2, LINE_8);
-	//circle(img_display, Point(cent_x, cent_y), 2, Scalar::all(0xADFF2F), 2, LINE_8);
-	//imwrite("E:/VSRepos/ConsoleTest1/x64/Debug/res.png", img_display);
+	CString cent_msg;
+	cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+	Log.info(cent_msg, true);
 
+	// 判定是否在有效范围
+	int diff_x, diff_y;
+	diff_x = abs(cent.x - 495);
+	diff_y = abs(cent.y - 342);
+	if (diff_x > 20 || diff_y > 20)
+	{
+		cent.x = 0;
+		cent.y = 0;
+		return cent;
+	}
 
-	//OpenCV::read_lock.unlock();
+	// 计算窗口左上角位置
+	int window_left = PDATA.dnf.dnf_rect.left;
+	int window_top = PDATA.dnf.dnf_rect.top;
+
+	cent.x += window_left;
+	cent.y += window_top;
+
+	CString coor_msg;
+	coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
+	Log.info(coor_msg, true);
+
+	return cent;
+}
+
+// 每日-完成按钮495,445
+ROOMCOOR OpenCV::getDailySubmit() 
+{
+	CString tmp_png = L"template\\daily_ok.png";
+	ROOMCOOR cent = read(tmp_png);
+
+	CString cent_msg;
+	cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+	Log.info(cent_msg, true);
+
+	// 判定是否在有效范围
+	int diff_x, diff_y;
+	diff_x = abs(cent.x - 495);
+	diff_y = abs(cent.y - 445);
+	if (diff_x > 20)
+	{
+		cent.x = 0;
+		cent.y = 0;
+		return cent;
+	}
+
+	// 计算窗口左上角位置
+	int window_left = PDATA.dnf.dnf_rect.left;
+	int window_top = PDATA.dnf.dnf_rect.top;
+
+	cent.x += window_left;
+	cent.y += window_top;
+
+	CString coor_msg;
+	coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
+	Log.info(coor_msg, true);
+
+	return cent;
 }

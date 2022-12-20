@@ -141,7 +141,7 @@ void DungeonLogic::inDungeon()
 		else {
 			// 捡物兜底
 			Log.info(L"已开门，准备捡物");
-			//finalGatherItems();
+			finalGatherItems();
 			Log.info(L"准备过图");
 
 			// 过图逻辑（自动进入下个房间）
@@ -198,17 +198,9 @@ void DungeonLogic::firstRoom()
 	}
 
 	// 呼出面板，三速生效
-
-	while (!hasPanel())
-	{
-		MSDK_keyPress(Keyboard_m, 1);
-		Sleep(500);
-	}
-	while (hasPanel())
-	{
-		MSDK_keyPress(Keyboard_m, 1);
-		Sleep(500);
-	}
+	panelCall(0);
+	Sleep(200);
+	panelCall(0);
 
 	penetrate(true);
 }
@@ -300,8 +292,12 @@ void DungeonLogic::clearanceLogic()
 		}
 
 		// 分解装备
-		__int64 fatigue = getUserFatigue();
+		if (getBackpackLoad() > 50) {
+			getPackageOfEq();
+		}
 
+		// 疲劳判断
+		int fatigue = getUserFatigue();
 		if (fatigue == 0 && job->times == -1)
 		{
 			dungeon_finished = true;
@@ -343,7 +339,7 @@ void DungeonLogic::finalGatherItems()
 	// 循环策略
 	bool has_item = true;
 	// 关闭穿透
-	penetrateMap(false);
+	penetrate(false);
 	while (has_item)
 	{
 		Log.info(L"刷新怪物与物品");
@@ -368,7 +364,7 @@ void DungeonLogic::finalGatherItems()
 		}
 	}
 	Log.info(L"捡物完毕");
-	penetrateMap(true);
+	penetrate(true);
 }
 
 void DungeonLogic::initDG()

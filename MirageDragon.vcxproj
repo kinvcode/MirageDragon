@@ -202,6 +202,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="baseAddress.h" />
+    <ClInclude Include="dailyJob.h" />
     <ClInclude Include="dataStruct.h" />
     <ClInclude Include="dnfBase.h" />
     <ClInclude Include="dnfCALL.h" />
@@ -239,6 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="baseAddress.cpp" />
+    <ClCompile Include="dailyJob.cpp" />
     <ClCompile Include="dataConvert.cpp" />
     <ClCompile Include="dataStruct.cpp" />
     <ClCompile Include="dnfBase.cpp" />
