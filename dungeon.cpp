@@ -70,8 +70,10 @@ void DungeonLogic::inTown()
 
 	//// 进入区域
 	areaCall(code);
+	Sleep(500);
 	// 组包选图
 	selectMap();
+	Sleep(500);
 	// 组包进图
 	entryDungeon(code, 0, 0, 0);
 }
