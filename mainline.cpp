@@ -57,6 +57,7 @@ void MainLineLogic::inTown()
 
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
+			updateData();
 			exitMainline();
 			return;
 		}
@@ -149,14 +150,6 @@ void MainLineLogic::selectDungeon()
 
 void MainLineLogic::inDungeon()
 {
-	if (hasPanel())
-	{
-		//while (!hasPanel()) {
-		//	MSDK_keyPress(Keyboard_ESCAPE, 1);
-		//	Sleep(200);
-		//}
-	}
-
 	// 刷图线程开启，关闭选角线程、城镇线程、选图线程
 
 	// 如果刚进入地图
@@ -272,12 +265,9 @@ void MainLineLogic::firstRoom()
 	}
 
 	// 呼出面板，三速生效
-
-	while (!hasPanel())
-	{
-		MSDK_keyPress(Keyboard_m, 1);
-		Sleep(500);
-	}
+	panelCall(0);
+	Sleep(200);
+	panelCall(0);
 
 	penetrate(true);
 }
@@ -859,6 +849,12 @@ int MainLineLogic::getMaxLvMap()
 		return lv_map[level];
 	}
 	return 5;
+}
+
+void MainLineLogic::updateData()
+{
+	// 提交任务完成类型
+	http.updateJob(1);
 }
 
 void MainLineLogic::test()

@@ -74,5 +74,7 @@ public:
 	// 获取等级最高地图
 	static int getMaxLvMap();
 
+	static void updateData();
+
 	static void test();
 };
