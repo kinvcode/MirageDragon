@@ -74,7 +74,11 @@ public:
 	// 获取等级最高地图
 	static int getMaxLvMap();
 
+	// 更新任务
 	static void updateData();
+
+	// 剧情独立的遍历（有太多特殊类型怪物）
+	static void getMainLineDungeonAllObj();
 
 	static void test();
 };

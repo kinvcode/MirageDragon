@@ -66,69 +66,69 @@ void DailyJobLogic::inTown()
 				else {
 					Log.info(L"完成按钮已点击完毕", true);
 					submit = false;
+					Log.info(L"退出鼠标事件", true);
+					daily_complete = true;
 					break;
 				}
 				Sleep(2000);
 			}
 		}
-
-		Log.info(L"退出鼠标事件", true);
-		daily_complete = true;
 		return;
 	}
+	else {
+		// 判断疲劳
+		if (getUserFatigue() > 0) {
+			Log.info(L"疲劳满足，开始寻找传送位置", true);
 
-	// 判断疲劳
-	if (getUserFatigue() > 0) {
-		Log.info(L"疲劳满足，开始寻找传送位置", true);
-
-		Log.info(L"检测是否有面板", true);
-		if (hasPanel()) {
-			while (hasPanel())
-			{
-				MSDK_keyPress(Keyboard_ESCAPE, 1);
-				Sleep(300);
+			Log.info(L"检测是否有面板", true);
+			if (hasPanel()) {
+				while (hasPanel())
+				{
+					MSDK_keyPress(Keyboard_ESCAPE, 1);
+					Sleep(300);
+				}
 			}
-		}
 
-		// 打开每日
-		Log.info(L"打开每日", true);
-		ROOMCOOR coor = OpenCV::getDailyIcon1();
-		if (coor.x != 0 && !hasPanel()) {
-			MSDK_MoveTo(coor.x, coor.y);
-			Sleep(500);
-			MSDK_LeftClick();
-			Sleep(1000);
-
-			// 点击传送按钮
-			Log.info(L"点击传送", true);
-			ROOMCOOR coor2 = OpenCV::getDelivery();
-			if (coor2.x != 0 && hasPanel()) {
-				MSDK_MoveTo(coor2.x, coor2.y);
+			// 打开每日
+			Log.info(L"打开每日", true);
+			ROOMCOOR coor = OpenCV::getDailyIcon1();
+			if (coor.x != 0 && !hasPanel()) {
+				MSDK_MoveTo(coor.x, coor.y);
 				Sleep(500);
 				MSDK_LeftClick();
 				Sleep(1000);
-				// 获取确认弹窗
-				Log.info(L"点击确认", true);
-				ROOMCOOR coor3 = OpenCV::getDailySpace();
-				if (coor3.x != 0 && hasPanel())
-				{
-					while (GAME.game_status == 1)
+
+				// 点击传送按钮
+				Log.info(L"点击传送", true);
+				ROOMCOOR coor2 = OpenCV::getDelivery();
+				if (coor2.x != 0 && hasPanel()) {
+					MSDK_MoveTo(coor2.x, coor2.y);
+					Sleep(500);
+					MSDK_LeftClick();
+					Sleep(1000);
+					// 获取确认弹窗
+					Log.info(L"点击确认", true);
+					ROOMCOOR coor3 = OpenCV::getDailySpace();
+					if (coor3.x != 0 && hasPanel())
 					{
-						MSDK_keyPress(Keyboard_KongGe, 1);
-						Sleep(200);
+						while (GAME.game_status == 1)
+						{
+							MSDK_keyPress(Keyboard_KongGe, 1);
+							Sleep(200);
+						}
 					}
 				}
-			}
-			else {
-				// 没有传送按钮，任务失败
-				Log.info(L"找不到传送按钮，任务失败", true);
-				job_faild = true;
-				return;
+				else {
+					// 没有传送按钮，任务失败
+					Log.info(L"找不到传送按钮，任务失败", true);
+					job_faild = true;
+					return;
+				}
 			}
 		}
-	}
-	else {
-		return;
+		else {
+			return;
+		}
 	}
 }
 

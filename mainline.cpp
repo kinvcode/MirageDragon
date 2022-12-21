@@ -32,7 +32,6 @@ void MainLineLogic::selectRole()
 		getRoleList();
 		GAME.dungeonInfoClean();
 		GAME.townInfoClean();
-
 		GAME.role_panel.entered = true;
 	}
 }
@@ -59,6 +58,7 @@ void MainLineLogic::inTown()
 
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
+			Log.info(L"疲劳已清空，结束剧情任务", true);
 			updateData();
 			exitMainline();
 			return;
@@ -98,15 +98,18 @@ handleJobBegin:
 		// 剧情材料判断
 		int m_status = handleJobMaterial(job_info.code);
 		if (m_status != 0) {
-			// 材料不满足，则退出任务
+			Log.info(L"任务材料不足，退出剧情", true);
 			exitMainline();
+			return;
 		}
 
 		// 剧情条件判断
 		int job_type = handleJobRequire();
 		if (job_type == 0)
 		{
+			Log.info(L"未知的任务类型，退出剧情", true);
 			exitMainline();
+			return;
 		}
 		if (job_type == 1) {
 			finishJobCall(job_info.code);
@@ -138,7 +141,6 @@ handleJobBegin:
 			Sleep(300);
 			selectMap();
 			entryDungeon(map, 0, 0, 0);
-			//exitMainline();
 		}
 	}
 	// 城镇逻辑结束
@@ -193,7 +195,7 @@ void MainLineLogic::inDungeon()
 	bool is_open_door = judgeDoorOpen();
 
 	// 遍历地图（人物、物品、怪物...）
-	getDungeonAllObj();
+	getMainLineDungeonAllObj();
 
 	// 处理对话
 	handleDialogue();
@@ -304,13 +306,14 @@ void MainLineLogic::closeFunctions()
 
 void MainLineLogic::attackMonsterLogic()
 {
+	int try_times = 0;
 	while (true)
 	{
 		// 对话处理
 		handleDialogue();
 
 		// 刷新怪物
-		getDungeonAllObj();
+		getMainLineDungeonAllObj();
 
 		// 获取当前怪物数量
 		int monster_num = (int)GAME.dungeon_info.current_room.monster_list.size();
@@ -322,7 +325,9 @@ void MainLineLogic::attackMonsterLogic()
 
 		// 跟随怪物
 		DUNGEONOBJ cur = GAME.dungeon_info.current_room.monster_list.front();
+
 		bool res = runToMonter(cur.coor.x, cur.coor.y);
+		try_times++;
 		if (res) {
 			// 攻击怪物
 			int key = getCoolDownKey();
@@ -404,7 +409,7 @@ void MainLineLogic::finalGatherItems()
 	penetrate(false);
 	while (has_item)
 	{
-		getDungeonAllObj();
+		getMainLineDungeonAllObj();
 		has_item = (bool)GAME.dungeon_info.current_room.item_list.size();
 
 		// 如果存在物品
@@ -779,7 +784,6 @@ void MainLineLogic::exitMainline()
 	// 主动退出线程
 	PDATA.cur_job_run = false;
 	PDATA.jobs_list.front().job.pop();
-	//ExitThread(0);
 }
 
 int MainLineLogic::handleJobRequire()
@@ -883,5 +887,144 @@ void MainLineLogic::test()
 	if (res == 0)
 	{
 		exit(0);
+	}
+}
+
+// 遍历图内对象信息（怪物、物品）
+void MainLineLogic::getMainLineDungeonAllObj()
+{
+	CURRENTROOM* p_current_room = &GAME.dungeon_info.current_room;
+	p_current_room->dungeon_object_list.clear();
+	p_current_room->item_list.clear();
+	p_current_room->monster_list.clear();
+
+	if (GAME.game_status != 3)
+	{
+		return;
+	}
+
+	__int64 map_base = readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16);
+	__int64 head_address = readLong(map_base + ADDR.x64("C_MAP_HEAD"));
+	__int64 end_address = readLong(map_base + ADDR.x64("C_MAP_END"));
+
+	if (head_address == 0 || end_address == 0) {
+		return;
+	}
+
+	int object_quantity = (int)(end_address - head_address) / 32;
+	if (object_quantity == 0 || object_quantity > 1000) {
+		return;
+	}
+
+	// 怪物列表中血量最大值
+	int monster_max_blood = 0;
+
+	for (__int64 i = 1; i <= object_quantity; i++)
+	{
+		__int64 monster_address = readLong(readLong(head_address + i * 32) + 16) - 32;
+		int monster_camp = readInt(monster_address + ADDR.x64("C_CAMP_OFFSET"));
+		int monster_type = readInt(monster_address + ADDR.x64("C_TYPE_OFFSET"));
+		int monster_code = readInt(monster_address + ADDR.x64("C_CODE_OFFSET"));
+		int monster_blood = readInt(monster_address + ADDR.x64("C_MONSTER_BLOOD"));
+		COORDINATE monster_coor = readCoordinate(monster_address);
+
+		// 图内对象结构体
+		DUNGEONOBJ d_object;
+		d_object.p = monster_address;
+		d_object.blood = monster_blood;
+		d_object.type = monster_type;
+		d_object.camp = monster_camp;
+		d_object.code = monster_code;
+		d_object.coor = monster_coor;
+
+		// 物品
+		if (d_object.type == 289 && d_object.coor.z == 0)
+		{
+			d_object.code = readInt(readLong(monster_address + ADDR.x64("C_GROUND_ITEM")) + ADDR.x64("C_CODE_OFFSET"));
+			// 过滤物品
+			if (d_object.code != 0)
+			{
+				p_current_room->item_list.push_back(d_object);
+			}
+		}
+		// 敌对怪物和人偶类型怪物
+		else if (d_object.type == 273 || d_object.type == 529 || d_object.type == 545)
+		{
+			// 投石车血量是0
+			if (d_object.type == 545)
+			{
+				goto mon_push;
+			}
+			if ((d_object.camp == 100 || d_object.camp == 110 || d_object.camp == 120 || d_object.camp == 75) && d_object.blood != 0)
+			{
+			mon_push:
+				if (d_object.code == 70137 && d_object.coor.y > 600) {
+					// 暴君祭坛卡BOSS
+				}
+				else {
+					p_current_room->monster_list.push_back(d_object);
+				}
+
+				// 最大血量值保存 
+				if (d_object.blood > monster_max_blood)
+				{
+					// 最大血量过滤(破坏之国王冲锋状态)
+					if (d_object.code != 109013674)
+					{
+						monster_max_blood = d_object.blood;
+					}
+				}
+
+				// 聚怪处理
+				if (GAME.function_switch.gather_monster)
+				{
+					// 恩山的机关枪不可移动
+					if (d_object.code != 109013676)
+					{
+						gatherAtUser(GAME.dungeon_info.user_coordinate, d_object);
+					}
+				}
+			}
+		}
+
+		// 如果存在时空旋涡
+		if (d_object.camp == 200 && d_object.type == 33 && d_object.code == 490019076)
+		{
+			p_current_room->room_has_urgent = true;
+		}
+		//handleEvents();
+	}
+
+	// 更新最大血量
+	GAME.dungeon_info.monster_max_blood = monster_max_blood;
+
+	// 调用冒泡算法对怪物数组进行排序(根据该房间的入门方向)
+	if (GAME.dungeon_info.user_coordinate.x < 500) {
+		int i, j, len;
+		DUNGEONOBJ temp;
+		len = (int)p_current_room->monster_list.size() - 1;
+		for (i = len; i > 0; i--) {
+			for (j = 0; j < i; j++) {
+				if (p_current_room->monster_list[j].coor.x > p_current_room->monster_list[j + 1].coor.x) {
+					temp = p_current_room->monster_list[j + 1];
+					p_current_room->monster_list[j + 1] = p_current_room->monster_list[j];
+					p_current_room->monster_list[j] = temp;
+				}
+			}
+		}
+	}
+	else {
+		int i, j, len;
+		DUNGEONOBJ temp;
+		len = (int)p_current_room->monster_list.size() - 1;
+		for (i = len; i > 0; i--) {
+			for (j = 0; j < i; j++) {
+				if (p_current_room->monster_list[j].coor.x < p_current_room->monster_list[j + 1].coor.x) {
+					temp = p_current_room->monster_list[j + 1];
+					p_current_room->monster_list[j + 1] = p_current_room->monster_list[j];
+					p_current_room->monster_list[j] = temp;
+				}
+			}
+		}
 	}
 }
