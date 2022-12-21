@@ -217,6 +217,13 @@ void DailyJobLogic::inDungeon()
 			if (GAME.penetrate_status != 1) {
 				penetrate(true);
 			}
+			int map_code = getMapNumber();
+			if (map_code == 100002705) {
+				if (GAME.dungeon_info.current_room.coordinate.x == 2 || GAME.dungeon_info.current_room.coordinate.x == 3) 
+				{
+					GAME.use_pass_room_call = true;
+				}
+			}
 			autoNextRoom();
 		}
 	}
