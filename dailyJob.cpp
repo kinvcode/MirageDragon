@@ -458,7 +458,7 @@ void DailyJobLogic::setGeneralHook()
 	if (!com_hook) {
 		int hook_value = GAME.dungeon_info.monster_max_blood;
 		if (hook_value != 0) {
-			hook_value = hook_value / 3;
+			hook_value = hook_value / 4;
 			com_hook = true;
 			CString msg;
 			msg.Format(L"已设置普通房间HOOK伤害为：%d", hook_value);
@@ -475,7 +475,7 @@ void DailyJobLogic::setBossHook()
 	{
 		int hook_value = GAME.dungeon_info.monster_max_blood;
 		if (hook_value != 0) {
-			hook_value = hook_value / 5;
+			hook_value = hook_value / 8;
 			com_hook = true;
 			CString msg;
 			msg.Format(L"已设置BOSS房间HOOK伤害为：%d", hook_value);

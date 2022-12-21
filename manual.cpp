@@ -8,6 +8,7 @@
 #include "MirageDragonDlg.h"
 #include "dnfCALL.h"
 #include "procData.h"
+#include "log.h"
 
 // 选择角色
 void ManualLogic::selectRole()
@@ -25,7 +26,7 @@ void ManualLogic::selectRole()
 		GAME.role_panel.entered = true;
 
 		// 更新角色列表
-		getRoleList();
+		//getRoleList();
 	}
 }
 
@@ -46,7 +47,8 @@ void ManualLogic::inTown()
 		GAME.town_info.entered = true;
 
 		// 获取角色ID
-		getRoleID();
+		//Log.info(L"更新角色ID", true);
+		//getRoleID();
 	}
 }
 

@@ -25,6 +25,10 @@ vector<CString> MainLineLogic::dungeon_jobs = { L"[hunt monster]" , L"[hunt enem
 
 vector<CString> MainLineLogic::town_jobs = { L"[meet npc]" , L"[seek n meet npc]" , L"[reach the range]" , L"[look cinematic]" , L"[question]" , L"[quest clear]" };
 
+bool MainLineLogic::com_hook = false; // 普通房间HOOK伤害设置
+
+bool MainLineLogic::boss_hook = false; // 普通房间HOOK伤害设置
+
 void MainLineLogic::selectRole()
 {
 	if (!GAME.role_panel.entered) {
@@ -95,8 +99,11 @@ handleJobBegin:
 			break;
 		}
 
+		// 特殊任务处理
+
 		// 剧情材料判断
 		int m_status = handleJobMaterial(job_info.code);
+
 		if (m_status != 0) {
 			Log.info(L"任务材料不足，退出剧情", true);
 			exitMainline();
@@ -203,6 +210,21 @@ void MainLineLogic::inDungeon()
 	// 未开门时处理逻辑
 	if (is_open_door == false)
 	{
+		if (is_boss) {
+			// HOOK伤害设置
+			setBossHook();
+		}
+		else {
+			// HOOK伤害设置
+			setGeneralHook();
+
+			//// 白色大地卡房间（房间坐标3,0）
+			//if (getMapNumber() == 100002724 && GAME.dungeon_info.current_room.coordinate.x == 3 && GAME.dungeon_info.current_room.coordinate.y == 0)
+			//{
+			//	runToMonter(2000, 500);
+			//}
+		}
+
 		// 打怪逻辑 
 		attackMonsterLogic();
 	}
@@ -222,13 +244,31 @@ void MainLineLogic::inDungeon()
 			// 捡物兜底
 			finalGatherItems();
 
-			if (GAME.dungeon_info.map_code == 15) {
-				if (GAME.dungeon_info.current_room.coordinate.y == 1) {
-					passRoomByPacket(0, 0);
+			// 卡图（不能这样写）
+			//if (GAME.dungeon_info.map_code == 15) {
+			//	if (GAME.dungeon_info.current_room.coordinate.y == 1) {
+			//		passRoomByPacket(0, 0);
+			//	}
+			//}
+
+			// 死亡撕裂之地-卡图
+			if (job_info.code == 12940) {
+				if (GAME.dungeon_info.current_room.coordinate.x == 6 && GAME.dungeon_info.current_room.coordinate.y == 1)
+				{
+					passRoomByPacket(6, 0);
+					return;
 				}
 			}
 
-			// 过图逻辑（自动进入下个房间）
+			// 【根特内部】走火-卡图2,1
+			if (job_info.code == 13570) {
+				if (GAME.dungeon_info.current_room.coordinate.x == 1 && GAME.dungeon_info.current_room.coordinate.y == 1)
+				{
+					passRoomByPacket(2, 1);
+					return;
+				}
+			}
+
 			autoNextRoom();
 		}
 	}
@@ -306,7 +346,6 @@ void MainLineLogic::closeFunctions()
 
 void MainLineLogic::attackMonsterLogic()
 {
-	int try_times = 0;
 	while (true)
 	{
 		// 对话处理
@@ -327,7 +366,6 @@ void MainLineLogic::attackMonsterLogic()
 		DUNGEONOBJ cur = GAME.dungeon_info.current_room.monster_list.front();
 
 		bool res = runToMonter(cur.coor.x, cur.coor.y);
-		try_times++;
 		if (res) {
 			// 攻击怪物
 			int key = getCoolDownKey();
@@ -362,6 +400,10 @@ void MainLineLogic::clearanceLogic()
 		}
 
 		finalGatherItems();
+
+		// 重置伤害
+		com_hook = false;
+		boss_hook = false;
 
 		GAME.dungeonInfoClean();
 
@@ -738,19 +780,8 @@ int MainLineLogic::handleJobMaterial(int code)
 	case 12122:
 		// 任务：米娅的通讯器
 		// 材料：米娅的通讯器1
-		//int job_item = getItemNum(10305900, 7);
-		job_item = 0;
-		if (job_item > 0)
-		{
-			finishJobCall(job_info.code);
-			Sleep(1000);
-			// 跳过CALL
-			Sleep(1000);
-			return 0;
-		}
-		else {
-			return 3;
-		}
+		finishJobCall(job_info.code);
+		Sleep(1000);
 		break;
 	case 1000002:
 		// 任务：二觉材料任务(2)
@@ -955,15 +986,33 @@ void MainLineLogic::getMainLineDungeonAllObj()
 			{
 				goto mon_push;
 			}
-			if ((d_object.camp == 100 || d_object.camp == 110 || d_object.camp == 120 || d_object.camp == 75) && d_object.blood != 0)
+
+			if ((d_object.camp == 100 || d_object.camp == 101 || d_object.camp == 110 || d_object.camp == 120 || d_object.camp == 75) && d_object.blood != 0)
 			{
 			mon_push:
+				// 存在BUG的地方
+				bool bug_exists = true;
+
 				if (d_object.code == 70137 && d_object.coor.y > 600) {
 					// 暴君祭坛卡BOSS
+					bug_exists = false;
 				}
-				else {
+
+				if (d_object.code == 63821 && d_object.coor.x > 1000) {
+					// 白色大地卡BOSS
+					bug_exists = false;
+				}
+
+				if (d_object.code == 109010762 && d_object.coor.y > 600)
+				{
+					// 根特收复战卡怪物
+					bug_exists = false;
+				}
+
+				if (bug_exists) {
 					p_current_room->monster_list.push_back(d_object);
 				}
+
 
 				// 最大血量值保存 
 				if (d_object.blood > monster_max_blood)
@@ -990,6 +1039,7 @@ void MainLineLogic::getMainLineDungeonAllObj()
 		// 如果存在时空旋涡
 		if (d_object.camp == 200 && d_object.type == 33 && d_object.code == 490019076)
 		{
+			Log.info(L"当前房间存在时空旋涡", true);
 			p_current_room->room_has_urgent = true;
 		}
 		//handleEvents();
@@ -1025,6 +1075,38 @@ void MainLineLogic::getMainLineDungeonAllObj()
 					p_current_room->monster_list[j] = temp;
 				}
 			}
+		}
+	}
+}
+
+void MainLineLogic::setGeneralHook()
+{
+	if (!com_hook) {
+		int hook_value = GAME.dungeon_info.monster_max_blood;
+		if (hook_value != 0) {
+			hook_value = hook_value / 4;
+			com_hook = true;
+			CString msg;
+			msg.Format(L"已设置普通房间HOOK伤害为：%d", hook_value);
+			Log.info(msg, true);
+			updateHookValue(hook_value);
+		}
+
+	}
+}
+
+void MainLineLogic::setBossHook()
+{
+	if (!boss_hook)
+	{
+		int hook_value = GAME.dungeon_info.monster_max_blood;
+		if (hook_value != 0) {
+			hook_value = hook_value / 8;
+			com_hook = true;
+			CString msg;
+			msg.Format(L"已设置BOSS房间HOOK伤害为：%d", hook_value);
+			Log.info(msg, true);
+			updateHookValue(hook_value);
 		}
 	}
 }

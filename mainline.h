@@ -14,6 +14,10 @@ public:
 	// 城镇任务容器
 	static vector<CString> town_jobs;
 
+	static bool com_hook; // 普通房间HOOK伤害设置
+
+	static bool boss_hook; // 普通房间HOOK伤害设置
+
 	// 选择角色
 	static void selectRole();
 
@@ -79,6 +83,10 @@ public:
 
 	// 剧情独立的遍历（有太多特殊类型怪物）
 	static void getMainLineDungeonAllObj();
+
+	// 设置HOOK伤害
+	static void setGeneralHook();
+	static void setBossHook();
 
 	static void test();
 };
