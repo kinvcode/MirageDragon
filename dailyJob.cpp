@@ -355,8 +355,6 @@ void DailyJobLogic::clearanceLogic()
 
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
 
-		finalGatherItems();
-
 		// 如果没翻牌
 		while (!judgeAwarded())
 		{
@@ -385,6 +383,8 @@ void DailyJobLogic::clearanceLogic()
 		com_hook = false;
 		boss_hook = false;
 
+		GAME.dungeonInfoClean();
+
 		// 疲劳判断
 		int fatigue = getUserFatigue();
 		if (fatigue == 0)
@@ -395,8 +395,6 @@ void DailyJobLogic::clearanceLogic()
 				MSDK_keyPress(Keyboard_F12, 1);
 			}
 		}
-
-		GAME.dungeonInfoClean();
 
 		// 判断任务是否完成
 		if (dungeon_finished)

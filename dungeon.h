@@ -6,6 +6,10 @@ public:
 
 	static queue<DUNGEONJOB> dg_list; // 副本列表
 
+	static bool com_hook; // 普通房间HOOK伤害设置
+
+	static bool boss_hook; // 普通房间HOOK伤害设置
+
 	// 选择角色
 	static void selectRole();
 
@@ -38,4 +42,8 @@ public:
 
 	// 更新副本列表
 	static void updateData();
+
+	// 设置HOOK伤害
+	static void setGeneralHook();
+	static void setBossHook();
 };

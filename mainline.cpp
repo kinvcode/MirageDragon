@@ -16,6 +16,7 @@
 #include "http.h"
 #include "baseAddress.h"
 #include "dnfBase.h"
+#include "dnfMap.h"
 
 vector<int> MainLineLogic::learn_skill_lv = { 5,8,15,20,25,30,35,40,45,65,70,76,80,85 };
 
@@ -33,7 +34,7 @@ void MainLineLogic::selectRole()
 {
 	if (!GAME.role_panel.entered) {
 		// 更新角色列表
-		getRoleList();
+		//getRoleList();
 		GAME.dungeonInfoClean();
 		GAME.townInfoClean();
 		GAME.role_panel.entered = true;
@@ -58,7 +59,7 @@ void MainLineLogic::inTown()
 		GAME.town_info.entered = true;
 
 		// 获取角色ID
-		getRoleID();
+		//getRoleID();
 
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
@@ -230,6 +231,18 @@ void MainLineLogic::inDungeon()
 	}
 	// 开门后的逻辑处理
 	else {
+
+		// 哈穆林BOSS房间更新
+		if (GAME.dungeon_info.map_code == 51)
+		{
+			ROOMCOOR boss_coor;
+			boss_coor.x = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
+			boss_coor.y = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+			GAME.dungeon_info.boos_room = boss_coor;
+			updateRooms();
+			return;
+		}
+
 		if (is_boss)
 		{
 			// 判断是否通关（篝火判断）
@@ -677,7 +690,7 @@ int MainLineLogic::handleJobMaterial(int code)
 		}
 		break;
 	case 3346:
-		// 任务：惊讶的诺顿
+		// 任务：惊讶的诺顿(50级已经发现)
 		// 材料：黑色小晶块30个；下级元素结晶10个
 		job_item1 = getItemNum(3033, 7);
 		job_item2 = getItemNum(3166, 3);
@@ -981,6 +994,9 @@ void MainLineLogic::getMainLineDungeonAllObj()
 		// 敌对怪物和人偶类型怪物
 		else if (d_object.type == 273 || d_object.type == 529 || d_object.type == 545)
 		{
+			// 存在BUG的地方
+			bool bug_exists = true;
+
 			// 投石车血量是0
 			if (d_object.type == 545)
 			{
@@ -989,9 +1005,6 @@ void MainLineLogic::getMainLineDungeonAllObj()
 
 			if ((d_object.camp == 100 || d_object.camp == 101 || d_object.camp == 110 || d_object.camp == 120 || d_object.camp == 75) && d_object.blood != 0)
 			{
-			mon_push:
-				// 存在BUG的地方
-				bool bug_exists = true;
 
 				if (d_object.code == 70137 && d_object.coor.y > 600) {
 					// 暴君祭坛卡BOSS
@@ -1009,6 +1022,20 @@ void MainLineLogic::getMainLineDungeonAllObj()
 					bug_exists = false;
 				}
 
+				if (d_object.code == 1097 && d_object.coor.x == 0)
+				{	
+					// 穆哈林卡怪物
+					bug_exists = false;
+				}
+
+				//// 穆哈林-移动的地形
+				//if (d_object.type == 1057 && d_object.code != 30533)
+				//{
+
+				//	bug_exists = false;
+				//}
+
+			mon_push:
 				if (bug_exists) {
 					p_current_room->monster_list.push_back(d_object);
 				}

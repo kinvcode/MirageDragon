@@ -14,8 +14,14 @@
 #include "dnfPacket.h"
 #include "dataStruct.h"
 #include "http.h"
+#include "dnfBase.h"
+#include "baseAddress.h"
 
 queue<DUNGEONJOB> DungeonLogic::dg_list = {};
+
+bool DungeonLogic::com_hook = false; // 普通房间HOOK伤害设置
+
+bool DungeonLogic::boss_hook = false; // 普通房间HOOK伤害设置
 
 void DungeonLogic::selectRole()
 {
@@ -32,7 +38,7 @@ void DungeonLogic::selectRole()
 		GAME.role_panel.entered = true;
 
 		// 更新角色列表
-		getRoleList();
+		//getRoleList();
 	}
 
 }
@@ -54,7 +60,7 @@ void DungeonLogic::inTown()
 		GAME.town_info.entered = true;
 
 		// 获取角色ID
-		getRoleID();
+		//getRoleID();
 
 		// 检查疲劳状态
 		if (getUserFatigue() == 0) {
@@ -70,6 +76,47 @@ void DungeonLogic::inTown()
 	// 读取当前要处理的副本ID
 	int code = dg_list.front().dungeon_code;
 
+	// 读取人物等级
+	int level = getUserLevel();
+	// 读取人物名望
+	int prestige = getUserPrestige();
+	// 地图难度 0普通 1冒险 2勇士 3王者 4噩梦
+	int difficulty = 0;
+	if (level >= 110)
+	{
+		if (prestige >= 25837)
+		{
+			// 英豪
+			if (prestige >= 29369) {
+				difficulty = 1;
+			}
+			if (prestige >= 30946) {
+				difficulty = 2;
+			}
+			if (prestige >= 32523) {
+				difficulty = 3;
+			}
+			if (prestige >= 33989) {
+				difficulty = 4;
+			}
+		}
+		else {
+			// 普通
+			if (prestige >= 8602) {
+				difficulty = 1;
+			}
+			if (prestige >= 13195) {
+				difficulty = 2;
+			}
+			if (prestige >= 21675) {
+				difficulty = 3;
+			}
+			if (prestige >= 23259) {
+				difficulty = 4;
+			}
+		}
+	}
+
 	//// 进入区域
 	areaCall(code);
 	Sleep(500);
@@ -77,7 +124,8 @@ void DungeonLogic::inTown()
 	selectMap();
 	Sleep(500);
 	// 组包进图
-	entryDungeon(code, 0, 0, 0);
+	entryDungeon(code, difficulty, 0, 0);
+	Sleep(500);
 }
 
 void DungeonLogic::selectDungeon()
@@ -121,6 +169,16 @@ void DungeonLogic::inDungeon()
 	if (is_open_door == false)
 	{
 		Log.info(L"当前未开门，开始清怪");
+
+		if (is_boss) {
+			// HOOK伤害设置
+			setBossHook();
+		}
+		else {
+			// HOOK伤害设置
+			setGeneralHook();
+		}
+
 		// 打怪逻辑 
 		attackMonsterLogic();
 	}
@@ -155,19 +213,9 @@ void DungeonLogic::firstRoom()
 	Log.info(L"开启首图功能");
 	CMirageDragonDlg* mainWindow = (CMirageDragonDlg*)theApp.m_pMainWnd;
 
-	// BUFF逻辑
+	if (GAME.function_switch.hidden_user)
 	{
-		// 上上空格
-		MSDK_keyPress(Keyboard_UpArrow, 1);
-		MSDK_keyPress(Keyboard_UpArrow, 1);
-		MSDK_keyPress(Keyboard_KongGe, 1);
-		Sleep(350);
-
-		// 右右空格
-		MSDK_keyPress(Keyboard_RightArrow, 1);
-		MSDK_keyPress(Keyboard_RightArrow, 1);
-		MSDK_keyPress(Keyboard_KongGe, 1);
-		Sleep(350);
+		hiddenUser();
 	}
 
 	if (GAME.function_switch.score)
@@ -192,17 +240,27 @@ void DungeonLogic::firstRoom()
 		threeSpeed(_ttoi(attack_speed), _ttoi(casting_speed), _ttoi(move_speed));
 	}
 
-	if (GAME.function_switch.hidden_user)
-	{
-		hiddenUser();
-	}
-
 	// 呼出面板，三速生效
 	panelCall(0);
 	Sleep(200);
 	panelCall(0);
 
 	penetrate(true);
+
+	// BUFF逻辑
+	{
+		// 上上空格
+		MSDK_keyPress(Keyboard_UpArrow, 1);
+		MSDK_keyPress(Keyboard_UpArrow, 1);
+		MSDK_keyPress(Keyboard_KongGe, 1);
+		Sleep(1000);
+
+		// 右右空格
+		MSDK_keyPress(Keyboard_RightArrow, 1);
+		MSDK_keyPress(Keyboard_RightArrow, 1);
+		MSDK_keyPress(Keyboard_KongGe, 1);
+		Sleep(500);
+	}
 }
 
 void DungeonLogic::closeFunctions()
@@ -254,7 +312,7 @@ void DungeonLogic::clearanceLogic()
 	DUNGEONJOB* job = &dg_list.front();
 
 	// 副本次数更新
-	if (job->times != -1 && job->times != 0) {
+	if (job->times > 0) {
 		job->times--;
 	}
 
@@ -262,17 +320,16 @@ void DungeonLogic::clearanceLogic()
 
 	if (job->times == 0)
 	{
-		dg_list.pop();
+		if (getUserFatigue() > 0)
+		{
+			dg_list.pop();
+			// 更新任务信息
+			updateData();
+		}
 		dungeon_finished = true;
 	}
 
-	// 更新任务信息
-	updateData();
-
 	while (judgeIsBossRoom() && GAME.game_status == 3) {
-
-		Log.info(L"BOSS房间捡物");
-		//finalGatherItems();
 
 		// 如果没翻牌
 		while (!judgeAwarded())
@@ -296,6 +353,14 @@ void DungeonLogic::clearanceLogic()
 			getPackageOfEq();
 		}
 
+		finalGatherItems();
+
+		// 重置伤害
+		com_hook = false;
+		boss_hook = false;
+
+		GAME.dungeonInfoClean();
+
 		// 疲劳判断
 		int fatigue = getUserFatigue();
 		if (fatigue == 0 && job->times == -1)
@@ -303,7 +368,6 @@ void DungeonLogic::clearanceLogic()
 			dungeon_finished = true;
 		}
 
-		GAME.dungeonInfoClean();
 		// 判断任务是否完成
 		if (dungeon_finished)
 		{
@@ -312,7 +376,9 @@ void DungeonLogic::clearanceLogic()
 			while (GAME.game_status == 3)
 			{
 				MSDK_keyPress(Keyboard_F12, 1);
+				Sleep(333);
 			}
+			return;
 		}
 		else {
 			// 疲劳为空返回城镇
@@ -323,13 +389,26 @@ void DungeonLogic::clearanceLogic()
 				while (GAME.game_status == 3)
 				{
 					MSDK_keyPress(Keyboard_F12, 1);
+					Sleep(333);
 				};
 			}
 			// 再次挑战
-			while (GAME.game_status == 3)
+			int ret_status = true;
+			while (ret_status)
 			{
 				MSDK_keyPress(Keyboard_F10, 1);
+				Sleep(333);
+				ROOMCOOR boss_coor;
+				boss_coor.x = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
+				boss_coor.y = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+				GAME.dungeon_info.boos_room = boss_coor;
+				if (!judgeIsBossRoom()) 
+				{
+					ret_status = false;
+					return;
+				}
 			}
+			return;
 		}
 	}
 }
@@ -377,8 +456,40 @@ void DungeonLogic::initDG()
 	}
 }
 
-void DungeonLogic::updateData() 
+void DungeonLogic::updateData()
 {
 	// 提交任务完成类型
 	http.updateJob(0);
+}
+
+void DungeonLogic::setGeneralHook()
+{
+	if (!com_hook) {
+		int hook_value = GAME.dungeon_info.monster_max_blood;
+		if (hook_value != 0) {
+			hook_value = hook_value / 4;
+			com_hook = true;
+			CString msg;
+			msg.Format(L"已设置普通房间HOOK伤害为：%d", hook_value);
+			Log.info(msg, true);
+			updateHookValue(hook_value);
+		}
+
+	}
+}
+
+void DungeonLogic::setBossHook()
+{
+	if (!boss_hook)
+	{
+		int hook_value = GAME.dungeon_info.monster_max_blood;
+		if (hook_value != 0) {
+			hook_value = hook_value / 8;
+			com_hook = true;
+			CString msg;
+			msg.Format(L"已设置BOSS房间HOOK伤害为：%d", hook_value);
+			Log.info(msg, true);
+			updateHookValue(hook_value);
+		}
+	}
 }
