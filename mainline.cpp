@@ -312,6 +312,9 @@ void MainLineLogic::firstRoom()
 		superScore();
 	}
 
+	// Ëø¶¨ÄÍ¾Ã
+	lockDurable();
+
 	if (GAME.function_switch.cool_down)
 	{
 		CString num;

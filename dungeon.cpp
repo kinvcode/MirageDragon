@@ -138,18 +138,23 @@ void DungeonLogic::inDungeon()
 
 	// 如果刚进入地图
 	if (!GAME.dungeon_info.entered) {
+		Log.info(L"准备初始化副本", true);
+		// 单独的BOSS房间判断(防止再次挑战问题)
+		if (!dungeonRoomIsBoss())
+		{
+			Log.info(L"初始化副本", true);
+			// 初始化副本信息
+			initDungeonInfo();
 
-		// 初始化副本信息
-		initDungeonInfo();
+			// 关闭其他状态的信息
+			GAME.townInfoClean();
 
-		// 关闭其他状态的信息
-		GAME.townInfoClean();
+			// 开启功能
+			firstRoom();
 
-		// 开启功能
-		firstRoom();
-
-		// 初始化后更改进入状态
-		GAME.dungeon_info.entered = true;
+			// 初始化后更改进入状态
+			GAME.dungeon_info.entered = true;
+		}
 	}
 
 	// 更新人物坐标
@@ -202,8 +207,19 @@ void DungeonLogic::inDungeon()
 			finalGatherItems();
 			Log.info(L"准备过图");
 
-			// 过图逻辑（自动进入下个房间）
-			autoNextRoom();
+			// 如果存在时空旋涡
+			if (GAME.dungeon_info.current_room.room_has_urgent)
+			{
+				// 取出时空旋涡位置
+				ROOMCOOR urgent_coor = getUrgentCoor();
+				// 跑到时空旋涡处
+				runToMonter(urgent_coor.x, urgent_coor.y);
+				return;
+			}
+			else {
+				// 过图逻辑（自动进入下个房间）
+				autoNextRoom();
+			}
 		}
 	}
 }
@@ -222,6 +238,9 @@ void DungeonLogic::firstRoom()
 	{
 		superScore();
 	}
+
+	// 锁定耐久
+	lockDurable();
 
 	if (GAME.function_switch.cool_down)
 	{
@@ -251,13 +270,17 @@ void DungeonLogic::firstRoom()
 	{
 		// 上上空格
 		MSDK_keyPress(Keyboard_UpArrow, 1);
+		Sleep(100);
 		MSDK_keyPress(Keyboard_UpArrow, 1);
+		Sleep(100);
 		MSDK_keyPress(Keyboard_KongGe, 1);
-		Sleep(1000);
+		Sleep(800);
 
 		// 右右空格
 		MSDK_keyPress(Keyboard_RightArrow, 1);
+		Sleep(100);
 		MSDK_keyPress(Keyboard_RightArrow, 1);
+		Sleep(100);
 		MSDK_keyPress(Keyboard_KongGe, 1);
 		Sleep(500);
 	}
@@ -329,12 +352,13 @@ void DungeonLogic::clearanceLogic()
 		dungeon_finished = true;
 	}
 
-	while (judgeIsBossRoom() && GAME.game_status == 3) {
+	if (judgeIsBossRoom() && GAME.game_status == 3) {
 
 		// 如果没翻牌
 		while (!judgeAwarded())
 		{
 			// 进行ESC翻牌
+			Log.info(L"进行翻牌", true);
 			MSDK_keyPress(Keyboard_ESCAPE, 1);
 			Sleep(500);
 		}
@@ -343,6 +367,7 @@ void DungeonLogic::clearanceLogic()
 		int shop_type = getClearanceShop();
 		if (shop_type == 1003)
 		{
+			Log.info(L"关闭商店", true);
 			// 关闭加百利商店
 			MSDK_keyPress(Keyboard_ESCAPE, 1);
 			Sleep(1000);
@@ -350,16 +375,16 @@ void DungeonLogic::clearanceLogic()
 
 		// 分解装备
 		if (getBackpackLoad() > 50) {
+			Log.info(L"分解装备", true);
 			getPackageOfEq();
 		}
 
+		Log.info(L"BOSS房间聚物", true);
 		finalGatherItems();
 
 		// 重置伤害
 		com_hook = false;
 		boss_hook = false;
-
-		GAME.dungeonInfoClean();
 
 		// 疲劳判断
 		int fatigue = getUserFatigue();
@@ -373,12 +398,8 @@ void DungeonLogic::clearanceLogic()
 		{
 			Log.info(L"当前副本任务已完成", true);
 			// 返回城镇
-			while (GAME.game_status == 3)
-			{
-				MSDK_keyPress(Keyboard_F12, 1);
-				Sleep(333);
-			}
-			return;
+			MSDK_keyPress(Keyboard_F12, 1);
+			Sleep(333);
 		}
 		else {
 			// 疲劳为空返回城镇
@@ -386,31 +407,17 @@ void DungeonLogic::clearanceLogic()
 			{
 				Log.info(L"当前副本任务失败：疲劳不足", true);
 				// 任务失败，返回城镇
-				while (GAME.game_status == 3)
-				{
-					MSDK_keyPress(Keyboard_F12, 1);
-					Sleep(333);
-				};
-			}
-			// 再次挑战
-			int ret_status = true;
-			while (ret_status)
-			{
-				MSDK_keyPress(Keyboard_F10, 1);
+				MSDK_keyPress(Keyboard_F12, 1);
 				Sleep(333);
-				ROOMCOOR boss_coor;
-				boss_coor.x = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
-				boss_coor.y = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
-				GAME.dungeon_info.boos_room = boss_coor;
-				if (!judgeIsBossRoom()) 
-				{
-					ret_status = false;
-					return;
-				}
 			}
-			return;
+			else {
+				Log.info(L"再次挑战", true);
+				MSDK_keyPress(Keyboard_F10, 1);
+				Sleep(5000);
+			}
 		}
 	}
+	GAME.dungeonInfoClean();
 }
 
 void DungeonLogic::finalGatherItems()
@@ -492,4 +499,26 @@ void DungeonLogic::setBossHook()
 			updateHookValue(hook_value);
 		}
 	}
+}
+
+bool DungeonLogic::dungeonRoomIsBoss()
+{
+	// 更新时间指针和门型指针（每次进图会变化/副本发生变化时）
+	__int64 time_pointer = readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS"));
+	__int64 door_pointer = readLong(time_pointer + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	// 获取当前房间位置
+	ROOMCOOR current_coor;
+	current_coor.x = readInt(time_pointer + ADDR.x64("C_BEGIN_ROOM_X"));
+	current_coor.y = readInt(time_pointer + ADDR.x64("C_BEGIN_ROOM_Y"));
+
+	// 获取BOSS房间位置
+	ROOMCOOR boss_coor;
+	boss_coor.x = (int)decrypt(door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
+	boss_coor.y = (int)decrypt(door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+	if (current_coor.x == boss_coor.x && current_coor.y == boss_coor.y)
+	{
+		return true;
+	}
+
+	return false;
 }

@@ -46,4 +46,7 @@ public:
 	// …Ë÷√HOOK…À∫¶
 	static void setGeneralHook();
 	static void setBossHook();
+
+	// BOSS∑øº‰≈–∂œ
+	static bool dungeonRoomIsBoss();
 };

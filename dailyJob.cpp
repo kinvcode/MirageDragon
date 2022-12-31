@@ -221,7 +221,7 @@ void DailyJobLogic::inDungeon()
 			if (map_code == 100002705) {
 				if (GAME.dungeon_info.current_room.coordinate.x == 2 || GAME.dungeon_info.current_room.coordinate.x == 3) 
 				{
-					GAME.use_pass_room_call = true;
+					//GAME.use_pass_room_call = true;
 				}
 			}
 			autoNextRoom();
@@ -254,6 +254,9 @@ void DailyJobLogic::firstRoom()
 	{
 		superScore();
 	}
+
+	// Ëø¶¨ÄÍ¾Ã
+	lockDurable();
 
 	if (GAME.function_switch.cool_down)
 	{
