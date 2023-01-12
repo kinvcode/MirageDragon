@@ -117,7 +117,55 @@ void DungeonLogic::inTown()
 		}
 	}
 
-	//// 进入区域
+	// 史诗之路
+	if (code == 400002143 || code == 400002144)
+	{
+		difficulty = 0;
+		if (prestige >= 21587)
+		{
+			// 英豪
+			if (prestige >= 24812) {
+				difficulty = 1;
+			}
+			if (prestige >= 27255) {
+				difficulty = 2;
+			}
+			if (prestige >= 28695) {
+				difficulty = 3;
+			}
+			if (prestige >= 30135) {
+				difficulty = 4;
+			}
+		}
+		else {
+			// 普通
+			if (prestige >= 8602) {
+				difficulty = 1;
+			}
+			if (prestige >= 13195) {
+				difficulty = 2;
+			}
+			if (prestige >= 16322) {
+				difficulty = 3;
+			}
+			if (prestige >= 18626) {
+				difficulty = 4;
+			}
+		}
+
+
+		// 判断当前是否在史诗之路区域
+		int word, area;
+		word = readInt(ADDR.x64("C_TOWN_WORLD"));
+		area = readInt(ADDR.x64("C_TOWN_AREA"));
+		if (word != 167)
+		{
+			moveOfTown(167, 0, 352, 279);
+			Sleep(500);
+		}
+	}
+
+	// 进入区域
 	areaCall(code);
 	Sleep(500);
 	// 组包选图
@@ -199,6 +247,17 @@ void DungeonLogic::inDungeon()
 				Log.info(L"开始通关处理");
 				// 通关处理
 				clearanceLogic();
+			}
+			else {
+				// 处理史诗之路
+				int code = dg_list.front().dungeon_code;
+				if (code == 400002143 || code == 400002144)
+				{
+					MSDK_keyPress(Keyboard_RightArrow, 1);
+					Sleep(100);
+					MSDK_KeyDown(Keyboard_RightArrow);
+					Sleep(100);
+				}
 			}
 		}
 		else {
@@ -379,6 +438,11 @@ void DungeonLogic::clearanceLogic()
 			getPackageOfEq();
 		}
 
+		int code = dg_list.front().dungeon_code;
+		if (code == 400002143 || code == 400002144)
+		{
+			MSDK_keyPress(Keyboard_v, 1);
+		}
 		Log.info(L"BOSS房间聚物", true);
 		finalGatherItems();
 
