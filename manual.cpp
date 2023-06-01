@@ -9,6 +9,8 @@
 #include "dnfCALL.h"
 #include "procData.h"
 #include "log.h"
+#include "keyboardDriver.h"
+#include "usbhidkeycode.h"
 
 // 选择角色
 void ManualLogic::selectRole()
@@ -90,22 +92,71 @@ void ManualLogic::inDungeon()
 	// 遍历地图（人物、物品、怪物...）
 	getDungeonAllObj();
 
-	// 通关处理
-	if (is_open_door && is_boss)
+	//// 通关处理
+	//if (is_open_door && is_boss)
+	//{
+	//	bool is_clearance = judgeClearance();
+	//	if (is_clearance)
+	//	{
+	//		// 关闭图内功能
+	//		closeFunctions();
+	//		GAME.dungeonInfoClean();
+	//		while (judgeIsBossRoom() && GAME.game_status == 3)
+	//		{
+	//			// 等待离开BOSS房间
+	//			Sleep(1000);
+	//		}
+	//	}
+	//}
+
+		// 未开门时处理逻辑
+	if (is_open_door == false)
 	{
-		bool is_clearance = judgeClearance();
-		if (is_clearance)
+		// 打怪逻辑 
+		if (PDATA.play_model) 
 		{
-			// 关闭图内功能
-			closeFunctions();
-			GAME.dungeonInfoClean();
-			while (judgeIsBossRoom() && GAME.game_status == 3)
-			{
-				// 等待离开BOSS房间
-				Sleep(1000);
-			}
+			attackMonsterLogic();
 		}
 	}
+	// 开门后的逻辑处理
+	else {
+		if (is_boss)
+		{
+			Log.info(L"BOSS房间怪物清理完毕");
+			// 判断是否通关（篝火判断）
+			bool is_clearance = judgeClearance();
+			if (is_clearance)
+			{
+				// 关闭图内功能
+				closeFunctions();
+				GAME.dungeonInfoClean();
+			}
+		}
+		else {
+
+			if (PDATA.play_model)
+			{
+				// 捡物兜底
+				finalGatherItems();
+
+				// 如果存在时空旋涡
+				if (GAME.dungeon_info.current_room.room_has_urgent)
+				{
+					// 取出时空旋涡位置
+					ROOMCOOR urgent_coor = getUrgentCoor();
+					// 跑到时空旋涡处
+					runToMonter(urgent_coor.x, urgent_coor.y);
+					return;
+				}
+				else {
+					// 过图逻辑（自动进入下个房间）
+					autoNextRoom();
+				}
+			}
+
+		}
+	}
+
 }
 
 void ManualLogic::firstRoom()
@@ -119,7 +170,7 @@ void ManualLogic::firstRoom()
 	}
 
 	// 锁定耐久
-	lockDurable();
+	//lockDurable();
 
 	if (GAME.function_switch.cool_down)
 	{
@@ -165,4 +216,68 @@ void ManualLogic::closeFunctions()
 	{
 		threeSpeed(0, 0, 0);
 	}
+}
+
+
+// 打怪逻辑
+void ManualLogic::attackMonsterLogic() 
+{
+	while (true)
+	{
+		if (!PDATA.play_model) {
+			break;
+		}
+		// 刷新怪物
+		getDungeonAllObj();
+
+		// 获取当前怪物数量
+		int monster_num = (int)GAME.dungeon_info.current_room.monster_list.size();
+
+		if (monster_num < 1)
+		{
+			break;
+		}
+
+		// 跟随怪物
+		DUNGEONOBJ cur = GAME.dungeon_info.current_room.monster_list.front();
+		bool res = runToMonter(cur.coor.x, cur.coor.y);
+		if (res) {
+			// 攻击怪物
+			int key = getCoolDownKey();
+			MSDK_keyPress(key, 1);
+		}
+	}
+}
+
+void ManualLogic::finalGatherItems()
+{
+	// 循环策略
+	bool has_item = true;
+	while (has_item)
+	{
+		if (!PDATA.play_model) {
+			break;
+		}
+		Log.info(L"刷新怪物与物品");
+		getDungeonAllObj();
+		has_item = (bool)GAME.dungeon_info.current_room.item_list.size();
+		// 如果存在物品
+		if (has_item) {
+			Log.info(L"存在物品");
+			updateUserCoor();
+			for (auto item : GAME.dungeon_info.current_room.item_list) {
+				gatherAtUser(GAME.dungeon_info.user_coordinate, item);
+			}
+
+			// 判断脚下是否有物品
+			while (itemUnderFooter())
+			{
+				Log.info(L"进行捡物");
+				// x捡物
+				MSDK_keyPress(Keyboard_x, 1);
+				Sleep(300);
+			}
+		}
+	}
+	Log.info(L"捡物完毕");
 }

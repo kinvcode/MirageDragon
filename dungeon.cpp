@@ -156,8 +156,8 @@ void DungeonLogic::inTown()
 
 		// 判断当前是否在史诗之路区域
 		int word, area;
-		word = readInt(ADDR.x64("C_TOWN_WORLD"));
-		area = readInt(ADDR.x64("C_TOWN_AREA"));
+		word = readInt(C_TOWN_WORLD);
+		area = readInt(C_TOWN_AREA);
 		if (word != 167)
 		{
 			moveOfTown(167, 0, 352, 279);
@@ -568,17 +568,17 @@ void DungeonLogic::setBossHook()
 bool DungeonLogic::dungeonRoomIsBoss()
 {
 	// 更新时间指针和门型指针（每次进图会变化/副本发生变化时）
-	__int64 time_pointer = readLong(readLong(ADDR.x64("C_ROOM_NUMBER")) + ADDR.x64("C_TIME_ADDRESS"));
-	__int64 door_pointer = readLong(time_pointer + ADDR.x64("C_DOOR_TYPE_OFFSET"));
+	__int64 time_pointer = readLong(readLong(C_ROOM_NUMBER) + C_TIME_ADDRESS);
+	__int64 door_pointer = readLong(time_pointer + C_DOOR_TYPE_OFFSET);
 	// 获取当前房间位置
 	ROOMCOOR current_coor;
-	current_coor.x = readInt(time_pointer + ADDR.x64("C_BEGIN_ROOM_X"));
-	current_coor.y = readInt(time_pointer + ADDR.x64("C_BEGIN_ROOM_Y"));
+	current_coor.x = readInt(time_pointer + C_BEGIN_ROOM_X);
+	current_coor.y = readInt(time_pointer + C_BEGIN_ROOM_Y);
 
 	// 获取BOSS房间位置
 	ROOMCOOR boss_coor;
-	boss_coor.x = (int)decrypt(door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
-	boss_coor.y = (int)decrypt(door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+	boss_coor.x = (int)decrypt(door_pointer + C_BOSS_ROOM_X);
+	boss_coor.y = (int)decrypt(door_pointer + C_BOSS_ROOM_Y);
 	if (current_coor.x == boss_coor.x && current_coor.y == boss_coor.y)
 	{
 		return true;

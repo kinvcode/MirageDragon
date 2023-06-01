@@ -20,4 +20,10 @@ public:
 
 	// 关闭图内功能
 	static void closeFunctions();
+
+	// 打怪逻辑
+	static void attackMonsterLogic();
+
+	// 捡物兜底
+	static void finalGatherItems();
 };

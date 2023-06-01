@@ -236,8 +236,8 @@ void MainLineLogic::inDungeon()
 		if (GAME.dungeon_info.map_code == 51)
 		{
 			ROOMCOOR boss_coor;
-			boss_coor.x = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_X"));
-			boss_coor.y = (int)decrypt(GAME.dungeon_info.door_pointer + ADDR.x64("C_BOSS_ROOM_Y"));
+			boss_coor.x = (int)decrypt(GAME.dungeon_info.door_pointer + C_BOSS_ROOM_X);
+			boss_coor.y = (int)decrypt(GAME.dungeon_info.door_pointer + C_BOSS_ROOM_Y);
 			GAME.dungeon_info.boos_room = boss_coor;
 			updateRooms();
 			return;
@@ -522,15 +522,15 @@ bool MainLineLogic::hasMainJob()
 	CString job_name;
 
 	// 任务地址
-	job_address = readLong(ADDR.x64("C_JOB_ADDRESS"));
-	head_address = readLong(job_address + ADDR.x64("C_ALL_JOB_HEAD"));
-	end_address = readLong(job_address + ADDR.x64("C_ALL_JOB_END"));
+	job_address = readLong(C_JOB_ADDRESS);
+	head_address = readLong(job_address + C_ALL_JOB_HEAD);
+	end_address = readLong(job_address + C_ALL_JOB_END);
 	job_number = (int)((end_address - head_address) / 8);
 
 	for (int i = 0; i < job_number; i++)
 	{
 		job_pointer = readLong(head_address + i * 8);
-		job_type = readInt(job_pointer + ADDR.x64("C_JOB_TYPE"));
+		job_type = readInt(job_pointer + C_JOB_TYPE);
 
 		if (job_type == 0)
 		{
@@ -541,7 +541,7 @@ bool MainLineLogic::hasMainJob()
 			else {
 				job_name = readString(job_pointer + 16, 50);
 			}
-			CString job_require = readString(readLong(job_pointer + ADDR.x64("C_JOB_REQUIRE")), 50);
+			CString job_require = readString(readLong(job_pointer + C_JOB_REQUIRE), 50);
 			int job_code = readInt(job_pointer);
 
 			job_info.name = job_name;
@@ -565,9 +565,9 @@ int MainLineLogic::getJobStatus(int code)
 	int remainder;
 
 	// 任务地址
-	job_address = readLong(ADDR.x64("C_JOB_ADDRESS"));
-	head_address = readLong(job_address + ADDR.x64("C_ACCEPTED_JOB_HEAD"));
-	end_address = readLong(job_address + ADDR.x64("C_ACCEPTED_JOB_END"));
+	job_address = readLong(C_JOB_ADDRESS);
+	head_address = readLong(job_address + C_ACCEPTED_JOB_HEAD);
+	end_address = readLong(job_address + C_ACCEPTED_JOB_END);
 	job_number = (int)((end_address - head_address) / 16);
 
 	for (int i = 0; i < job_number; i++)
@@ -859,9 +859,9 @@ int MainLineLogic::getJobMap(int code)
 	int number;
 
 	// 任务地址
-	job_address = readLong(ADDR.x64("C_JOB_ADDRESS"));
-	head_address = readLong(job_address + ADDR.x64("C_ALL_JOB_HEAD"));
-	end_address = readLong(job_address + ADDR.x64("C_ALL_JOB_END"));
+	job_address = readLong(C_JOB_ADDRESS);
+	head_address = readLong(job_address + C_ALL_JOB_HEAD);
+	end_address = readLong(job_address + C_ALL_JOB_END);
 	number = (int)((end_address - head_address) / 8);
 	for (int i = 0; i < number; i++)
 	{
@@ -870,7 +870,7 @@ int MainLineLogic::getJobMap(int code)
 		{
 			int job_data = getJobSpecialMap(code);
 			if (job_data == -1) {
-				job_data = readInt(readLong(job_pointer + ADDR.x64("C_JOB_MAP")));
+				job_data = readInt(readLong(job_pointer + C_JOB_MAP));
 				return job_data;
 			}
 			else {
@@ -950,15 +950,15 @@ void MainLineLogic::getMainLineDungeonAllObj()
 		return;
 	}
 
-	__int64 map_base = readLong(readLong(readLong(ADDR.x64("C_USER_ADDRESS")) + ADDR.x64("C_MAP_OFFSET")) + 16);
-	__int64 head_address = readLong(map_base + ADDR.x64("C_MAP_HEAD"));
-	__int64 end_address = readLong(map_base + ADDR.x64("C_MAP_END"));
+	__int64 map_base = readLong(readLong(readLong(C_USER_ADDRESS) + C_MAP_OFFSET) + 16);
+	__int64 head_address = readLong(map_base + C_MAP_HEAD);
+	__int64 end_address = readLong(map_base + C_MAP_END);
 
 	if (head_address == 0 || end_address == 0) {
 		return;
 	}
 
-	int object_quantity = (int)(end_address - head_address) / 32;
+	int object_quantity = (int)(end_address - head_address) / 24;
 	if (object_quantity == 0 || object_quantity > 1000) {
 		return;
 	}
@@ -968,11 +968,11 @@ void MainLineLogic::getMainLineDungeonAllObj()
 
 	for (__int64 i = 1; i <= object_quantity; i++)
 	{
-		__int64 monster_address = readLong(readLong(head_address + i * 32) + 16) - 32;
-		int monster_camp = readInt(monster_address + ADDR.x64("C_CAMP_OFFSET"));
-		int monster_type = readInt(monster_address + ADDR.x64("C_TYPE_OFFSET"));
-		int monster_code = readInt(monster_address + ADDR.x64("C_CODE_OFFSET"));
-		int monster_blood = readInt(monster_address + ADDR.x64("C_MONSTER_BLOOD"));
+		__int64 monster_address = readLong(readLong(head_address + i * 24) + 16) - 32;
+		int monster_camp = readInt(monster_address + C_CAMP_OFFSET);
+		int monster_type = readInt(monster_address + C_TYPE_OFFSET);
+		int monster_code = readInt(monster_address + C_CODE_OFFSET);
+		int monster_blood = readInt(monster_address + C_MONSTER_BLOOD);
 		COORDINATE monster_coor = readCoordinate(monster_address);
 
 		// 图内对象结构体
@@ -987,7 +987,7 @@ void MainLineLogic::getMainLineDungeonAllObj()
 		// 物品
 		if (d_object.type == 289 && d_object.coor.z == 0)
 		{
-			d_object.code = readInt(readLong(monster_address + ADDR.x64("C_GROUND_ITEM")) + ADDR.x64("C_CODE_OFFSET"));
+			d_object.code = readInt(readLong(monster_address + C_GROUND_ITEM) + C_CODE_OFFSET);
 			// 过滤物品
 			if (d_object.code != 0)
 			{

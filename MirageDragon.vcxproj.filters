@@ -209,9 +209,6 @@
     <ClCompile Include="http.cpp">
       <Filter>组件\网络库</Filter>
     </ClCompile>
-    <ClCompile Include="baseAddress.cpp">
-      <Filter>DNF\基址</Filter>
-    </ClCompile>
     <ClCompile Include="GameData.cpp">
       <Filter>DNF\游戏数据</Filter>
     </ClCompile>

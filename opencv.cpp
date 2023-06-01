@@ -16,7 +16,6 @@ ROOMCOOR OpenCV::read(CString tmp_png)
 	Point matchLoc;
 
 	ScreenShot::savePic();
-
 	img = imread(PDATA.screenshot_file_s, IMREAD_COLOR); // 读取图片
 
 	CString tmp1 = PDATA.cur_dir;
@@ -37,10 +36,10 @@ ROOMCOOR OpenCV::read(CString tmp_png)
 	//msg.Format(L"当前匹配度:%f", minVal);
 	//Log.info(msg, true);
 
-	if (minVal < 10)
-	{
-		Log.info(L"匹配成功，准备移动鼠标", true);
-	}
+	//if (minVal < 10)
+	//{
+	//	Log.info(L"匹配成功，准备移动鼠标", true);
+	//}
 
 	int coor[1] = { 0 };
 	//double maxVal;
@@ -71,32 +70,31 @@ ROOMCOOR OpenCV::getDailyIcon1()
 	ROOMCOOR cent = read(tmp_png);
 
 	// 判定是否在有效范围
-	int diff_x, diff_y;
-	diff_x = abs(cent.x - 768);
-	diff_y = abs(cent.y - 532);
-	if (diff_x > 20 || diff_y > 20)
-	{
+	if (cent.x >= 626 && cent.x <= 642 && cent.y >= 522 && cent.y <= 540) {
+		//CString cent_msg;
+		//cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
+		//Log.info(cent_msg, true);
+
+		// 计算窗口左上角位置
+		int window_left = PDATA.dnf.dnf_rect.left;
+		int window_top = PDATA.dnf.dnf_rect.top;
+
+		cent.x += window_left;
+		cent.y += window_top;
+
+		//CString coor_msg;
+		//coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
+		//Log.info(coor_msg, true);
+
+		return cent;
+	}
+	else {
 		cent.x = 0;
 		cent.y = 0;
 		return cent;
 	}
 
-	//CString cent_msg;
-	//cent_msg.Format(L"游戏中坐标X:%d Y:%d", cent.x, cent.y);
-	//Log.info(cent_msg, true);
 
-	// 计算窗口左上角位置
-	int window_left = PDATA.dnf.dnf_rect.left;
-	int window_top = PDATA.dnf.dnf_rect.top;
-
-	cent.x += window_left;
-	cent.y += window_top;
-
-	//CString coor_msg;
-	//coor_msg.Format(L"实际坐标X:%d Y:%d", cent.x, cent.y);
-	//Log.info(coor_msg, true);
-
-	return cent;
 }
 
 ROOMCOOR OpenCV::getDailyIcon2()
