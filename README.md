@@ -34,3 +34,35 @@ D:\Program Files\opencv\build\x64\vc16\lib
 
 打开项目属性 -> 链接器 -> 输入 -> 附加依赖项 -> 将下面这个文件名追加进去
 opencv_world470d.lib
+
+
+# tesseract OCR环境配置
+
+## 下载tesseract
+
+下载地址：https://digi.bib.uni-mannheim.de/tesseract/
+
+选择win64最新版本下载：https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-5.3.1.20230401.exe
+
+安装路径：D:\Program Files\tesseractOCR
+
+## 配置环境变量
+
+将以下路径添加到path中
+D:\Program Files\tesseractOCR
+
+## 下载中文文字库
+
+https://github.com/tesseract-ocr/tessdata/blame/main/chi_sim.traineddata
+
+## 下VCPKG
+
+https://github.com/microsoft/vcpkg.git
+
+安装路径：D:\Program Files\vcpkg
+
+运行源码中的bootstrap-vcpkg.bat文件
+
+## 配置环境变量
+将以下路径添加到path中
+D:\Program Files\vcpkg
